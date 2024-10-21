@@ -1,35 +1,56 @@
-// This file contains type definitions for your data.
-// It describes the shape of the data, and what data type each property should accept.
-// For simplicity of teaching, we're manually defining these types.
-// However, these types are generated automatically if you're using an ORM such as Prisma.
-export type User = {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-};
+export type Player = 
+    {
+        id : string,
+        nick : string,
+        password : string
+    }
 
-export type Customer = {
-  id: string;
-  name: string;
-  email: string;
-  image_url: string;
-};
+export type League =
+    {
+        id : string,
+        name : string,
+        password : string
+    }
 
-export type Invoice = {
+export type Tournament =
+    {
+        id : string,
+        leagueid : string,
+        championid: string | null,
+        date: Date,
+        name : string
+    }
+
+export type Game = 
+    {
+        id : string,
+        tournamentid : string,
+        player1 : string,
+        player2 : string,
+        match1 : 0 | 1 | 2 | null,
+        match2 : 0 | 1 | 2 | null,
+        match3 : 0 | 1 | 2 | null,
+        result : 0 | 1 | 2 | null,
+    }
+
+export type LatestGames = {
   id: string;
-  customer_id: string;
-  amount: number;
+  league: string;
+  tournament: string;
   date: string;
-  // In TypeScript, this is called a string union type.
-  // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
-  status: 'pending' | 'paid';
+  player1: string;
+  player2: string;
+  match1 : 0 | 1 | 2 | null,
+  match2 : 0 | 1 | 2 | null,
+  match3 : 0 | 1 | 2 | null,
+  result : 0 | 1 | 2 | null,
 };
 
+//eliminar todas estas luego
 export type Revenue = {
-  month: string;
-  revenue: number;
-};
+    month: string;
+    revenue: number;
+    };
 
 export type LatestInvoice = {
   id: string;

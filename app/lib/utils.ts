@@ -1,4 +1,8 @@
-import { Revenue } from './definitions';
+import { Revenue, Game, Tournament } from './definitions';
+
+const MonthsDictionary = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('en-US', {
@@ -21,18 +25,50 @@ export const formatDateToLocal = (
   return formatter.format(date);
 };
 
-export const generateYAxis = (revenue: Revenue[]) => {
-  // Calculate what labels we need to display on the y-axis
-  // based on highest record and in 1000s
-  const yAxisLabels = [];
-  const highestRecord = Math.max(...revenue.map((month) => month.revenue));
-  const topLabel = Math.ceil(highestRecord / 1000) * 1000;
+export const generateLast12Months = () => {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const helpArray = [];
 
-  for (let i = topLabel; i >= 0; i -= 1000) {
-    yAxisLabels.push(`$${i / 1000}K`);
+    let currenMonthVariable = currentMonth+1;
+    for (let i=11; i>=0; i--) {
+      helpArray[i] = currenMonthVariable;
+      currenMonthVariable > 1 ?  
+        currenMonthVariable-- :
+        currenMonthVariable =12;
+    }
+
+  let last12Months = helpArray.map((m) => ({month: MonthsDictionary[m-1], games: 0}))
+  return last12Months;
+}
+
+
+export const generateYAxis = (games: Game[], tournaments: Tournament[], last12Months: {month: string; games: number}[]) => {
+  const yAxisLabels = [];
+  //const ayuda = console.log(tournaments[0].id);
+  //const ayuda2 = console.log(games[0].tournamentid == tournaments[0].id);
+  //const ayuda2 = console.log(games);
+
+  const populateMonths = games.forEach(game => { 
+    tournaments.forEach(tournament => {
+      if (tournament.id == game.tournamentid) {
+        let tostringMonth = MonthsDictionary[tournament.date.getMonth()];
+        let indexOfMonth = last12Months.findIndex(x => x.month === tostringMonth);
+        last12Months[indexOfMonth].games ++; }
+      }
+      
+)});
+
+  const highestRecord = Math.max(...last12Months.map(month => month.games));
+  const topLabel = highestRecord;
+  //const topLabel = Math.ceil(highestRecord / 1000) * 1000;
+  //console.log(highestRecord);
+
+  for (let i = topLabel; i >= 0; i -= 1) {
+    yAxisLabels.push(`${i}`);
   }
 
-  return { yAxisLabels, topLabel };
+  return { yAxisLabels, topLabel};
 };
 
 export const generatePagination = (currentPage: number, totalPages: number) => {

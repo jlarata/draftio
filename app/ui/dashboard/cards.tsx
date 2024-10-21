@@ -1,16 +1,16 @@
 import {
-  BanknotesIcon,
-  ClockIcon,
+  PuzzlePieceIcon,
   UserGroupIcon,
-  InboxIcon,
+  TrophyIcon,
+  TableCellsIcon
 } from '@heroicons/react/24/outline';
-import { roboto } from '@/app/ui/fonts';
+import { inter } from '@/app/ui/fonts';
 
 const iconMap = {
-  collected: BanknotesIcon,
-  customers: UserGroupIcon,
-  pending: ClockIcon,
-  invoices: InboxIcon,
+  games: PuzzlePieceIcon,
+  players: UserGroupIcon,
+  leagues: TableCellsIcon,
+  tournaments: TrophyIcon,
 };
 
 export default async function CardWrapper() {
@@ -37,7 +37,7 @@ export function Card({
 }: {
   title: string;
   value: number | string;
-  type: 'invoices' | 'customers' | 'pending' | 'collected';
+  type: 'games' | 'players' | 'leagues' | 'tournaments';
 }) {
   const Icon = iconMap[type];
 
@@ -48,7 +48,7 @@ export function Card({
         <h3 className="ml-2 text-sm font-medium">{title}</h3>
       </div>
       <p
-        className={`${roboto.className}
+        className={`${inter.className}
           truncate rounded-xl bg-white px-4 py-8 text-center text-2xl`}
       >
         {value}
