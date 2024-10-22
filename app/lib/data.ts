@@ -1,8 +1,9 @@
 import { sql } from '@vercel/postgres';
 import { unstable_noStore as noStore} from 'next/cache';
 import { formatCurrency } from './utils';
-import { Game, Tournament } from './definitions';
+import { Game, Tournament, GamesTable } from './definitions';
 import { Revenue, CustomersTableType, LatestGames, LatestInvoice, LatestInvoiceRaw, InvoiceForm, InvoicesTable, CustomerField } from './definitions';
+import { TableCellsIcon } from '@heroicons/react/24/outline';
 
 export async function fetchRevenue() {
   try {
@@ -262,60 +263,136 @@ export async function fetchCardData() {
   }
 } */
 
+
+// LA ANTERIOR QUERY DE INVOICES TableCellsIcon
+// SELECT
+//         invoices.id,
+//         invoices.amount,
+//         invoices.date,
+//         invoices.status,
+//         customers.name,
+//         customers.email,
+//         customers.image_url
+//       FROM invoices
+//       JOIN customers ON invoices.customer_id = customers.id
+//       WHERE
+//         customers.name ILIKE ${`%${query}%`} OR
+//         customers.email ILIKE ${`%${query}%`} OR
+//         invoices.amount::text ILIKE ${`%${query}%`} OR
+//         invoices.date::text ILIKE ${`%${query}%`} OR
+//         invoices.status ILIKE ${`%${query}%`}
+//       ORDER BY invoices.date DESC
+//       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+//     `;
+
+
 const ITEMS_PER_PAGE = 6;
-export async function fetchFilteredInvoices(
+export async function fetchFilteredGames(
   query: string,
   currentPage: number,
 ) {
+  
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const invoices = await sql<InvoicesTable>`
+    const games = await sql<GamesTable>`
       SELECT
-        invoices.id,
-        invoices.amount,
-        invoices.date,
-        invoices.status,
-        customers.name,
-        customers.email,
-        customers.image_url
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
+      g.id AS id, l.name AS league, t.name AS tournament,
+      TO_CHAR(t.date, 'dd/mm/yyyy') AS date,
+      (SELECT p.nick FROM players p WHERE p.id = g.player1)
+      AS Player1,
+      (SELECT p.nick FROM players p WHERE p.id = g.player2)
+      AS Player2,
+
+      CASE
+      WHEN g.match1 = '1' THEN
+      (SELECT p.nick FROM players p WHERE p.id = g.player1)
+      WHEN g.match1 = '2' THEN
+      (SELECT p.nick FROM players p WHERE p.id = g.player2)
+      WHEN g.match1 = '0' THEN 'Tie'
+      WHEN g.match1 = null THEN 'nope'
+      END AS Match1,
+
+      CASE
+      WHEN g.match2 = '1' THEN
+      (SELECT p.nick FROM players p WHERE p.id = g.player1)
+      WHEN g.match2 = '2' THEN
+      (SELECT p.nick FROM players p WHERE p.id = g.player2)
+      WHEN g.match2 = '0' THEN 'Tie'
+      WHEN g.match2 = null THEN 'nope'
+      END AS Match2,
+
+      CASE
+      WHEN g.match3 = '1' THEN
+      (SELECT p.nick FROM players p WHERE p.id = g.player1)
+      WHEN g.match3 = '2' THEN
+      (SELECT p.nick FROM players p WHERE p.id = g.player2)
+      WHEN g.match3 = '0' THEN 'Tie'
+      WHEN g.match3 = null THEN 'nope'
+      END AS Match3,
+
+      CASE
+      WHEN g.result = '1' THEN
+      (SELECT p.nick FROM players p WHERE p.id = g.player1)
+      WHEN g.result = '2' THEN
+      (SELECT p.nick FROM players p WHERE p.id = g.player2)
+      WHEN g.result = '0' THEN 'Tie'
+      WHEN g.result = null THEN 'nope'
+      END AS Result
+
+      FROM games g
+      INNER JOIN
+      players p
+      ON (g.player1 = p.id)
+      INNER JOIN
+      tournaments t
+      ON (g.tournamentid = t.id)
+      INNER JOIN
+      leagues l
+      ON (t.leagueid = l.id)
+
       WHERE
-        customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`} OR
-        invoices.amount::text ILIKE ${`%${query}%`} OR
-        invoices.date::text ILIKE ${`%${query}%`} OR
-        invoices.status ILIKE ${`%${query}%`}
-      ORDER BY invoices.date DESC
+      (SELECT p.nick FROM players p WHERE p.id = g.player1) ILIKE ${`%${query}%`} OR
+      (SELECT p.nick FROM players p WHERE p.id = g.player2) ILIKE ${`%${query}%`}
+
+      ORDER BY
+      t.date DESC
+
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
-    return invoices.rows;
+    return games.rows;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch invoices.');
+    throw new Error('Failed to fetch games.');
   }
 }
 
-export async function fetchInvoicesPages(query: string) {
+export async function fetchGamesPages(query: string) {
   try {
     const count = await sql`SELECT COUNT(*)
-    FROM invoices
-    JOIN customers ON invoices.customer_id = customers.id
+    FROM games g
+      INNER JOIN
+      players p
+      ON (g.player1 = p.id)
+      INNER JOIN
+      tournaments t
+      ON (g.tournamentid = t.id)
+      INNER JOIN
+      leagues l
+      ON (t.leagueid = l.id)
     WHERE
-      customers.name ILIKE ${`%${query}%`} OR
-      customers.email ILIKE ${`%${query}%`} OR
-      invoices.amount::text ILIKE ${`%${query}%`} OR
-      invoices.date::text ILIKE ${`%${query}%`} OR
-      invoices.status ILIKE ${`%${query}%`}
+      (SELECT p.nick FROM players p WHERE p.id = g.player1) ILIKE ${`%${query}%`} OR
+      (SELECT p.nick FROM players p WHERE p.id = g.player2) ILIKE ${`%${query}%`};
   `;
-
+  
+  
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    console.log("páginas: " +totalPages)
     return totalPages;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch total number of invoices.');
+    throw new Error('Failed to fetch total number of pages.');
   }
 }
 

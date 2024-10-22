@@ -114,11 +114,11 @@ export function TableRowSkeleton() {
           <div className="h-6 w-24 rounded bg-gray-100"></div>
         </div>
       </td>
-      {/* Email */}
+      {/* league */}
       <td className="whitespace-nowrap px-3 py-3">
         <div className="h-6 w-32 rounded bg-gray-100"></div>
       </td>
-      {/* Amount */}
+      {/* tournament */}
       <td className="whitespace-nowrap px-3 py-3">
         <div className="h-6 w-16 rounded bg-gray-100"></div>
       </td>
@@ -126,7 +126,7 @@ export function TableRowSkeleton() {
       <td className="whitespace-nowrap px-3 py-3">
         <div className="h-6 w-16 rounded bg-gray-100"></div>
       </td>
-      {/* Status */}
+      {/* Rsult */}
       <td className="whitespace-nowrap px-3 py-3">
         <div className="h-6 w-16 rounded bg-gray-100"></div>
       </td>
@@ -165,7 +165,7 @@ export function GamesMobileSkeleton() {
   );
 }
 
-export function InvoicesTableSkeleton() {
+export function GamesTableSkeleton() {
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -182,20 +182,20 @@ export function InvoicesTableSkeleton() {
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Customer
+                  League
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Email
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Amount
+                  Tournament
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Date
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Status
+                  Result
                 </th>
+                {/* <th scope="col" className="px-3 py-5 font-medium">
+                  Status
+                </th> */}
                 <th
                   scope="col"
                   className="relative pb-4 pl-3 pr-6 pt-2 sm:pr-6"
