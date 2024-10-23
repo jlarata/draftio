@@ -8,7 +8,6 @@ import { GamesChartSkeleton, LatestGamesSkeleton,CardSkeleton } from '@/app/ui/s
 
 export default async function Page() {
   
-
   return (
     <main>
       <h1 className={`${inter.className} mb-4 text-xl md:text-2xl`}>

@@ -59,6 +59,27 @@ export type GamesTable = {
   result : 0 | 1 | 2 | null,
 };
 
+export type PlayerField = {
+  id: string;
+  nick: string;
+};
+
+export type TournamentForCreateQuery = {
+  id: string;
+  name: string;
+  date: string; // already converted to string in the query.
+};
+
+export type TournamentField = {
+  id: string;
+  name: string;
+  date: string; // already converted to string in the query.
+};
+export type LeagueField = {
+  id: string;
+  name: string;
+};
+
 //eliminar todas estas luego
 export type Revenue = {
     month: string;

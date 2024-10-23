@@ -1,7 +1,7 @@
 import { sql } from '@vercel/postgres';
-import { unstable_noStore as noStore} from 'next/cache';
+// import { unstable_noStore as noStore} from 'next/cache';
 import { formatCurrency } from './utils';
-import { Game, Tournament, GamesTable } from './definitions';
+import { Game, Tournament, GamesTable, Player, League, TournamentForCreateQuery } from './definitions';
 import { Revenue, CustomersTableType, LatestGames, LatestInvoice, LatestInvoiceRaw, InvoiceForm, InvoicesTable, CustomerField } from './definitions';
 import { TableCellsIcon } from '@heroicons/react/24/outline';
 
@@ -25,7 +25,7 @@ export async function fetchRevenue() {
 }
 
 export async function fetchGamesAndTournaments() {
-  noStore();
+  // noStore();
   try {
     const gamesDataPromise = await sql<Game>`SELECT * FROM games`;
     const tournamentsDataPromise = await sql<Tournament>`SELECT * FROM tournaments`;
@@ -55,11 +55,79 @@ export async function fetchGamesAndTournaments() {
   }
 
 }
+//  Este fetch hay que repensarlo: una vez elegida la league, el usuario debería recién entonces
+//  fetchear tournaments y presentarlos. O bien, si se accede a la pantalla con una league pre-seleccionada
+//  recién entonces se haría el fetch de tournaments (me parece mejor, si es que vamos a permitir esa opción) 
+
+export async function fetchCreateGameData() {
+  // noStore();
+  try {
+    const playersPromise = await sql<Player>`SELECT id, nick FROM players;`;
+    const tournamentsPromise = await sql<TournamentForCreateQuery>`SELECT id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date FROM tournaments t;`;
+    const leaguesPromise = await sql<League>`SELECT id, name FROM leagues;`;
+
+    const data = await Promise.all([
+      playersPromise, tournamentsPromise, leaguesPromise
+    ]);
+
+    const players = data[0].rows ?? 'No players in database';
+    const tournaments = data[1].rows ?? 'No tournaments in database';
+    const leagues = data[2].rows ?? 'No leagues in database';
 
 
+    return {
+      players,
+      tournaments,
+      leagues
+    };
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch createGame data.');
+  }
+}
+// estos tres fetchs fueron mi primer intento para el creatGame, luego reemplazados por una
+// query en paralelo.
+
+// export async function fetchIdAndNickFromPlayers() {
+//   noStore();
+//   try {
+//     const data = await sql<Player>`SELECT id, nick FROM players;`;
+
+//     console.log(data.rows)
+//     return data.rows;
+//   } catch (error) {
+//     console.error('Database Error:', error);
+//     throw new Error('Failed to fetch players id and nick.');
+//   }
+// }
+
+// export async function fetchIdAndNameFromLeagues() {
+//   noStore();
+//   try {
+//     const data = await sql<League>`SELECT id, name FROM leagues;`;
+
+//     console.log(data.rows)
+//     return data.rows;
+//   } catch (error) {
+//     console.error('Database Error:', error);
+//     throw new Error('Failed to fetch leagues id and name.');
+//   }
+// }
+
+// export async function fetchIdAndNameFromTournaments() {
+//   noStore();
+//   try {
+//     const data = await sql<League>`SELECT id, name FROM tournaments;`;
+
+//     console.log(data.rows)
+//     return data.rows;
+//   } catch (error) {
+//     console.error('Database Error:', error);
+//     throw new Error('Failed to fetch leagues id and name.');
+//   }}
 
 export async function fetchGames() {
-  noStore();
+  // noStore();
   try {
     const data = await sql<Game>`SELECT * FROM games`;
 
@@ -72,7 +140,7 @@ export async function fetchGames() {
 }
 
 export async function fetchTournaments() {
-  noStore();
+  // noStore();
   try {
     const data = await sql<Tournament>`SELECT * FROM tournaments`;
     //console.log(data.rows);
@@ -84,7 +152,7 @@ export async function fetchTournaments() {
 }
 
 export async function fetchLatestGames() {
-  noStore();
+  // noStore();
   try {
     const data = await sql<LatestGames>`
       SELECT
@@ -182,22 +250,12 @@ export async function fetchLatestInvoices() {
 }
 
 export async function fetchCardData() {
-  noStore();
+  // noStore();
   try {
-    // You can probably combine these into a single SQL query
-    // However, we are intentionally splitting them to demonstrate
-    // how to initialize multiple queries in parallel with JS.
-    //const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
-    //const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
     const gamesCountPromise = sql`SELECT COUNT(*) FROM games`;
     const playersCountPromise = sql`SELECT COUNT(*) FROM players`;
     const leaguesCountPromise = sql`SELECT COUNT(*) FROM leagues`;
     const tournamentsCountPromise = sql`SELECT COUNT(*) FROM tournaments`;
-
-    //const invoiceStatusPromise = sql`SELECT
-    //     SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
-    //     SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
-    //     FROM invoices`;
 
     const data = await Promise.all([
       gamesCountPromise,
@@ -211,10 +269,6 @@ export async function fetchCardData() {
     const numberOfLeagues = Number(data[2].rows[0].count ?? '0');
     const numberOfTournaments = Number(data[3].rows[0].count ?? '0');
 
-    //const numberOfInvoices = Number(data[0].rows[0].count ?? '0');
-    //const numberOfCustomers = Number(data[1].rows[0].count ?? '0');
-    //const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? '0');
-    //const totalPendingInvoices = formatCurrency(data[2].rows[0].pending ?? '0');
 
     return {
       numberOfGames,

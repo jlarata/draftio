@@ -10,9 +10,11 @@ export const roboto = Roboto({
   })
 export const agdasima = Agdasima({ 
     weight: ['400', '700'],
-    subsets: ['latin']
+    subsets: ['latin'],
+    display: 'swap'
     });
 export const poppins = Poppins({
     weight: ['100', '200', '300', '400', '500', '600', '700'],
-    subsets: ['latin']
+    subsets: ['latin'],
+    display: 'swap'
   })
