@@ -131,7 +131,7 @@ export default function Form(
         {/* Match 1 */}
         <div className="mb-4">
           <label htmlFor="match 1" className="mb-2 block text-sm font-medium">
-            Match 1 result?
+            Match 1 result
           </label>
           <div className="relative">
             <select
@@ -141,7 +141,7 @@ export default function Form(
               defaultValue=""
             >
               <option value="" disabled>
-                Select a winner?
+                Select a winner
               </option>      
               <option         
                 value="1">Player 1
@@ -160,7 +160,7 @@ export default function Form(
         {/* Match 2 */}
         <div className="mb-4">
           <label htmlFor="match 2" className="mb-2 block text-sm font-medium">
-            Match 1 result?
+            Match 2 result
           </label>
           <div className="relative">
             <select
@@ -170,7 +170,7 @@ export default function Form(
               defaultValue=""
             >
               <option value="" disabled>
-                Select a winner?
+                Select a winner
               </option>      
               <option         
                 value="1">Player 1
@@ -189,7 +189,7 @@ export default function Form(
         {/* Match 3 */}
         <div className="mb-4">
           <label htmlFor="match 3" className="mb-2 block text-sm font-medium">
-            Match 1 result?
+            Match 3 result
           </label>
           <div className="relative">
             <select
@@ -199,7 +199,7 @@ export default function Form(
               defaultValue=""
             >
               <option value="" disabled>
-                Select a winner?
+                Select a winner
               </option>      
               <option         
                 value="1">Player 1
