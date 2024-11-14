@@ -59,6 +59,42 @@ export async function fetchGamesAndTournaments() {
 //  fetchear tournaments y presentarlos. O bien, si se accede a la pantalla con una league pre-seleccionada
 //  recién entonces se haría el fetch de tournaments (me parece mejor, si es que vamos a permitir esa opción) 
 
+
+
+export async function fetchSelectTournamentData() {
+  try {
+    const tournamentsPromise = await sql<TournamentForCreateQuery>`SELECT id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date FROM tournaments t;`;
+
+    const data = await Promise.all([
+      tournamentsPromise
+    ]);
+    const tournaments = data[0].rows ?? 'No tournaments in chosen league';
+    return {
+      tournaments
+    };
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch selectTournament data.');
+  }
+}
+
+export async function fetchSelectLeagueData() {
+  try {
+    const leaguesPromise = await sql<League>`SELECT id, name FROM leagues;`;
+
+    const data = await Promise.all([
+      leaguesPromise
+    ]);
+    const leagues = data[0].rows ?? 'No leagues in database';
+    return {
+      leagues
+    };
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch selectLeague data.');
+  }
+}
+
 export async function fetchCreateGameData() {
   // noStore();
   try {

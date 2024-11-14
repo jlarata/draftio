@@ -64,3 +64,21 @@ export async function createGame(formData: FormData) {
     redirect('/dashboard/games');
   }
 }
+
+export async function selectLeague(formData: FormData) {
+  let rawFormData : {
+    leagueid : string,
+  } = {
+      leagueid: formData.get('leagueid') as string,
+    };
+
+    console.log(rawFormData);
+
+    /* await sql`
+    INSERT INTO games (tournamentid, player1, player2, match1, match2, match3, result)
+       VALUES (${rawFormData.tournamentid}, ${rawFormData.player1id}, ${rawFormData.player2id}, ${rawFormData.match1}, ${rawFormData.match2}, ${rawFormData.match3}, ${result});
+  `; */
+
+  // revalidatePath('/dashboard/games/create');
+  redirect(`/dashboard/games/createStep2?league=${rawFormData.leagueid}`);
+}
