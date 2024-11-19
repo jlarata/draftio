@@ -14,22 +14,37 @@ import { Button } from '@/app/ui/button';
 import { createGame } from '@/app/lib/actions';
 import { useState, useCallback } from 'react';
 import { selectLeague } from '@/app/lib/actions';
+import { fetchSelectTournamentData } from '@/app/lib/data';
+import { fetchTournamentsByLeague } from '@/app/dashboard/games/create/page';
+
 //import { SelectLeague } from './buttons';
 
 
-export default function Form(
-    { players, tournaments, leagues } :
-    { players: PlayerField[], tournaments: TournamentField[], leagues: LeagueField[] })
-{
 
+export default function Form({leagues} : {leagues : LeagueField[]}
+    // { players, tournaments, leagues } :
+    // { players: PlayerField[], tournaments: TournamentField[], leagues: LeagueField[] }
+  )
+{
   const [isLeagueSelected, setIsLeagueSelected] = useState(false);
   const [leagueSelected, setLeagueSelected] = useState('');
+  //const [tournaments, setTournaments] = useState([]);
   const [isTournamentSelected, setIsTournamentSelected] = useState(false);
   const [tournamentSelected, setTournamentSelected] = useState('');
 
+  //let tournaments : TournamentField[];
+
+  
 
   const setLeague = useCallback((leagueId : string) => {
     setLeagueSelected((leagueSelected) => leagueId);
+    
+    // async function fetchTournaments() {
+    //   const {tournaments} = await fetchSelectTournamentData();
+    //   return {tournaments};
+    // }
+
+    // const tournaments = fetchTournaments();
   }, []);
 
   const toggleIsLeagueSelected = useCallback(() => {
@@ -113,9 +128,9 @@ export default function Form(
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue=""
               required
-              onChange={(e) => {
+              /* onChange={(e) => {
                 setLeague(e.target.value);
-              }}
+              }} */
       
             >
               <option value="" disabled>

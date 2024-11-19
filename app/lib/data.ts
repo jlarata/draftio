@@ -37,9 +37,32 @@ export async function fetchGamesAndTournaments() {
 
 }
 
-export async function fetchSelectTournamentData() {
+// export async function fetchSelectTournamentData() {
+//   try {
+//     const data = await sql<TournamentForCreateQuery>`
+//     SELECT id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date
+//     FROM
+//     tournaments t;
+//     `;
+    
+//     return data;
+//   } catch (error) {
+//     console.error('Database Error:', error);
+//     throw new Error('Failed to fetch tournaments.');
+//   }
+// }
+
+export async function fetchSelectTournamentData(leagueId : string) {
   try {
-    const tournamentsPromise = await sql<TournamentForCreateQuery>`SELECT id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date FROM tournaments t;`;
+    const tournamentsPromise = await sql<TournamentForCreateQuery>`
+    SELECT
+    leagueid, id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date
+    
+    FROM
+    tournaments t
+    WHERE t.leagueid = ${leagueId};
+    
+    `;
 
     const data = await Promise.all([
       tournamentsPromise
@@ -70,6 +93,7 @@ export async function fetchSelectLeagueData() {
     throw new Error('Failed to fetch selectLeague data.');
   }
 }
+
 
 export async function fetchCreateGameData() {
   // noStore();

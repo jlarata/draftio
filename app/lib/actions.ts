@@ -4,8 +4,6 @@ import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
 
-
-
 export async function createGame(formData: FormData) {
     let rawFormData : {
       tournamentid : string,
@@ -78,5 +76,4 @@ export async function selectLeague(formData: FormData) {
   // revalidatePath('/dashboard/games/create');
   //redirect(`/dashboard/games/createStep2?league=${rawFormData.leagueid}`);
 
-  return leagueId;
 }

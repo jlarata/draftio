@@ -1,43 +1,48 @@
-import { LeagueField, PlayerField, TournamentField } from '@/app/lib/definitions';
+import { TournamentField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
-    TableCellsIcon
+    TableCellsIcon,
+    TrophyIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { selectLeague } from '@/app/lib/actions';
+import { fetchSelectTournamentData } from '@/app/lib/data';
 
-export default function SelectLeagueForm(
-    { leagues } :
-    { leagues: LeagueField[] })
+
+
+
+export default async function SelectTournamentForm({leagueId} : {leagueId : string})
 {
+
+  const { tournaments } = await fetchSelectTournamentData(leagueId);
+
 
   return (
     <form action="">
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
 
-        {/* League Name */}
+        {/* Tournament  */}
         <div className="mb-4">
           <label htmlFor="player 1" className="mb-2 block text-sm font-medium">
-            Choose League
+            Choose Tournament
           </label>
           <div className="relative">
             <select
-              id="leagueid"
-              name="leagueid"
+              id="tournamentid"
+              name="tournamentid"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue=""
               required
             >
               <option value="" disabled>
-                Select league
+                Select tournament
               </option>
-              {leagues.map((league) => (
-                <option key={league.id} value={league.id}>
-                  {league.name}
+              {tournaments.map((tmt) => (
+                <option key={tmt.id} value={tmt.id}>
+                  {tmt.name}
                 </option>
               ))}
             </select>
-            <TableCellsIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <TrophyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
         </div>
       </div>
