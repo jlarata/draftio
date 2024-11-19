@@ -73,12 +73,10 @@ export async function selectLeague(formData: FormData) {
     };
 
     console.log(rawFormData);
-
-    /* await sql`
-    INSERT INTO games (tournamentid, player1, player2, match1, match2, match3, result)
-       VALUES (${rawFormData.tournamentid}, ${rawFormData.player1id}, ${rawFormData.player2id}, ${rawFormData.match1}, ${rawFormData.match2}, ${rawFormData.match3}, ${result});
-  `; */
+    const leagueId = rawFormData.leagueid;
 
   // revalidatePath('/dashboard/games/create');
-  redirect(`/dashboard/games/createStep2?league=${rawFormData.leagueid}`);
+  //redirect(`/dashboard/games/createStep2?league=${rawFormData.leagueid}`);
+
+  return leagueId;
 }

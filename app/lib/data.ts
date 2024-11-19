@@ -2,27 +2,8 @@ import { sql } from '@vercel/postgres';
 // import { unstable_noStore as noStore} from 'next/cache';
 import { formatCurrency } from './utils';
 import { Game, Tournament, GamesTable, Player, League, TournamentForCreateQuery } from './definitions';
-import { Revenue, CustomersTableType, LatestGames, LatestInvoice, LatestInvoiceRaw, InvoiceForm, InvoicesTable, CustomerField } from './definitions';
-import { TableCellsIcon } from '@heroicons/react/24/outline';
+import { CustomersTableType, LatestGames, LatestInvoice, LatestInvoiceRaw, InvoiceForm, InvoicesTable, CustomerField } from './definitions';
 
-export async function fetchRevenue() {
-  try {
-    // Artificially delay a response for demo purposes.
-    // Don't do this in production :)
-
-    // console.log('Fetching revenue data...');
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
-
-    const data = await sql<Revenue>`SELECT * FROM revenue`;
-
-    // console.log('Data fetch completed after 3 seconds.');
-
-    return data.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch revenue data.');
-  }
-}
 
 export async function fetchGamesAndTournaments() {
   // noStore();
@@ -55,11 +36,6 @@ export async function fetchGamesAndTournaments() {
   }
 
 }
-//  Este fetch hay que repensarlo: una vez elegida la league, el usuario debería recién entonces
-//  fetchear tournaments y presentarlos. O bien, si se accede a la pantalla con una league pre-seleccionada
-//  recién entonces se haría el fetch de tournaments (me parece mejor, si es que vamos a permitir esa opción) 
-
-
 
 export async function fetchSelectTournamentData() {
   try {

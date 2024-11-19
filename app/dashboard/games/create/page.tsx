@@ -1,14 +1,16 @@
-import Form from '@/app/ui/games/create-form';
+//import Form from '@/app/ui/games/create-form';
+import Form from '@/app/ui/games/create-game-form';
 import Breadcrumbs from '@/app/ui/games/breadcrumbs';
-import { fetchCreateGameData } from '@/app/lib/data';
+import { fetchCreateGameData, fetchSelectLeagueData } from '@/app/lib/data';
  
 export default async function Page() {
 
-  const {
+/*   const {
     players,
     tournaments,
     leagues
-  } = await fetchCreateGameData();
+  } = await fetchCreateGameData(); */
+  const leagues = fetchSelectLeagueData;
 
 
 
@@ -25,6 +27,7 @@ export default async function Page() {
         ]}
       />
       <Form players={players} tournaments={tournaments} leagues={leagues} />
+      {/* <Form players={players} tournaments={tournaments} leagues={leagues} /> */}
     </main>
   );
 }
