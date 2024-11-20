@@ -94,6 +94,25 @@ export async function fetchSelectLeagueData() {
   }
 }
 
+export async function fetchPlayersByLeague(leagueId : string) {
+  // noStore();
+  try {
+    const playersPromise = await sql<Player>`SELECT id, nick FROM players;`;
+
+    const data = await Promise.all([
+      playersPromise
+    ]);
+
+    const players = data[0].rows ?? 'No players in database';
+
+    return {
+      players
+    };
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch players data.');
+  }
+}
 
 export async function fetchCreateGameData() {
   // noStore();
@@ -121,46 +140,6 @@ export async function fetchCreateGameData() {
     throw new Error('Failed to fetch createGame data.');
   }
 }
-// estos tres fetchs fueron mi primer intento para el creatGame, luego reemplazados por una
-// query en paralelo.
-
-// export async function fetchIdAndNickFromPlayers() {
-//   noStore();
-//   try {
-//     const data = await sql<Player>`SELECT id, nick FROM players;`;
-
-//     console.log(data.rows)
-//     return data.rows;
-//   } catch (error) {
-//     console.error('Database Error:', error);
-//     throw new Error('Failed to fetch players id and nick.');
-//   }
-// }
-
-// export async function fetchIdAndNameFromLeagues() {
-//   noStore();
-//   try {
-//     const data = await sql<League>`SELECT id, name FROM leagues;`;
-
-//     console.log(data.rows)
-//     return data.rows;
-//   } catch (error) {
-//     console.error('Database Error:', error);
-//     throw new Error('Failed to fetch leagues id and name.');
-//   }
-// }
-
-// export async function fetchIdAndNameFromTournaments() {
-//   noStore();
-//   try {
-//     const data = await sql<League>`SELECT id, name FROM tournaments;`;
-
-//     console.log(data.rows)
-//     return data.rows;
-//   } catch (error) {
-//     console.error('Database Error:', error);
-//     throw new Error('Failed to fetch leagues id and name.');
-//   }}
 
 export async function fetchGames() {
   // noStore();

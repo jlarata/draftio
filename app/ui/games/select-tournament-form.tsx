@@ -14,11 +14,33 @@ export default async function SelectTournamentForm({leagueId} : {leagueId : stri
 {
 
   const { tournaments } = await fetchSelectTournamentData(leagueId);
-
+  const properUrl = encodeURIComponent("&leagueid="+leagueId);
 
   return (
     <form action="">
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
+        {/* League Name */}
+        <div className="mb-4 visibility: hidden">
+          <label htmlFor="player 1" className="mb-2 block text-sm font-medium">
+            League
+          </label>
+          <div className="relative">
+            <select
+              id="leagueid"
+              name="leagueid"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              defaultValue=""
+            >
+              <option key={leagueId} value={leagueId}>
+                  {leagueId}
+              </option>
+              
+            </select>
+            <TableCellsIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+          </div>
+        </div>
+      
 
         {/* Tournament  */}
         <div className="mb-4">
@@ -36,9 +58,9 @@ export default async function SelectTournamentForm({leagueId} : {leagueId : stri
               <option value="" disabled>
                 Select tournament
               </option>
-              {tournaments.map((tmt) => (
-                <option key={tmt.id} value={tmt.id}>
-                  {tmt.name}
+              {tournaments.map((tournament) => (
+                <option key={tournament.id} value={tournament.id}>
+                  {tournament.name+" | "+tournament.date} 
                 </option>
               ))}
             </select>
@@ -53,7 +75,7 @@ export default async function SelectTournamentForm({leagueId} : {leagueId : stri
         >
           Cancel
         </Link>
-        <Button type="submit">Select League</Button>
+        <Button type="submit">Select Tournament</Button>
       </div>
     </form>
   );
