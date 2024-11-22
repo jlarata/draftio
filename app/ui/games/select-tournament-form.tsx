@@ -20,7 +20,7 @@ export default async function SelectTournamentForm({leagueId} : {leagueId : stri
     <form action="">
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
 
-        {/* League Name */}
+        {/* League */}
         <div className="mb-4 visibility: hidden">
           <label htmlFor="player 1" className="mb-2 block text-sm font-medium">
             League

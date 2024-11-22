@@ -13,6 +13,7 @@ export default async function Page(props: {
   searchParams?: Promise<{
     leagueid?: string;
     tournamentid?: string;
+    player1id?: string;
   }>;})
    {
 /*   const {
@@ -26,6 +27,8 @@ export default async function Page(props: {
   const tournamentSearchParams = await props.searchParams;
   const leagueId = leagueSearchParams?.leagueid || '';
   const tournamentId = tournamentSearchParams?.tournamentid || '';
+  const player1Id = tournamentSearchParams?.player1id || '';
+
   
   const {players} = await fetchPlayersByLeague("here should go the leagueId")
 
@@ -66,9 +69,10 @@ export default async function Page(props: {
         </>
       )}
 
+
       {tournamentId && (
         <>
-        <CreateForm leagueId={leagueId} tournamentId={tournamentId} players={players} />
+        <CreateForm leagueId={leagueId} tournamentId={tournamentId} players={players} player1Id={player1Id} />
         
         </>
       )}

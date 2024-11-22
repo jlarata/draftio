@@ -4,7 +4,6 @@ import {
     TableCellsIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { selectLeague } from '@/app/lib/actions';
 
 export default function SelectLeagueForm(
     { leagues } :

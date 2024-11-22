@@ -1,9 +1,8 @@
 import { LeagueField, PlayerField, TournamentField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
-    CheckIcon,
-    ClockIcon,
-    CurrencyDollarIcon,
+    TableCellsIcon,
+    TrophyIcon,
     UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
@@ -11,11 +10,94 @@ import { createGame } from '@/app/lib/actions';
 
 
 export default function CreateForm(
-    {leagueId, tournamentId, players } : {leagueId : string, tournamentId : string, players : PlayerField[]})
+    {leagueId, tournamentId, players, player1Id } : {leagueId : string, tournamentId : string, players : PlayerField[], player1Id : string})
 {
+/*  async function returnValues(
+  moreSearchParams?: Promise<{
+    player1Id?: string;
+  }>)
+  {
+    const moreParams = await moreSearchParams;
+
+    const player1IdDefaultValue = moreParams?.player1Id || "";
+    return player1IdDefaultValue
+  }
+ */
+
+  // await delay(5000); esto tampoco funciona. no es cuestion de tiempos. ¿es por como funciona el select defaultvalue y value?
+
+
+  async function ReturnPlayer1IdDefaultValue() {
+    let player1IdDefaultValue : string;
+    player1Id  ? player1IdDefaultValue = player1Id
+    : player1IdDefaultValue = "";
+    
+    return player1IdDefaultValue
+  }
+
+  let consolidatedPlayersArray: PlayerField[] = [];
+
+  players.map((player) => 
+    {consolidatedPlayersArray.push(player)
+    })
+  
+
+
+
+
+  //const player1IdDefaultValue = await ReturnPlayer1DefaultValue()
+
+
   return (
+    <>
+
     <form action={createGame}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
+        {/* League */}
+        <div className="mb-4 visibility: hidden">
+          <label htmlFor="player 1" className="mb-2 block text-sm font-medium">
+            League
+          </label>
+          <div className="relative">
+            <select
+              id="leagueid"
+              name="leagueid"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              defaultValue=""
+            >
+              <option key={leagueId} value={leagueId}>
+                  {leagueId}
+              </option>
+              
+            </select>
+            <TableCellsIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+          </div>
+        </div>
+      
+
+        {/* Tournament  */}
+        <div className="mb-4 visibility: hidden">
+          <label htmlFor="player 1" className="mb-2 block text-sm font-medium">
+            Choose Tournament
+          </label>
+          <div className="relative">
+          <div className="relative">
+            <select
+              id="tournamentid"
+              name="tournamentid"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              defaultValue=""
+            >
+              <option key={tournamentId} value={tournamentId}>
+                  {tournamentId}
+              </option>
+            </select>
+            <TrophyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+          </div>
+        </div>
+        </div>
+
 
         {/* Player 1 Nick */}
         <div className="mb-4">
@@ -27,7 +109,7 @@ export default function CreateForm(
               id="player1id"
               name="player1id"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue=""
+              defaultValue={player1Id.toString()}
               required
               // onChange={(option) => {
               //   setp1(option.target.value);
@@ -164,7 +246,7 @@ export default function CreateForm(
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/invoices"
+          href="/dashboard/games"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancel
@@ -172,5 +254,6 @@ export default function CreateForm(
         <Button type="submit">Create Game</Button>
       </div>
     </form>
+    </>
   );
 }

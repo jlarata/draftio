@@ -3,9 +3,13 @@
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
+import { fetchTournaments } from "./data";
 
-export async function createGame(formData: FormData) {
+export async function createGame(
+  formData: FormData) {
+    console.log('iniciate action');
     let rawFormData : {
+      leagueid : string,
       tournamentid : string,
       player1id: string,
       player2id: string,
@@ -17,7 +21,7 @@ export async function createGame(formData: FormData) {
       match3: number | null,
 
     } = {
-        //leagueid: formData.get('leagueid'),
+        leagueid: formData.get('leagueid') as string,
         tournamentid: formData.get('tournamentid') as string,
         player1id: formData.get('player1id') as string,
         player2id: formData.get('player2id') as string,
@@ -27,9 +31,10 @@ export async function createGame(formData: FormData) {
         match1: null, 
         match2: null, 
         match3: null, 
-        // amount: formData.get('amount'),
-        // status: formData.get('status'),
       };
+      console.log(rawFormData); 
+
+      //parses matchs data
       if ((rawFormData.prematch1 !== null)) { 
         rawFormData.match1 = parseInt(formData.get('match1') as string);
        }
@@ -38,10 +43,21 @@ export async function createGame(formData: FormData) {
       }
       if ((rawFormData.prematch3 !== null)) { 
         rawFormData.match3 = parseInt(formData.get('match3') as string);
-       } 
+      } 
 
       if ((rawFormData.player1id) && (rawFormData.player1id === rawFormData.player2id))
-        { return console.log("Anyone who plays against themself is a sure looser..") }
+        // throw new Error ("Anyone who plays against themself is a sure looser..");
+        // { return message: "Anyone who plays against themself is a sure looser.." }
+       { 
+        const samePlayerErrorURL = "/dashboard/games/create?leagueid="+rawFormData.leagueid+"&tournamentid="+rawFormData.tournamentid+"&player1id="+rawFormData.player1id
+      //   return {
+      //   message: "Anyone who plays against themself is a sure looser..",
+      //   payload: formData,
+      //  }
+        console.log("Anyone who plays against themself is a sure looser...")
+        revalidatePath(samePlayerErrorURL);
+        redirect(samePlayerErrorURL);
+       }
       else
       if (rawFormData.match2 && (!rawFormData.match1)) {
         return console.log("A game cannot have match 2 if does not have match 1")
@@ -51,6 +67,7 @@ export async function createGame(formData: FormData) {
       } else {
       const result : number | null = 0;
 
+      console.log("todo bien");
       console.log(rawFormData);
 
       await sql`
@@ -62,6 +79,8 @@ export async function createGame(formData: FormData) {
     redirect('/dashboard/games');
   }
 }
+
+/* dont need it anymore?
 
 export async function selectLeague(formData: FormData) {
   let rawFormData : {
@@ -76,4 +95,4 @@ export async function selectLeague(formData: FormData) {
   // revalidatePath('/dashboard/games/create');
   //redirect(`/dashboard/games/createStep2?league=${rawFormData.leagueid}`);
 
-}
+} */
