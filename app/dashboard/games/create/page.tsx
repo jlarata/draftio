@@ -5,9 +5,6 @@ import SelectTournamentForm from '@/app/ui/games/select-tournament-form';
 import CreateForm from '@/app/ui/games/create-form';
 
 import { fetchCreateGameData, fetchPlayersByLeague, fetchSelectLeagueData, fetchSelectTournamentData } from '@/app/lib/data';
-import { Button } from '@/app/ui/button';
-
- 
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -16,11 +13,6 @@ export default async function Page(props: {
     player1id?: string;
   }>;})
    {
-/*   const {
-    players,
-    tournaments,
-    leagues
-  } = await fetchCreateGameData(); */
 
   const {leagues} = await fetchSelectLeagueData();
   const leagueSearchParams = await props.searchParams;
@@ -30,13 +22,7 @@ export default async function Page(props: {
   const player1Id = tournamentSearchParams?.player1id || '';
 
   
-  const {players} = await fetchPlayersByLeague("here should go the leagueId")
-
-  
-  
-  //const tournaments = await fetchSelectTournamentData();
- // const {tournaments} = await fetchSelectTournamentData();
-
+  const {players} = await fetchPlayersByLeague("here should go the leagueId eventually")
 
   return (
     <main>
@@ -51,12 +37,19 @@ export default async function Page(props: {
         ]}
       />
 
-      {leagueId && (<div>League id: {leagueId}</div>)}
+
+      {/* for debugging purposes {leagueId && (<div>League id: {leagueId}</div>)}
       {tournamentId && (
         
         <div>Tournament id: {tournamentId}</div>
         
       )}
+      {player1Id && (
+        
+        <div>Player1 id: {player1Id}</div>
+        
+      )} */}
+
 
       {!leagueId && (<SelectLeagueForm leagues={leagues}/>)}
 
@@ -69,7 +62,6 @@ export default async function Page(props: {
         </>
       )}
 
-
       {tournamentId && (
         <>
         <CreateForm leagueId={leagueId} tournamentId={tournamentId} players={players} player1Id={player1Id} />
@@ -77,8 +69,6 @@ export default async function Page(props: {
         </>
       )}
 
-      {/* <Form leagues={leagues} /> */}
-      {/* <Form players={players} tournaments={tournaments} leagues={leagues} /> */}
     </main>
   );
 }

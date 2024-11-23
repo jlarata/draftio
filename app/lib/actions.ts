@@ -3,11 +3,9 @@
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
-import { fetchTournaments } from "./data";
 
 export async function createGame(
   formData: FormData) {
-    console.log('iniciate action');
     let rawFormData : {
       leagueid : string,
       tournamentid : string,
@@ -32,7 +30,7 @@ export async function createGame(
         match2: null, 
         match3: null, 
       };
-      console.log(rawFormData); 
+      //console.log(rawFormData); 
 
       //parses matchs data
       if ((rawFormData.prematch1 !== null)) { 
@@ -44,19 +42,16 @@ export async function createGame(
       if ((rawFormData.prematch3 !== null)) { 
         rawFormData.match3 = parseInt(formData.get('match3') as string);
       } 
-
-      if ((rawFormData.player1id) && (rawFormData.player1id === rawFormData.player2id))
-        // throw new Error ("Anyone who plays against themself is a sure looser..");
-        // { return message: "Anyone who plays against themself is a sure looser.." }
+      
+      
+      /* this conditionals are not needded anymore. 
+       different playerid is now handled at the front with a disable={p1=p2}
+       mandatory m1 to select m2, etc */
+       
+      /* if ((rawFormData.player1id) && (rawFormData.player1id === rawFormData.player2id))
        { 
         const samePlayerErrorURL = "/dashboard/games/create?leagueid="+rawFormData.leagueid+"&tournamentid="+rawFormData.tournamentid+"&player1id="+rawFormData.player1id
-      //   return {
-      //   message: "Anyone who plays against themself is a sure looser..",
-      //   payload: formData,
-      //  }
-        console.log("Anyone who plays against themself is a sure looser...")
-        revalidatePath(samePlayerErrorURL);
-        redirect(samePlayerErrorURL);
+        redirect(samePlayerErrorURL);        
        }
       else
       if (rawFormData.match2 && (!rawFormData.match1)) {
@@ -64,10 +59,10 @@ export async function createGame(
       } else 
       if (rawFormData.match3 && ((!rawFormData.match2) || (!rawFormData.match1))) {
         return console.log("A game cannot have match 3 if does not have match 1 and 2")
-      } else {
+      } */
+      
       const result : number | null = 0;
-
-      console.log("todo bien");
+      console.log("creating game");
       console.log(rawFormData);
 
       await sql`
@@ -75,10 +70,11 @@ export async function createGame(
          VALUES (${rawFormData.tournamentid}, ${rawFormData.player1id}, ${rawFormData.player2id}, ${rawFormData.match1}, ${rawFormData.match2}, ${rawFormData.match3}, ${result});
     `;
 
+
     revalidatePath('/dashboard/games');
-    redirect('/dashboard/games');
+    redirect('/dashboard/games?gamecreated=ok');
   }
-}
+
 
 /* dont need it anymore?
 
