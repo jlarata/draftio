@@ -7,7 +7,7 @@ import { GamesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
 import { fetchGamesPages } from '@/app/lib/data';
 import { Metadata } from 'next';
-import AlertsPage from '@/app/ui/alerts/page';
+import AlertsPage from '@/app/ui/alerts/alerts';
 
 // export const metadata: Metadata = {
 //   title: 'Invoices | Acme Dashboard',
@@ -30,7 +30,7 @@ export default async function Page(props: {
   return (
     <>
     {gameCreatedMessage && (
-      <AlertsPage text={'Game successfully created'}></AlertsPage>
+      <AlertsPage someText={'Game successfully created'}></AlertsPage>
     )}
     
     <div className="w-full">

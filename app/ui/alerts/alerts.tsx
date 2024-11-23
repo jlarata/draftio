@@ -4,15 +4,15 @@ import { showSwal } from "@/app/lib/alerts";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { Message } from "@/app/lib/definitions";
 
 
-
-
-export default function AlertsPage({text} : {text : string}) {
+export default function AlertsPage(
+   {someText} : {someText : string} ) {
 
   const router = useRouter()
 
-  showSwal(text);
+  showSwal(someText);
 
    router.replace('/dashboard/games')
    

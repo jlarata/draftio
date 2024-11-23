@@ -64,7 +64,7 @@ export default async function Page(props: {
 
       {tournamentId && (
         <>
-        <CreateForm leagueId={leagueId} tournamentId={tournamentId} players={players} player1Id={player1Id} />
+        <CreateForm leagueId={leagueId} tournamentId={tournamentId} players={players} />
         
         </>
       )}

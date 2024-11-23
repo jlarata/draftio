@@ -1,3 +1,8 @@
+export type Message =
+    {
+      text: string,
+    }
+
 export type Player = 
     {
         id : string,
