@@ -14,8 +14,8 @@ const iconMap = {
   tournaments: TrophyIcon,
 };
 
+//export const dynamic = 'force-dynamic';
 export default async function CardWrapper() {
-
   const {
     numberOfGames,
     numberOfLeagues,

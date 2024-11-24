@@ -1,8 +1,6 @@
 'use client'
 
 import { showSwal } from "@/app/lib/alerts";
-import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Message } from "@/app/lib/definitions";
 

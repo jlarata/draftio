@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-// import { unstable_noStore as noStore} from 'next/cache';
+import { unstable_noStore as noStore} from 'next/cache';
 import { formatCurrency } from './utils';
 import { Game, Tournament, GamesTable, Player, League, TournamentForCreateQuery } from './definitions';
 import { CustomersTableType, LatestGames, LatestInvoice, LatestInvoiceRaw, InvoiceForm, InvoicesTable, CustomerField } from './definitions';
@@ -265,7 +265,7 @@ export async function fetchLatestInvoices() {
 }
 
 export async function fetchCardData() {
-  // noStore();
+  noStore();
   try {
     const gamesCountPromise = sql`SELECT COUNT(*) FROM games`;
     const playersCountPromise = sql`SELECT COUNT(*) FROM players`;
