@@ -1,4 +1,4 @@
-import { Revenue, Game, Tournament } from './definitions';
+import { GameAxis, TournamentAxis } from './definitions';
 
 const MonthsDictionary = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -43,7 +43,7 @@ export const generateLast12Months = () => {
 }
 
 
-export const generateYAxis = (games: Game[], tournaments: Tournament[], last12Months: {month: string; games: number}[]) => {
+export const generateYAxis = (games: GameAxis[], tournaments: TournamentAxis[], last12Months: {month: string; games: number}[]) => {
   const yAxisLabels = [];
   //const ayuda = console.log(tournaments[0].id);
   //const ayuda2 = console.log(games[0].tournamentid == tournaments[0].id);
@@ -51,7 +51,7 @@ export const generateYAxis = (games: Game[], tournaments: Tournament[], last12Mo
 
   const populateMonths = games.forEach(game => { 
     tournaments.forEach(tournament => {
-      if (tournament.id == game.tournamentid) {
+      if (tournament.id === game.tournament_id) {
         let tostringMonth = MonthsDictionary[tournament.date.getMonth()];
         let indexOfMonth = last12Months.findIndex(x => x.month === tostringMonth);
         last12Months[indexOfMonth].games ++; }

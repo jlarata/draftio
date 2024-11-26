@@ -25,6 +25,12 @@ export type Tournament =
         date: Date,
         name : string
     }
+export type TournamentAxis =
+    {
+        id : string,
+        name : string,
+        date: Date,
+    }
 
 export type Game = 
     {
@@ -38,7 +44,13 @@ export type Game =
         result : 0 | 1 | 2 | null,
     }
 
-export type LatestGames = {
+export type GameAxis = 
+    {
+        id : string,
+        tournament_id : string
+    }    
+
+/* export type LatestGames = {
   id: string;
   league: string;
   tournament: string;
@@ -49,6 +61,24 @@ export type LatestGames = {
   match2 : 0 | 1 | 2 | null,
   match3 : 0 | 1 | 2 | null,
   result : 0 | 1 | 2 | null,
+}; */
+export type LatestGames = {
+  league_name: string;
+  tournament_name: string;
+  date: string;
+  game_id: string;
+  player: string;
+  wins : 0 | 1 | 2,
+};
+export type LatestGamesJoinedWith2Players = {
+  league_name: string;
+  tournament_name: string;
+  date: string;
+  game_id: string;
+  player1: string;
+  player1Wins: 0 | 1 | 2, 
+  player2: string;
+  player2Wins : 0 | 1 | 2,
 };
 
 export type GamesTable = {

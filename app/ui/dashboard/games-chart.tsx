@@ -1,15 +1,18 @@
 import { generateYAxis, generateLast12Months } from '@/app/lib/utils';
 import { CalendarIcon } from '@heroicons/react/24/outline';
 import { inter } from '@/app/ui/fonts';
-import { fetchGamesAndTournaments, fetchGames, fetchTournaments } from '@/app/lib/data';
+import { fetchGamesAndTournamentsForChart } from '@/app/lib/data';
 
 export default async function GamesChart(){
   const {
     games,
     tournaments
-  } = await fetchGamesAndTournaments();
+  } = await fetchGamesAndTournamentsForChart();
   
   const last12Months = generateLast12Months();
+/*   console.log(last12Months);
+  console.log(games);
+  console.log(tournaments); */
   const chartHeight = 350;
   const { yAxisLabels, topLabel} = generateYAxis(games, tournaments, last12Months);
   

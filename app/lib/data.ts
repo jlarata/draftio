@@ -1,27 +1,20 @@
 import { sql } from '@vercel/postgres';
 import { unstable_noStore as noStore} from 'next/cache';
 import { formatCurrency } from './utils';
-import { Game, Tournament, GamesTable, Player, League, TournamentForCreateQuery } from './definitions';
-import { CustomersTableType, LatestGames, LatestInvoice, LatestInvoiceRaw, InvoiceForm, InvoicesTable, CustomerField } from './definitions';
+import { Game, Tournament, GamesTable, Player, League, TournamentForCreateQuery, GameAxis, TournamentAxis } from './definitions';
+import { CustomersTableType, LatestGames, LatestGamesJoinedWith2Players } from './definitions';
 
 
-export async function fetchGamesAndTournaments() {
+export async function fetchGamesAndTournamentsForChart() {
   // noStore();
   try {
-    const gamesDataPromise = await sql<Game>`SELECT * FROM games`;
-    const tournamentsDataPromise = await sql<Tournament>`SELECT * FROM tournaments`;
-  
-    // Artificially delay a response for demo purposes.
-    // Don't do this in production :)
-    // console.log('Fetching games and tournaments data...');
-    // await new Promise((resolve) => setTimeout(resolve, 2000));
+    const gamesDataPromise = await sql<GameAxis>`SELECT * FROM game`;
+    const tournamentsDataPromise = await sql<TournamentAxis>`SELECT * FROM tournament`;
 
     const data = await Promise.all([
       gamesDataPromise,
       tournamentsDataPromise,
     ]);
-
-    // console.log('Data fetch completed after 2 seconds.');
 
     const games = data[0].rows;
     const tournaments = data[1].rows;
@@ -170,81 +163,92 @@ export async function fetchLatestGames() {
   // noStore();
   try {
     const data = await sql<LatestGames>`
-      SELECT
+    
+    SELECT
+    l.name AS league_name,
+    t.name AS tournament_name,
+    TO_CHAR(t.date, 'dd/mm/yyyy') AS date,
+    pg.game_id,
+    p.username as Player,
+    pg.wins
 
-g.id AS id, l.name AS league, t.name AS tournament,
+    from game g
+    INNER JOIN
+    player_game pg
+    ON pg.game_id = g.id
+    INNER JOIN
+    player p
+    on pg.player_id = p.id
+    INNER JOIN
+    tournament t
+    on g.tournament_id = t.id
+    INNER JOIN
+    league l
+    on t.league_id = l.id
 
-TO_CHAR(t.date, 'dd/mm/yyyy') AS date,
+    ORDER BY
+    g.id
 
-(SELECT p.nick FROM players p WHERE p.id = g.player1)
-AS Player1,
-
-(SELECT p.nick FROM players p WHERE p.id = g.player2)
-AS Player2,
-
-CASE
-WHEN g.match1 = '1' THEN
-(SELECT p.nick FROM players p WHERE p.id = g.player1)
-WHEN g.match1 = '2' THEN
-(SELECT p.nick FROM players p WHERE p.id = g.player2)
-WHEN g.match1 = '0' THEN 'Tie'
-WHEN g.match1 = null THEN 'nope'
-END AS Match1,
-
-CASE
-WHEN g.match2 = '1' THEN
-(SELECT p.nick FROM players p WHERE p.id = g.player1)
-WHEN g.match2 = '2' THEN
-(SELECT p.nick FROM players p WHERE p.id = g.player2)
-WHEN g.match2 = '0' THEN 'Tie'
-WHEN g.match2 = null THEN 'nope'
-END AS Match2,
-
-CASE
-WHEN g.match3 = '1' THEN
-(SELECT p.nick FROM players p WHERE p.id = g.player1)
-WHEN g.match3 = '2' THEN
-(SELECT p.nick FROM players p WHERE p.id = g.player2)
-WHEN g.match3 = '0' THEN 'Tie'
-WHEN g.match3 = null THEN 'nope'
-END AS Match3,
-
-
-CASE
-WHEN g.result = '1' THEN
-(SELECT p.nick FROM players p WHERE p.id = g.player1)
-WHEN g.result = '2' THEN
-(SELECT p.nick FROM players p WHERE p.id = g.player2)
-WHEN g.result = '0' THEN 'Tie'
-WHEN g.result = null THEN 'nope'
-END AS Result
-
-FROM games g
-INNER JOIN
-players p
-ON (g.player1 = p.id)
-INNER JOIN
-tournaments t
-ON (g.tournamentid = t.id)
-INNER JOIN
-leagues l
-ON (t.leagueid = l.id)
-
-ORDER BY
-t.date DESC
-
-limit 10;`;
+    limit 40;
+    `;
 
     const latestGames = data.rows;
+
+    /* transforms the query results (with two rows each game)
+    in a new array with player 1 and player 2 and only one row for game */
+
+    let latestGamesJoinedWith2Players : LatestGamesJoinedWith2Players[] = [];
+    let currentGameIndex = 0;
+    let currentGameJoinedIndex = 0;
+    let currentGameId = "";
+
+    for (let i = 0; i<latestGames.length; i++)
+    {
+      /* console.log('testing game in index '+currentGameIndex)
+      console.log(latestGames[currentGameIndex]) */
+      let thisGame = latestGames[currentGameIndex];
+      //console.log("testing game "+ latestGames[currentGameIndex].game_id)
+
+      if (currentGameId === thisGame.game_id) {
+        /* console.log("updating game ")
+        console.log(latestGamesJoinedWith2Players[currentGameJoinedIndex]) */
+        latestGamesJoinedWith2Players[currentGameJoinedIndex].player2 = thisGame.player;
+        latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = thisGame.wins
+        /* console.log("game updated ")
+        console.log(latestGamesJoinedWith2Players[currentGameJoinedIndex]) */
+        currentGameJoinedIndex++;
+      } else {
+        //console.log("new game")
+        currentGameId = thisGame.game_id
+
+        let newGame : LatestGamesJoinedWith2Players = {
+          league_name: thisGame.league_name,
+          tournament_name: thisGame.tournament_name,
+          date: thisGame.date,
+          game_id: thisGame.game_id,
+          player1: thisGame.player,
+          player1Wins: thisGame.wins,
+          player2: 'string',
+          player2Wins: 0
+        }
+        latestGamesJoinedWith2Players.push(newGame);
+        /* console.log('created game');
+        console.log(newGame) */
+      }
+      currentGameIndex++
+    }
+
     //console.log(data.rows);
-    return latestGames;
+    //return latestGames;
+    //console.log(latestGamesJoinedWith2Players);
+    return latestGamesJoinedWith2Players;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch the latest games.');
   }
 }
 
-export async function fetchLatestInvoices() {
+/* export async function fetchLatestInvoices() {
   try {
     const data = await sql<LatestInvoiceRaw>`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
@@ -262,15 +266,15 @@ export async function fetchLatestInvoices() {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch the latest invoices.');
   }
-}
+} */
 
 export async function fetchCardData() {
   noStore();
   try {
-    const gamesCountPromise = sql`SELECT COUNT(*) FROM games`;
-    const playersCountPromise = sql`SELECT COUNT(*) FROM players`;
-    const leaguesCountPromise = sql`SELECT COUNT(*) FROM leagues`;
-    const tournamentsCountPromise = sql`SELECT COUNT(*) FROM tournaments`;
+    const gamesCountPromise = sql`SELECT COUNT(*) FROM game`;
+    const playersCountPromise = sql`SELECT COUNT(*) FROM player`;
+    const leaguesCountPromise = sql`SELECT COUNT(*) FROM league`;
+    const tournamentsCountPromise = sql`SELECT COUNT(*) FROM tournament`;
 
     const data = await Promise.all([
       gamesCountPromise,
@@ -465,7 +469,7 @@ export async function fetchGamesPages(query: string) {
   }
 }
 
-export async function fetchInvoiceById(id: string) {
+/* export async function fetchInvoiceById(id: string) {
   try {
     const data = await sql<InvoiceForm>`
       SELECT
@@ -488,9 +492,9 @@ export async function fetchInvoiceById(id: string) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch invoice.');
   }
-}
+} */
 
-export async function fetchCustomers() {
+/* export async function fetchCustomers() {
   try {
     const data = await sql<CustomerField>`
       SELECT
@@ -506,9 +510,9 @@ export async function fetchCustomers() {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch all customers.');
   }
-}
+} */
 
-export async function fetchFilteredCustomers(query: string) {
+/* export async function fetchFilteredCustomers(query: string) {
   try {
     const data = await sql<CustomersTableType>`
 		SELECT
@@ -539,4 +543,4 @@ export async function fetchFilteredCustomers(query: string) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch customer table.');
   }
-}
+} */
