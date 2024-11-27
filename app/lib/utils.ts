@@ -1,8 +1,18 @@
-import { GameAxis, TournamentAxis } from './definitions';
+import { GameAxis, LatestGamesJoinedWith2Players, TournamentAxis } from './definitions';
 
 const MonthsDictionary = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
+export const GamesByDate = (a: { date: string; }, b: { date: string; }) => {
+  if (a.date < b.date)
+  {return +1;}
+  if (a.date > b.date)
+  {return -1;}
+  return 0;
+}
 
+export const sortByDate = (games : LatestGamesJoinedWith2Players[]) => {
+  games.sort(GamesByDate);
+}
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('en-US', {

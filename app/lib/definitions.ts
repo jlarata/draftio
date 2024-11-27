@@ -79,6 +79,7 @@ export type LatestGamesJoinedWith2Players = {
   player1Wins: 0 | 1 | 2, 
   player2: string;
   player2Wins : 0 | 1 | 2,
+  result : 0 | 1 | 2
 };
 
 export type GamesTable = {

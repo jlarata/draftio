@@ -202,41 +202,73 @@ export async function fetchLatestGames() {
     let currentGameJoinedIndex = 0;
     let currentGameId = "";
 
-    for (let i = 0; i<latestGames.length; i++)
-    {
-      /* console.log('testing game in index '+currentGameIndex)
-      console.log(latestGames[currentGameIndex]) */
-      let thisGame = latestGames[currentGameIndex];
-      //console.log("testing game "+ latestGames[currentGameIndex].game_id)
+    /* this map replaces the commented for loop ahead. apparently nailed at first attempt.  */
+    latestGames.map((game) => {
+      currentGameId === game.game_id ? (
+      latestGamesJoinedWith2Players[currentGameJoinedIndex].player2 = game.player,
+      latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = game.wins,
 
-      if (currentGameId === thisGame.game_id) {
-        /* console.log("updating game ")
-        console.log(latestGamesJoinedWith2Players[currentGameJoinedIndex]) */
-        latestGamesJoinedWith2Players[currentGameJoinedIndex].player2 = thisGame.player;
-        latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = thisGame.wins
-        /* console.log("game updated ")
-        console.log(latestGamesJoinedWith2Players[currentGameJoinedIndex]) */
-        currentGameJoinedIndex++;
-      } else {
-        //console.log("new game")
-        currentGameId = thisGame.game_id
+      latestGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins > latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins ? 
+      latestGamesJoinedWith2Players[currentGameJoinedIndex].result = 1 :
+      latestGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins < latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins ? 
+      latestGamesJoinedWith2Players[currentGameJoinedIndex].result = 2 :
+      null,
 
-        let newGame : LatestGamesJoinedWith2Players = {
-          league_name: thisGame.league_name,
-          tournament_name: thisGame.tournament_name,
-          date: thisGame.date,
-          game_id: thisGame.game_id,
-          player1: thisGame.player,
-          player1Wins: thisGame.wins,
-          player2: 'string',
-          player2Wins: 0
-        }
+      currentGameJoinedIndex++
+      ) : 
+      
+      currentGameId = game.game_id
+      let newGame : LatestGamesJoinedWith2Players = {
+        league_name: game.league_name,
+        tournament_name: game.tournament_name,
+        date: game.date,
+        game_id: game.game_id,
+        player1: game.player,
+        player1Wins: game.wins,
+        player2: 'string',
+        player2Wins: 0,
+        result: 0    
+       };
         latestGamesJoinedWith2Players.push(newGame);
-        /* console.log('created game');
-        console.log(newGame) */
-      }
-      currentGameIndex++
-    }
+        currentGameIndex++;
+    }) 
+
+    /* -apparently not needed anymore- for loop */
+    // for (let i = 0; i<latestGames.length; i++)
+    // {
+    //   /* console.log('testing game in index '+currentGameIndex)
+    //   console.log(latestGames[currentGameIndex]) */
+    //   let thisGame = latestGames[currentGameIndex];
+    //   //console.log("testing game "+ latestGames[currentGameIndex].game_id)
+
+    //   if (currentGameId === thisGame.game_id) {
+    //     /* console.log("updating game ")
+    //     console.log(latestGamesJoinedWith2Players[currentGameJoinedIndex]) */
+    //     latestGamesJoinedWith2Players[currentGameJoinedIndex].player2 = thisGame.player;
+    //     latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = thisGame.wins
+    //     /* console.log("game updated ")
+    //     console.log(latestGamesJoinedWith2Players[currentGameJoinedIndex]) */
+    //     currentGameJoinedIndex++;
+    //   } else {
+    //     //console.log("new game")
+    //     currentGameId = thisGame.game_id
+
+    //     let newGame : LatestGamesJoinedWith2Players = {
+    //       league_name: thisGame.league_name,
+    //       tournament_name: thisGame.tournament_name,
+    //       date: thisGame.date,
+    //       game_id: thisGame.game_id,
+    //       player1: thisGame.player,
+    //       player1Wins: thisGame.wins,
+    //       player2: 'string',
+    //       player2Wins: 0
+    //     }
+    //     latestGamesJoinedWith2Players.push(newGame);
+    //     /* console.log('created game');
+    //     console.log(newGame) */
+    //   }
+    //   currentGameIndex++
+    // }
 
     //console.log(data.rows);
     //return latestGames;
@@ -247,26 +279,6 @@ export async function fetchLatestGames() {
     throw new Error('Failed to fetch the latest games.');
   }
 }
-
-/* export async function fetchLatestInvoices() {
-  try {
-    const data = await sql<LatestInvoiceRaw>`
-      SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
-      ORDER BY invoices.date DESC
-      LIMIT 5`;
-
-    const latestInvoices = data.rows.map((invoice) => ({
-      ...invoice,
-      amount: formatCurrency(invoice.amount),
-    }));
-    return latestInvoices;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch the latest invoices.');
-  }
-} */
 
 export async function fetchCardData() {
   noStore();

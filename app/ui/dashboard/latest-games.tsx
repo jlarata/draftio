@@ -2,17 +2,11 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { inter } from '@/app/ui/fonts';
 import { fetchLatestGames } from '@/app/lib/data';
+import { GamesByDate } from '@/app/lib/utils';
+
 
 const latestGames = await fetchLatestGames();
-function GamesByDate(a: { date: string; }, b: { date: string; }){
-  if (a.date < b.date)
-  {return -1;}
-  if (a.date > b.date)
-  {return +1;}
-  return 0;
-}
-latestGames.sort(GamesByDate);
-//console.log(latestGames);
+latestGames.sort(GamesByDate)
 
 
 export default async function LatestGames() {
@@ -42,19 +36,22 @@ export default async function LatestGames() {
                     <p className="truncate text-sm font-semibold md:text-base">
                       {game.league_name} <span className=' font-normal'>| {game.tournament_name} ({game.date})</span>
                     </p>
-                    <p className="hidden text-sm text-gray-700 sm:block">
-                      {game.player1} ({game.player1Wins}) vs {game.player2} ({game.player2Wins})
+                    {game.result === 1 ? 
+                      <p className="hidden text-sm text-gray-700 sm:block">
+                      <span className='font-bold'>{game.player1} ({game.player1Wins})</span> vs {game.player2} ({game.player2Wins})
                     </p>
-                    {/* <p className="hidden text-sm text-gray-700 sm:block">
-                      m1: {game.match1} | m2: {game.match2} | m3: {game.match3} 
-                    </p> */}
+                    : 
+                      game.result === 2 ?
+                      <p className="hidden text-sm text-gray-700 sm:block">
+                      {game.player1} ({game.player1Wins}) vs <span className='font-bold'>{game.player2} ({game.player2Wins})</span>
+                    </p>
+                    :
+                      <p className="hidden text-sm text-gray-700 sm:block">
+                      {game.player1} ({game.player1Wins}) vs {game.player2} ({game.player2Wins})<span className='font-bold'> (tie)</span>
+                      </p>
+                    }
                   </div>
                 </div>
-                {/* <p
-                  className={`${inter.className} text-center text-sm font-medium md:text-base`}
-                >
-                  Winner: {game.result}
-                </p> */}
               </div>
             );
           })}
