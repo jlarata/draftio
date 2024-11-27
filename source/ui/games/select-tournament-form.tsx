@@ -1,11 +1,11 @@
-import { TournamentField } from '@/app/lib/definitions';
+import { TournamentField } from '@/services/lib/definitions';
 import Link from 'next/link';
 import {
     TableCellsIcon,
     TrophyIcon
 } from '@heroicons/react/24/outline';
-import { Button } from '@/app/ui/button';
-import { fetchSelectTournamentData } from '@/app/lib/data';
+import { Button } from '@/source/ui/button';
+import { fetchSelectTournamentData } from '@/services/lib/data';
 
 
 

@@ -1,9 +1,9 @@
-import { LeagueField, PlayerField, TournamentField } from '@/app/lib/definitions';
+import { LeagueField, PlayerField, TournamentField } from '@/services/lib/definitions';
 import Link from 'next/link';
 import {
     TableCellsIcon
 } from '@heroicons/react/24/outline';
-import { Button } from '@/app/ui/button';
+import { Button } from '@/source/ui/button';
 
 export default function SelectLeagueForm(
     { leagues } :

@@ -1,8 +1,8 @@
 
-import Breadcrumbs from '@/app/ui/games/breadcrumbs';
-import SelectLeagueForm from '@/app/ui/games/select-league-form';
-import SelectTournamentForm from '@/app/ui/games/select-tournament-form';
-import CreateForm from '@/app/ui/games/create-form';
+import Breadcrumbs from '@/source/ui/games/breadcrumbs';
+import SelectLeagueForm from '@/source/ui/games/select-league-form';
+import SelectTournamentForm from '@/source/ui/games/select-tournament-form';
+import CreateForm from '@/source/ui/games/create-form';
 
 import { fetchCreateGameData, fetchPlayersByLeague, fetchSelectLeagueData, fetchSelectTournamentData } from '@/app/lib/data';
 

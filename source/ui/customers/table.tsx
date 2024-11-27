@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Search from '@/app/ui/search';
+import Search from '@/source/ui/search';
 import {
   CustomersTableType,
   FormattedCustomersTable,

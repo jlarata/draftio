@@ -1,5 +1,5 @@
 import '@/app/ui/global.css';
-import { inter, agdasima, poppins } from '@/app/ui/fonts';
+import { inter, agdasima, poppins } from '@/source/ui/fonts';
 
 export default function RootLayout({
   children,

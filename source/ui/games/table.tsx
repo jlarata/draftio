@@ -1,5 +1,5 @@
-import { UpdateGame, DeleteGame } from '@/app/ui/games/buttons';
-import { fetchFilteredGames } from '@/app/lib/data';
+import { UpdateGame, DeleteGame } from '@/source/ui/games/buttons';
+import { fetchFilteredGames } from '@/services/lib/data';
 
 export default async function GamesTable({
   query,

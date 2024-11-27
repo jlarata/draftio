@@ -1,10 +1,10 @@
 
-import { inter } from '@/app/ui/fonts';
-import CardWrapper from '@/app/ui/dashboard/cards';
-import GamesChart from '@/app/ui/dashboard/games-chart';
-import LatestGames from '@/app/ui/dashboard/latest-games';
+import { inter } from '@/source/ui/fonts';
+import CardWrapper from '@/source/ui/dashboard/cards';
+import GamesChart from '@/source/ui/dashboard/games-chart';
+import LatestGames from '@/source/ui/dashboard/latest-games';
 import { Suspense } from 'react';
-import { GamesChartSkeleton, LatestGamesSkeleton,CardSkeleton } from '@/app/ui/skeletons';
+import { GamesChartSkeleton, LatestGamesSkeleton,CardSkeleton } from '@/source/ui/skeletons';
 
 export default async function Page() {
   

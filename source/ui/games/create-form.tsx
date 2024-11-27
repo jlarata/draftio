@@ -1,16 +1,16 @@
 'use client'
-import { showSwal } from "@/app/lib/alerts";
+import { showSwal } from "@/services/lib/alerts";
 import { useState, useCallback } from "react";
 
-import { PlayerField } from '@/app/lib/definitions';
+import { PlayerField } from '@/services/lib/definitions';
 import Link from 'next/link';
 import {
     TableCellsIcon,
     TrophyIcon,
     UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import { Button } from '@/app/ui/button';
-import { createGame } from '@/app/lib/actions';
+import { Button } from '@/source/ui/button';
+import { createGame } from '@/services/lib/actions';
 
 
 

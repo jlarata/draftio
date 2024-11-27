@@ -1,7 +1,7 @@
 import Image from "next/image";
 import d3cimg from '../public/d3cimg.jpg';
 import styles from '@/app/ui/home.module.css';
-import { inter, poppins, agdasima, roboto } from "./ui/fonts";
+import { inter, poppins, agdasima, roboto } from "../source/ui/fonts";
 
 export default function Page() {
   return (

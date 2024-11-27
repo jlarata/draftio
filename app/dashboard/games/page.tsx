@@ -1,13 +1,13 @@
-import Pagination from '@/app/ui/games/pagination';
-import Search from '@/app/ui/search';
-import Table from '@/app/ui/games/table'
-import { CreateGame } from '@/app/ui/games/buttons';
-import { inter } from '@/app/ui/fonts';
-import { GamesTableSkeleton } from '@/app/ui/skeletons';
+import Pagination from '@/source/ui/games/pagination';
+import Search from '@/source/ui/search';
+import Table from '@/source/ui/games/table'
+import { CreateGame } from '@/source/ui/games/buttons';
+import { inter } from '@/source/ui/fonts';
+import { GamesTableSkeleton } from '@/source/ui/skeletons';
 import { Suspense } from 'react';
-import { fetchGamesPages } from '@/app/lib/data';
+import { fetchGamesPages } from '@/services/lib/data';
 import { Metadata } from 'next';
-import AlertsPage from '@/app/ui/alerts/alerts';
+import AlertsPage from '@/source/ui/alerts/alerts';
 
 export const metadata: Metadata = {
   title: 'Games | Draftio Dashboard',

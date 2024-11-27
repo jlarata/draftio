@@ -1,8 +1,8 @@
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
-import { inter } from '@/app/ui/fonts';
-import { fetchLatestGames } from '@/app/lib/data';
-import { GamesByDate } from '@/app/lib/utils';
+import { inter } from '@/source/ui/fonts';
+import { fetchLatestGames } from '@/services/lib/data';
+import { GamesByDate } from '@/services/lib/utils';
 
 
 const latestGames = await fetchLatestGames();

@@ -1,7 +1,7 @@
-import { generateYAxis, generateLast12Months } from '@/app/lib/utils';
+import { generateYAxis, generateLast12Months } from '@/services/lib/utils';
 import { CalendarIcon } from '@heroicons/react/24/outline';
-import { inter } from '@/app/ui/fonts';
-import { fetchGamesAndTournamentsForChart } from '@/app/lib/data';
+import { inter } from '@/source/ui/fonts';
+import { fetchGamesAndTournamentsForChart } from '@/services/lib/data';
 
 export default async function GamesChart(){
   const {

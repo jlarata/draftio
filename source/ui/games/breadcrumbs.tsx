@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 import Link from 'next/link';
-import { roboto } from '@/app/ui/fonts';
+import { roboto } from '@/source/ui/fonts';
 
 interface Breadcrumb {
   label: string;

@@ -1,11 +1,11 @@
-import { fetchCardData } from '@/app/lib/data';
+import { fetchCardData } from '@/services/lib/data';
 import {
   PuzzlePieceIcon,
   UserGroupIcon,
   TrophyIcon,
   TableCellsIcon
 } from '@heroicons/react/24/outline';
-import { inter } from '@/app/ui/fonts';
+import { inter } from '@/source/ui/fonts';
 
 const iconMap = {
   games: PuzzlePieceIcon,
