@@ -1,4 +1,3 @@
-import { roboto } from '@/source/ui/fonts';
 import {
   AtSymbolIcon,
   KeyIcon,
@@ -6,6 +5,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from './button';
+import { roboto } from './fonts';
 
 export default function LoginForm() {
   return (

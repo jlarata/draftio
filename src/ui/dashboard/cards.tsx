@@ -5,7 +5,7 @@ import {
   TrophyIcon,
   TableCellsIcon
 } from '@heroicons/react/24/outline';
-import { inter } from '@/source/ui/fonts';
+import { inter } from '../fonts';
 
 const iconMap = {
   games: PuzzlePieceIcon,

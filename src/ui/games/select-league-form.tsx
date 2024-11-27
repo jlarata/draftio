@@ -1,19 +1,16 @@
-import { LeagueField, PlayerField, TournamentField } from '@/services/lib/definitions';
-import Link from 'next/link';
-import {
-    TableCellsIcon
-} from '@heroicons/react/24/outline';
-import { Button } from '@/source/ui/button';
+import { LeagueField } from "@/services/lib/definitions";
+import { TableCellsIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { Button } from "../button";
 
-export default function SelectLeagueForm(
-    { leagues } :
-    { leagues: LeagueField[] })
-{
-
+export default function SelectLeagueForm({
+  leagues,
+}: {
+  leagues: LeagueField[];
+}) {
   return (
     <form action="">
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-
         {/* League Name */}
         <div className="mb-4">
           <label htmlFor="player 1" className="mb-2 block text-sm font-medium">

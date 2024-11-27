@@ -1,36 +1,35 @@
-import { sql } from '@vercel/postgres';
-import { unstable_noStore as noStore} from 'next/cache';
-import { formatCurrency } from './utils';
-import { Game, LatestGames, Tournament, GamesTable, Player, League, TournamentForCreateQuery, GameAxis, TournamentAxis, GameJoinedWith2Players } from './definitions';
-import { GamesByDate } from '@/app/lib/utils';
-
-import { log } from 'console';
-import { Calistoga } from 'next/font/google';
-
+import { sql } from '@vercel/postgres'
+import { unstable_noStore as noStore } from 'next/cache'
+import {
+  Game,
+  GameAxis,
+  GameJoinedWith2Players,
+  GamesTable,
+  LatestGames,
+  League,
+  Player,
+  Tournament,
+  TournamentAxis,
+  TournamentForCreateQuery,
+} from './definitions'
+import { gamesByDate } from './utils'
 
 export async function fetchGamesAndTournamentsForChart() {
   // noStore();
   try {
-    const gamesDataPromise = await sql<GameAxis>`SELECT * FROM game`;
-    const tournamentsDataPromise = await sql<TournamentAxis>`SELECT * FROM tournament`;
+    const gamesDataPromise = await sql<GameAxis>`SELECT * FROM game`
+    const tournamentsDataPromise = await sql<TournamentAxis>`SELECT * FROM tournament`
 
-    const data = await Promise.all([
-      gamesDataPromise,
-      tournamentsDataPromise,
-    ]);
-
-    const games = data[0].rows;
-    const tournaments = data[1].rows;
+    const [games, tournament] = await Promise.all([gamesDataPromise, tournamentsDataPromise])
 
     return {
-      games,
-      tournaments
-      }
+      games: games.rows,
+      tournaments: tournament.rows,
+    }
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch games and tournaments data.');
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch games and tournaments data.')
   }
-
 }
 
 // export async function fetchSelectTournamentData() {
@@ -40,7 +39,7 @@ export async function fetchGamesAndTournamentsForChart() {
 //     FROM
 //     tournaments t;
 //     `;
-    
+
 //     return data;
 //   } catch (error) {
 //     console.error('Database Error:', error);
@@ -48,124 +47,96 @@ export async function fetchGamesAndTournamentsForChart() {
 //   }
 // }
 
-export async function fetchSelectTournamentData(leagueId : string) {
-  try {
-    const tournamentsPromise = await sql<TournamentForCreateQuery>`
-    SELECT
-    leagueid, id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date
-    
-    FROM
-    tournaments t
-    WHERE t.leagueid = ${leagueId};
-    
-    `;
-
-    const data = await Promise.all([
-      tournamentsPromise
-    ]);
-    const tournaments = data[0].rows ?? 'No tournaments in chosen league';
-    return {
-      tournaments
-    };
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch selectTournament data.');
-  }
-}
-
 export async function fetchSelectLeagueData() {
   try {
-    const leaguesPromise = await sql<League>`SELECT id, name FROM leagues;`;
+    const leaguesPromise = await sql<League>`SELECT id, name FROM leagues;`
 
-    const data = await Promise.all([
-      leaguesPromise
-    ]);
-    const leagues = data[0].rows ?? 'No leagues in database';
+    const data = await Promise.all([leaguesPromise])
+    const leagues = data[0].rows ?? 'No leagues in database'
     return {
-      leagues
-    };
+      leagues,
+    }
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch selectLeague data.');
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch selectLeague data.')
   }
 }
 
-export async function fetchPlayersByLeague(leagueId : string) {
+export async function fetchPlayersByLeague(leagueId: string) {
   // noStore();
   try {
-    const playersPromise = await sql<Player>`SELECT id, nick FROM players;`;
-
-    const data = await Promise.all([
-      playersPromise
-    ]);
-
-    const players = data[0].rows ?? 'No players in database';
+    const { rows: players } = await sql<Player>`SELECT id, nick FROM players;`
 
     return {
-      players
-    };
+      players: players ?? 'No players in database',
+    }
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch players data.');
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch players data.')
   }
 }
 
 export async function fetchCreateGameData() {
   // noStore();
   try {
-    const playersPromise = await sql<Player>`SELECT id, nick FROM players;`;
-    const tournamentsPromise = await sql<TournamentForCreateQuery>`SELECT id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date FROM tournaments t;`;
-    const leaguesPromise = await sql<League>`SELECT id, name FROM leagues;`;
+    const playersPromise = await sql<Player>`SELECT id, nick FROM players;`
+    const tournamentsPromise =
+      await sql<TournamentForCreateQuery>`SELECT id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date FROM tournaments t;`
+    const leaguesPromise = await sql<League>`SELECT id, name FROM leagues;`
 
-    const data = await Promise.all([
-      playersPromise, tournamentsPromise, leaguesPromise
-    ]);
+    const data = await Promise.all([playersPromise, tournamentsPromise, leaguesPromise])
 
-    const players = data[0].rows ?? 'No players in database';
-    const tournaments = data[1].rows ?? 'No tournaments in database';
-    const leagues = data[2].rows ?? 'No leagues in database';
-
+    const players = data[0].rows ?? 'No players in database'
+    const tournaments = data[1].rows ?? 'No tournaments in database'
+    const leagues = data[2].rows ?? 'No leagues in database'
 
     return {
       players,
       tournaments,
-      leagues
-    };
+      leagues,
+    }
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch createGame data.');
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch createGame data.')
   }
 }
 
 export async function fetchGames() {
   // noStore();
   try {
-    const data = await sql<Game>`SELECT * FROM games`;
+    const { rows: games } = await sql<Game>`SELECT * FROM games`
 
     //console.log(data.rows)
-    return data.rows;
+    return games
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch games data.');
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch games data.')
   }
+}
+
+const JlaRata = {
+  campeonAnos: [
+    { ano: 2019, campeon: 'JLA' },
+    { ano: 2020, campeon: 'JLA' },
+  ],
 }
 
 export async function fetchTournaments() {
   // noStore();
   try {
-    const data = await sql<Tournament>`SELECT * FROM tournaments`;
+    const data = await sql<Tournament>`SELECT * FROM tournaments`
     //console.log(data.rows);
-    return data.rows;
+    return data.rows
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch tournaments data.');
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch tournaments data.')
   }
 }
 
 export async function fetchLatestGames() {
   // noStore();
   try {
-    const data = await sql<LatestGames>`
+    const { rows: latestGames } = await sql<LatestGames>`
     SELECT
     l.name AS league_name,
     t.name AS tournament_name,
@@ -192,35 +163,31 @@ export async function fetchLatestGames() {
     g.id
 
     limit 40;
-    `;
-
-    const latestGames = data.rows;
+    `
 
     /* transforms the query results (with two rows each game)
     in a new array with player 1 and player 2 and only one row for game */
 
-    let latestGamesJoinedWith2Players : GameJoinedWith2Players[] = [];
-    let currentGameIndex = 0;
-    let currentGameJoinedIndex = 0;
-    let currentGameId = "";
+    let latestGamesJoinedWith2Players: GameJoinedWith2Players[] = []
+    let currentGameIndex = 0
+    let currentGameJoinedIndex = 0
+    let currentGameId = ''
 
     /* this map replaces the commented for loop ahead. apparently nailed at first attempt.  */
     latestGames.map((game) => {
-      currentGameId === game.game_id ? (
-      latestGamesJoinedWith2Players[currentGameJoinedIndex].player2 = game.player,
-      latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = game.wins,
-
-      latestGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins > latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins ? 
-      latestGamesJoinedWith2Players[currentGameJoinedIndex].result = 1 :
-      latestGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins < latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins ? 
-      latestGamesJoinedWith2Players[currentGameJoinedIndex].result = 2 :
-      null,
-
-      currentGameJoinedIndex++
-      ) : 
-      
-      currentGameId = game.game_id
-      let newGame : GameJoinedWith2Players = {
+      currentGameId === game.game_id
+        ? ((latestGamesJoinedWith2Players[currentGameJoinedIndex].player2 = game.player),
+          (latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = game.wins),
+          latestGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins >
+          latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins
+            ? (latestGamesJoinedWith2Players[currentGameJoinedIndex].result = 1)
+            : latestGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins <
+              latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins
+            ? (latestGamesJoinedWith2Players[currentGameJoinedIndex].result = 2)
+            : null,
+          currentGameJoinedIndex++)
+        : (currentGameId = game.game_id)
+      let newGame: GameJoinedWith2Players = {
         league_name: game.league_name,
         tournament_name: game.tournament_name,
         date: game.date,
@@ -230,11 +197,11 @@ export async function fetchLatestGames() {
         player2: 'string',
         player2Wins: 0,
         result: 0,
-        round: game.round  
-       };
-        latestGamesJoinedWith2Players.push(newGame);
-        currentGameIndex++;
-    }) 
+        round: game.round,
+      }
+      latestGamesJoinedWith2Players.push(newGame)
+      currentGameIndex++
+    })
 
     /* -apparently not needed anymore- for loop */
     // for (let i = 0; i<latestGames.length; i++)
@@ -276,43 +243,42 @@ export async function fetchLatestGames() {
     //console.log(data.rows);
     //return latestGames;
     //console.log(latestGamesJoinedWith2Players);
-    return latestGamesJoinedWith2Players;
+    return latestGamesJoinedWith2Players
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch the latest games.');
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch the latest games.')
   }
 }
 
 export async function fetchCardData() {
-  noStore();
+  noStore()
   try {
-    const gamesCountPromise = sql`SELECT COUNT(*) FROM game`;
-    const playersCountPromise = sql`SELECT COUNT(*) FROM player`;
-    const leaguesCountPromise = sql`SELECT COUNT(*) FROM league`;
-    const tournamentsCountPromise = sql`SELECT COUNT(*) FROM tournament`;
+    const gamesCountPromise = sql`SELECT COUNT(*) FROM game`
+    const playersCountPromise = sql`SELECT COUNT(*) FROM player`
+    const leaguesCountPromise = sql`SELECT COUNT(*) FROM league`
+    const tournamentsCountPromise = sql`SELECT COUNT(*) FROM tournament`
 
     const data = await Promise.all([
       gamesCountPromise,
       playersCountPromise,
       leaguesCountPromise,
-      tournamentsCountPromise
-    ]);
+      tournamentsCountPromise,
+    ])
 
-    const numberOfGames = Number(data[0].rows[0].count ?? '0');
-    const numberOfPlayers = Number(data[1].rows[0].count ?? '0');
-    const numberOfLeagues = Number(data[2].rows[0].count ?? '0');
-    const numberOfTournaments = Number(data[3].rows[0].count ?? '0');
-
+    const numberOfGames = Number(data[0].rows[0].count ?? '0')
+    const numberOfPlayers = Number(data[1].rows[0].count ?? '0')
+    const numberOfLeagues = Number(data[2].rows[0].count ?? '0')
+    const numberOfTournaments = Number(data[3].rows[0].count ?? '0')
 
     return {
       numberOfGames,
       numberOfPlayers,
       numberOfLeagues,
       numberOfTournaments,
-    };
+    }
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch card data.');
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch card data.')
   }
 }
 
@@ -351,7 +317,6 @@ export async function fetchCardData() {
   }
 } */
 
-
 // LA ANTERIOR QUERY DE INVOICES TableCellsIcon
 // SELECT
 //         invoices.id,
@@ -373,14 +338,9 @@ export async function fetchCardData() {
 //       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
 //     `;
 
-
-const ITEMS_PER_PAGE = 6;
-export async function fetchFilteredGames(
-  query: string,
-  currentPage: number,
-) {
-  
-  const offset = (currentPage - 1) * (ITEMS_PER_PAGE*2);
+const ITEMS_PER_PAGE = 6
+export async function fetchFilteredGames(query: string, currentPage: number) {
+  const offset = (currentPage - 1) * (ITEMS_PER_PAGE * 2)
   //console.log("current page: "+currentPage+" items per page: "+ITEMS_PER_PAGE+" offset: "+ offset);
 
   try {
@@ -415,39 +375,41 @@ export async function fetchFilteredGames(
     ORDER BY
     g.id
 
-    LIMIT ${ITEMS_PER_PAGE*2} OFFSET ${offset};
-    `;
+    LIMIT ${ITEMS_PER_PAGE * 2} OFFSET ${offset};
+    `
     //console.log(data.rows);
 
     /* transforms the query results (with two rows each game)
     in a new array with player 1 and player 2 and only one row for game */
-    const games = data.rows; 
+    const games = data.rows
     //console.log(games);
-    let allGamesJoinedWith2Players : GameJoinedWith2Players[] = [];
-    let currentGameIndex = 0;
-    let currentGameJoinedIndex = 0;
-    let currentGameId = "";
+    let allGamesJoinedWith2Players: GameJoinedWith2Players[] = []
+    let currentGameIndex = 0
+    let currentGameJoinedIndex = 0
+    let currentGameId = ''
 
-    games.sort(GamesByDate);
+    games.sort(gamesByDate)
 
     games.map((game) => {
       //console.log("analizing game: "+ game.game_id);
       if (currentGameId === game.game_id) {
         //console.log("game is old, updating");
-        allGamesJoinedWith2Players[currentGameJoinedIndex].player2 = game.player;
-        allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = game.wins;
-  
-        allGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins > allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins ? 
-        allGamesJoinedWith2Players[currentGameJoinedIndex].result = 1 :
-        allGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins < allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins ? 
-        allGamesJoinedWith2Players[currentGameJoinedIndex].result = 2 :
-        null;
+        allGamesJoinedWith2Players[currentGameJoinedIndex].player2 = game.player
+        allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = game.wins
+
+        allGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins >
+        allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins
+          ? (allGamesJoinedWith2Players[currentGameJoinedIndex].result = 1)
+          : allGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins <
+            allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins
+          ? (allGamesJoinedWith2Players[currentGameJoinedIndex].result = 2)
+          : null
         currentGameJoinedIndex++
       } else {
         //console.log("game is new, creating one");
-        currentGameId = game.game_id;
-  
-        let newGame : GameJoinedWith2Players = {
+        currentGameId = game.game_id
+
+        let newGame: GameJoinedWith2Players = {
           league_name: game.league_name,
           tournament_name: game.tournament_name,
           date: game.date,
@@ -457,20 +419,20 @@ export async function fetchFilteredGames(
           player2: 'string',
           player2Wins: 0,
           result: 0,
-          round: game.round
-        };
-        allGamesJoinedWith2Players.push(newGame);
+          round: game.round,
+        }
+        allGamesJoinedWith2Players.push(newGame)
         //console.log("allGamesJoinedWith2Players lenght: "+allGamesJoinedWith2Players.length)
       }
-        currentGameIndex++;
-    }) 
-    
+      currentGameIndex++
+    })
+
     //console.log(allGamesJoinedWith2Players)
-    
-    return allGamesJoinedWith2Players;
+
+    return allGamesJoinedWith2Players
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch games.');
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch games.')
   }
 }
 
@@ -492,14 +454,14 @@ export async function fetchGamesPages(query: string) {
       ON (t.league_id = l.id)
     WHERE
       (SELECT p.username FROM player p WHERE p.id = pg.player_id) ILIKE ${`%${query}%`};
-  `;
-  
-    const totalPages = Math.ceil(Number(count.rows[0].count) / (ITEMS_PER_PAGE*2));
+  `
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / (ITEMS_PER_PAGE * 2))
     //console.log("páginas: " +totalPages)
-    return totalPages;
+    return totalPages
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch total number of pages.');
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch total number of pages.')
   }
 }
 

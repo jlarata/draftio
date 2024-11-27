@@ -1,8 +1,9 @@
 'use client'
 
-import { showSwal } from "@/app/lib/alerts";
-import { useRouter } from "next/navigation";
-import { Message } from "@/app/lib/definitions";
+import { showSwal } from "@/services/lib/alerts";
+import { useRouter } from "next/router";
+
+
 
 
 export default function AlertsPage(

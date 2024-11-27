@@ -1,4 +1,4 @@
-import SideNav from '@/source/ui/dashboard/sidenav';
+import SideNav from "@/src/ui/dashboard/sidenav";
 
 export const experimental_ppr = true;
 
