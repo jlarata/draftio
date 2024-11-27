@@ -1,4 +1,4 @@
-import { GameAxis, GameJoinedWith2Players, TournamentAxis } from './definitions'
+import { GameJoinedWith2Players } from './definitions'
 
 export const gamesByDate = (a: { date: string }, b: { date: string }) => {
   if (a.date < b.date) {

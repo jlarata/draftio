@@ -4,7 +4,6 @@ import { inter } from '../../fonts'
 import { gamesChartUtils } from './utils'
 import { gamesChartConfig } from './config'
 
-
 export default async function GamesChart() {
   const { generateLast12Months, generateYAxis } = gamesChartUtils
   const { games, tournaments } = await fetchGamesAndTournamentsForChart()

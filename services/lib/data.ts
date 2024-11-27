@@ -203,46 +203,6 @@ export async function fetchLatestGames() {
       currentGameIndex++
     })
 
-    /* -apparently not needed anymore- for loop */
-    // for (let i = 0; i<latestGames.length; i++)
-    // {
-    //   /* console.log('testing game in index '+currentGameIndex)
-    //   console.log(latestGames[currentGameIndex]) */
-    //   let thisGame = latestGames[currentGameIndex];
-    //   //console.log("testing game "+ latestGames[currentGameIndex].game_id)
-
-    //   if (currentGameId === thisGame.game_id) {
-    //     /* console.log("updating game ")
-    //     console.log(latestGamesJoinedWith2Players[currentGameJoinedIndex]) */
-    //     latestGamesJoinedWith2Players[currentGameJoinedIndex].player2 = thisGame.player;
-    //     latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = thisGame.wins
-    //     /* console.log("game updated ")
-    //     console.log(latestGamesJoinedWith2Players[currentGameJoinedIndex]) */
-    //     currentGameJoinedIndex++;
-    //   } else {
-    //     //console.log("new game")
-    //     currentGameId = thisGame.game_id
-
-    //     let newGame : LatestGamesJoinedWith2Players = {
-    //       league_name: thisGame.league_name,
-    //       tournament_name: thisGame.tournament_name,
-    //       date: thisGame.date,
-    //       game_id: thisGame.game_id,
-    //       player1: thisGame.player,
-    //       player1Wins: thisGame.wins,
-    //       player2: 'string',
-    //       player2Wins: 0
-    //     }
-    //     latestGamesJoinedWith2Players.push(newGame);
-    //     /* console.log('created game');
-    //     console.log(newGame) */
-    //   }
-    //   currentGameIndex++
-    // }
-
-    //console.log(data.rows);
-    //return latestGames;
-    //console.log(latestGamesJoinedWith2Players);
     return latestGamesJoinedWith2Players
   } catch (error) {
     console.error('Database Error:', error)

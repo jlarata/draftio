@@ -23,7 +23,7 @@ export default async function LatestGames() {
                
             return (
               <div
-                key={game.game_id}
+                key={`${game.game_id}_${i}`}
                 className={clsx(
                   'flex flex-row items-center justify-between py-4',
                   {
