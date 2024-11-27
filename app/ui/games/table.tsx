@@ -157,12 +157,12 @@ export default async function GamesTable({
                   
                   {game.result === 1 ? 
                       <td className="whitespace-nowrap px-3 py-3">
-                      {game.player1}
+                      {game.player1} won
                       </td>
                     : 
                       game.result === 2 ?
                       <td className="whitespace-nowrap px-3 py-3">
-                        {game.player2}
+                        {game.player2} won
                       </td>
                     :
                     <td>
