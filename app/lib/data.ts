@@ -1,8 +1,11 @@
 import { sql } from '@vercel/postgres';
 import { unstable_noStore as noStore} from 'next/cache';
 import { formatCurrency } from './utils';
-import { Game, Tournament, GamesTable, Player, League, TournamentForCreateQuery, GameAxis, TournamentAxis } from './definitions';
-import { CustomersTableType, LatestGames, LatestGamesJoinedWith2Players } from './definitions';
+import { Game, LatestGames, Tournament, GamesTable, Player, League, TournamentForCreateQuery, GameAxis, TournamentAxis, GameJoinedWith2Players } from './definitions';
+import { GamesByDate } from '@/app/lib/utils';
+
+import { log } from 'console';
+import { Calistoga } from 'next/font/google';
 
 
 export async function fetchGamesAndTournamentsForChart() {
@@ -163,7 +166,6 @@ export async function fetchLatestGames() {
   // noStore();
   try {
     const data = await sql<LatestGames>`
-    
     SELECT
     l.name AS league_name,
     t.name AS tournament_name,
@@ -197,7 +199,7 @@ export async function fetchLatestGames() {
     /* transforms the query results (with two rows each game)
     in a new array with player 1 and player 2 and only one row for game */
 
-    let latestGamesJoinedWith2Players : LatestGamesJoinedWith2Players[] = [];
+    let latestGamesJoinedWith2Players : GameJoinedWith2Players[] = [];
     let currentGameIndex = 0;
     let currentGameJoinedIndex = 0;
     let currentGameId = "";
@@ -218,7 +220,7 @@ export async function fetchLatestGames() {
       ) : 
       
       currentGameId = game.game_id
-      let newGame : LatestGamesJoinedWith2Players = {
+      let newGame : GameJoinedWith2Players = {
         league_name: game.league_name,
         tournament_name: game.tournament_name,
         date: game.date,
@@ -227,7 +229,8 @@ export async function fetchLatestGames() {
         player1Wins: game.wins,
         player2: 'string',
         player2Wins: 0,
-        result: 0    
+        result: 0,
+        round: game.round  
        };
         latestGamesJoinedWith2Players.push(newGame);
         currentGameIndex++;
@@ -377,76 +380,94 @@ export async function fetchFilteredGames(
   currentPage: number,
 ) {
   
-  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  const offset = (currentPage - 1) * (ITEMS_PER_PAGE*2);
+  //console.log("current page: "+currentPage+" items per page: "+ITEMS_PER_PAGE+" offset: "+ offset);
 
   try {
-    const games = await sql<GamesTable>`
-      SELECT
-      g.id AS id, l.name AS league, t.name AS tournament,
-      TO_CHAR(t.date, 'dd/mm/yyyy') AS date,
-      (SELECT p.nick FROM players p WHERE p.id = g.player1)
-      AS Player1,
-      (SELECT p.nick FROM players p WHERE p.id = g.player2)
-      AS Player2,
+    const data = await sql<GamesTable>`
 
-      CASE
-      WHEN g.match1 = '1' THEN
-      (SELECT p.nick FROM players p WHERE p.id = g.player1)
-      WHEN g.match1 = '2' THEN
-      (SELECT p.nick FROM players p WHERE p.id = g.player2)
-      WHEN g.match1 = '0' THEN 'Tie'
-      WHEN g.match1 = null THEN 'nope'
-      END AS Match1,
+    SELECT
+    l.name AS league_name,
+    t.name AS tournament_name,
+    TO_CHAR(t.date, 'dd/mm/yyyy') AS date,
+    pg.game_id,
+    p.username as Player,
+    pg.wins,
+    g.round
 
-      CASE
-      WHEN g.match2 = '1' THEN
-      (SELECT p.nick FROM players p WHERE p.id = g.player1)
-      WHEN g.match2 = '2' THEN
-      (SELECT p.nick FROM players p WHERE p.id = g.player2)
-      WHEN g.match2 = '0' THEN 'Tie'
-      WHEN g.match2 = null THEN 'nope'
-      END AS Match2,
+    from game g
+    INNER JOIN
+    player_game pg
+    ON pg.game_id = g.id
+    INNER JOIN
+    player p
+    on pg.player_id = p.id
+    INNER JOIN
+    tournament t
+    on g.tournament_id = t.id
+    INNER JOIN
+    league l
+    on t.league_id = l.id
 
-      CASE
-      WHEN g.match3 = '1' THEN
-      (SELECT p.nick FROM players p WHERE p.id = g.player1)
-      WHEN g.match3 = '2' THEN
-      (SELECT p.nick FROM players p WHERE p.id = g.player2)
-      WHEN g.match3 = '0' THEN 'Tie'
-      WHEN g.match3 = null THEN 'nope'
-      END AS Match3,
+    WHERE
+    (SELECT p.username FROM player p WHERE p.id = pg.player_id) ILIKE ${`%${query}%`}
 
-      CASE
-      WHEN g.result = '1' THEN
-      (SELECT p.nick FROM players p WHERE p.id = g.player1)
-      WHEN g.result = '2' THEN
-      (SELECT p.nick FROM players p WHERE p.id = g.player2)
-      WHEN g.result = '0' THEN 'Tie'
-      WHEN g.result = null THEN 'nope'
-      END AS Result
+    ORDER BY
+    g.id
 
-      FROM games g
-      INNER JOIN
-      players p
-      ON (g.player1 = p.id)
-      INNER JOIN
-      tournaments t
-      ON (g.tournamentid = t.id)
-      INNER JOIN
-      leagues l
-      ON (t.leagueid = l.id)
-
-      WHERE
-      (SELECT p.nick FROM players p WHERE p.id = g.player1) ILIKE ${`%${query}%`} OR
-      (SELECT p.nick FROM players p WHERE p.id = g.player2) ILIKE ${`%${query}%`}
-
-      ORDER BY
-      t.date DESC
-
-      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    LIMIT ${ITEMS_PER_PAGE*2} OFFSET ${offset};
     `;
+    //console.log(data.rows);
 
-    return games.rows;
+    /* transforms the query results (with two rows each game)
+    in a new array with player 1 and player 2 and only one row for game */
+    const games = data.rows; 
+    //console.log(games);
+    let allGamesJoinedWith2Players : GameJoinedWith2Players[] = [];
+    let currentGameIndex = 0;
+    let currentGameJoinedIndex = 0;
+    let currentGameId = "";
+
+    games.sort(GamesByDate);
+
+    games.map((game) => {
+      //console.log("analizing game: "+ game.game_id);
+      if (currentGameId === game.game_id) {
+        //console.log("game is old, updating");
+        allGamesJoinedWith2Players[currentGameJoinedIndex].player2 = game.player;
+        allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = game.wins;
+  
+        allGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins > allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins ? 
+        allGamesJoinedWith2Players[currentGameJoinedIndex].result = 1 :
+        allGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins < allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins ? 
+        allGamesJoinedWith2Players[currentGameJoinedIndex].result = 2 :
+        null;
+        currentGameJoinedIndex++
+      } else {
+        //console.log("game is new, creating one");
+        currentGameId = game.game_id;
+  
+        let newGame : GameJoinedWith2Players = {
+          league_name: game.league_name,
+          tournament_name: game.tournament_name,
+          date: game.date,
+          game_id: game.game_id,
+          player1: game.player,
+          player1Wins: game.wins,
+          player2: 'string',
+          player2Wins: 0,
+          result: 0,
+          round: game.round
+        };
+        allGamesJoinedWith2Players.push(newGame);
+        //console.log("allGamesJoinedWith2Players lenght: "+allGamesJoinedWith2Players.length)
+      }
+        currentGameIndex++;
+    }) 
+    
+    //console.log(allGamesJoinedWith2Players)
+    
+    return allGamesJoinedWith2Players;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch games.');
@@ -456,24 +477,25 @@ export async function fetchFilteredGames(
 export async function fetchGamesPages(query: string) {
   try {
     const count = await sql`SELECT COUNT(*)
-    FROM games g
+    FROM game g
       INNER JOIN
-      players p
-      ON (g.player1 = p.id)
+      player_game pg
+      ON pg.game_id = g.id
       INNER JOIN
-      tournaments t
-      ON (g.tournamentid = t.id)
+      player p
+      on pg.player_id = p.id
       INNER JOIN
-      leagues l
-      ON (t.leagueid = l.id)
+      tournament t
+      ON (g.tournament_id = t.id)
+      INNER JOIN
+      league l
+      ON (t.league_id = l.id)
     WHERE
-      (SELECT p.nick FROM players p WHERE p.id = g.player1) ILIKE ${`%${query}%`} OR
-      (SELECT p.nick FROM players p WHERE p.id = g.player2) ILIKE ${`%${query}%`};
+      (SELECT p.username FROM player p WHERE p.id = pg.player_id) ILIKE ${`%${query}%`};
   `;
   
-  
-    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
-    console.log("páginas: " +totalPages)
+    const totalPages = Math.ceil(Number(count.rows[0].count) / (ITEMS_PER_PAGE*2));
+    //console.log("páginas: " +totalPages)
     return totalPages;
   } catch (error) {
     console.error('Database Error:', error);

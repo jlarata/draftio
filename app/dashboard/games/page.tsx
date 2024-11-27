@@ -9,9 +9,9 @@ import { fetchGamesPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 import AlertsPage from '@/app/ui/alerts/alerts';
 
-// export const metadata: Metadata = {
-//   title: 'Invoices | Acme Dashboard',
-// };
+export const metadata: Metadata = {
+  title: 'Games | Draftio Dashboard',
+};
 
 export default async function Page(props: {
   searchParams?: Promise<{

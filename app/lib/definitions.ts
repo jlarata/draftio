@@ -69,8 +69,9 @@ export type LatestGames = {
   game_id: string;
   player: string;
   wins : 0 | 1 | 2,
+  round : 1 | 2 | 3
 };
-export type LatestGamesJoinedWith2Players = {
+export type GameJoinedWith2Players = {
   league_name: string;
   tournament_name: string;
   date: string;
@@ -79,10 +80,21 @@ export type LatestGamesJoinedWith2Players = {
   player1Wins: 0 | 1 | 2, 
   player2: string;
   player2Wins : 0 | 1 | 2,
-  result : 0 | 1 | 2
+  result : 0 | 1 | 2,
+  round : 1 | 2 | 3
 };
 
 export type GamesTable = {
+  league_name: string;
+  tournament_name: string;
+  date: string;
+  game_id: string;
+  player: string;
+  wins : 0 | 1 | 2,
+  round : 1 | 2 | 3
+};
+
+/* export type GamesTable = {
   id: string;
   league: string;
   tournament: string;
@@ -93,7 +105,7 @@ export type GamesTable = {
   match2 : 0 | 1 | 2 | null,
   match3 : 0 | 1 | 2 | null,
   result : 0 | 1 | 2 | null,
-};
+}; */
 
 export type PlayerField = {
   id: string;
