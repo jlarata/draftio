@@ -1,12 +1,16 @@
-import { fetchGamesAndTournamentsForChart } from '@/services/lib/data'
 import { CalendarIcon } from '@heroicons/react/24/outline'
 import { inter } from '../../fonts'
 import { gamesChartUtils } from './utils'
 import { gamesChartConfig } from './config'
+import { ChartServices } from '@/services/gamesChart'
 
 export default async function GamesChart() {
+  /* const { fetchSelectTournamentData } = tournamentServices
+  const { tournaments } = await fetchSelectTournamentData({ leagueId }) */
+  const { fetchGamesAndTournamentsForChart } = ChartServices;
+  const { games, tournaments } = await fetchGamesAndTournamentsForChart();
+
   const { generateLast12Months, generateYAxis } = gamesChartUtils
-  const { games, tournaments } = await fetchGamesAndTournamentsForChart()
 
   const last12Months = generateLast12Months()
   const { yAxisLabels, topLabel } = generateYAxis(games, tournaments, last12Months)

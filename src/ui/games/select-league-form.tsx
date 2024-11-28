@@ -27,8 +27,8 @@ export default function SelectLeagueForm({
               <option value="" disabled>
                 Select league
               </option>
-              {leagues.map((league) => (
-                <option key={league.id} value={league.id}>
+              {leagues.map((league, index) => (
+                <option key={league.id+index} value={league.id}>
                   {league.name}
                 </option>
               ))}

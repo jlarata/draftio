@@ -10,42 +10,8 @@ import {
   Player,
   Tournament,
   TournamentAxis,
-  TournamentForCreateQuery,
 } from './definitions'
 import { gamesByDate } from './utils'
-
-export async function fetchGamesAndTournamentsForChart() {
-  // noStore();
-  try {
-    const gamesDataPromise = await sql<GameAxis>`SELECT * FROM game`
-    const tournamentsDataPromise = await sql<TournamentAxis>`SELECT * FROM tournament`
-
-    const [games, tournament] = await Promise.all([gamesDataPromise, tournamentsDataPromise])
-
-    return {
-      games: games.rows,
-      tournaments: tournament.rows,
-    }
-  } catch (error) {
-    console.error('Database Error:', error)
-    throw new Error('Failed to fetch games and tournaments data.')
-  }
-}
-
-// export async function fetchSelectTournamentData() {
-//   try {
-//     const data = await sql<TournamentForCreateQuery>`
-//     SELECT id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date
-//     FROM
-//     tournaments t;
-//     `;
-
-//     return data;
-//   } catch (error) {
-//     console.error('Database Error:', error);
-//     throw new Error('Failed to fetch tournaments.');
-//   }
-// }
 
 export async function fetchSelectLeagueData() {
   try {
@@ -73,31 +39,6 @@ export async function fetchPlayersByLeague(leagueId: string) {
   } catch (error) {
     console.error('Database Error:', error)
     throw new Error('Failed to fetch players data.')
-  }
-}
-
-export async function fetchCreateGameData() {
-  // noStore();
-  try {
-    const playersPromise = await sql<Player>`SELECT id, nick FROM players;`
-    const tournamentsPromise =
-      await sql<TournamentForCreateQuery>`SELECT id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date FROM tournaments t;`
-    const leaguesPromise = await sql<League>`SELECT id, name FROM leagues;`
-
-    const data = await Promise.all([playersPromise, tournamentsPromise, leaguesPromise])
-
-    const players = data[0].rows ?? 'No players in database'
-    const tournaments = data[1].rows ?? 'No tournaments in database'
-    const leagues = data[2].rows ?? 'No leagues in database'
-
-    return {
-      players,
-      tournaments,
-      leagues,
-    }
-  } catch (error) {
-    console.error('Database Error:', error)
-    throw new Error('Failed to fetch createGame data.')
   }
 }
 
