@@ -3,7 +3,7 @@ import { TournamentForCreateQuery } from '../lib/definitions'
 
 const fetchSelectTournamentData = async ({ leagueId }: { leagueId: string }) => {
   try {
-    const tournamentsPromise = await sql<TournamentForCreateQuery>`
+    const {rows : tournamentsPromise} = await sql<TournamentForCreateQuery>`
       SELECT
       leagueid, id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date
       
@@ -13,10 +13,9 @@ const fetchSelectTournamentData = async ({ leagueId }: { leagueId: string }) => 
       
       `
 
-    const data = await Promise.all([tournamentsPromise])
-    const tournaments = data[0].rows ?? 'No tournaments in chosen league'
+    const tournaments = tournamentsPromise ?? 'No tournaments in chosen league'
     return {
-      tournaments,
+      tournaments: tournaments,
     }
   } catch (error) {
     console.error('Database Error:', error)

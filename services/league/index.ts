@@ -3,12 +3,11 @@ import { League } from "../lib/definitions"
 
 const fetchSelectLeagueData = async () => {
     try {
-        const leaguesPromise = await sql<League>`SELECT id, name FROM leagues;`
+        const {rows : leaguesPromise} = await sql<League>`SELECT id, name FROM leagues;`
     
-        const data = await Promise.all([leaguesPromise])
-        const leagues = data[0].rows ?? 'No leagues in database'
+        const leagues = leaguesPromise ?? 'No leagues in database'
         return {
-          leagues,
+          leagues: leagues,
         }
       } catch (error) {
         console.error('Database Error:', error)

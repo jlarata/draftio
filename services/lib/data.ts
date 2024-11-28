@@ -39,13 +39,6 @@ export async function fetchGames() {
   }
 }
 
-const JlaRata = {
-  campeonAnos: [
-    { ano: 2019, campeon: 'JLA' },
-    { ano: 2020, campeon: 'JLA' },
-  ],
-}
-
 export async function fetchTournaments() {
   // noStore();
   try {

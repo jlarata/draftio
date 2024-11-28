@@ -4,8 +4,6 @@ import { showSwal } from "@/services/lib/alerts";
 import { useRouter } from "next/navigation";
 
 
-
-
 export default function AlertsPage(
    {someText} : {someText : string} ) {
 

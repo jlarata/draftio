@@ -28,8 +28,8 @@ export default async function Page(props: {
 
   return (
     <>
-      {gameCreatedMessage && (
-        <AlertsPage someText={"Game successfully created"}></AlertsPage>
+       {gameCreatedMessage && (
+        <AlertsPage someText={"Game successfully created"}></AlertsPage> 
       )}
 
       <div className="w-full">

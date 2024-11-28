@@ -13,9 +13,6 @@ export default async function Page(props: {
   }>
 }) {
 
-  /* const { fetchSelectTournamentData } = tournamentServices
-  const { tournaments } = await fetchSelectTournamentData({ leagueId }) */
-
   const { fetchSelectLeagueData } = leagueServices;
   const { leagues } = await fetchSelectLeagueData();
 

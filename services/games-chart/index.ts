@@ -4,14 +4,14 @@ import { GameAxis, TournamentAxis } from "../lib/definitions"
 const fetchGamesAndTournamentsForChart = async () => {
     // noStore();
     try {
-      const gamesDataPromise = await sql<GameAxis>`SELECT * FROM game`
-      const tournamentsDataPromise = await sql<TournamentAxis>`SELECT * FROM tournament`
+      const {rows : gamesDataPromise} = await sql<GameAxis>`SELECT * FROM game`
+      const {rows : tournamentsDataPromise} = await sql<TournamentAxis>`SELECT * FROM tournament`
   
-      const [games, tournament] = await Promise.all([gamesDataPromise, tournamentsDataPromise])
+      const [games, tournaments] = await Promise.all([gamesDataPromise ?? 'No games in ddbb', tournamentsDataPromise ?? 'No tournaments in ddbb'])
   
       return {
-        games: games.rows,
-        tournaments: tournament.rows,
+        games: games,
+        tournaments: tournaments,
       }
     } catch (error) {
       console.error('Database Error:', error)
