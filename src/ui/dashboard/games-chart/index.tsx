@@ -2,7 +2,7 @@ import { CalendarIcon } from '@heroicons/react/24/outline'
 import { inter } from '../../fonts'
 import { gamesChartUtils } from './utils'
 import { gamesChartConfig } from './config'
-import { ChartServices } from '@/services/gamesChart'
+import { ChartServices } from '@/services/games-chart'
 
 export default async function GamesChart() {
   /* const { fetchSelectTournamentData } = tournamentServices
