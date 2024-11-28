@@ -352,7 +352,7 @@ ORDER BY
 
     LIMIT ${ITEMS_PER_PAGE * 2} OFFSET ${offset};
     `
-    console.log(filteredGames);
+    //console.log(filteredGames);
 
     /* transforms the query results (with two rows each game)
     in a new array with player 1 and player 2 and only one row for game */
