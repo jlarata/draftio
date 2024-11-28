@@ -299,58 +299,73 @@ export async function fetchCardData() {
 //     `;
 
 const ITEMS_PER_PAGE = 6
+
 export async function fetchFilteredGames(query: string, currentPage: number) {
   const offset = (currentPage - 1) * (ITEMS_PER_PAGE * 2)
   //console.log("current page: "+currentPage+" items per page: "+ITEMS_PER_PAGE+" offset: "+ offset);
 
   try {
-    const data = await sql<GamesTable>`
+    const { rows: filteredGames }  = await sql<GamesTable>`
 
     SELECT
-    l.name AS league_name,
-    t.name AS tournament_name,
-    TO_CHAR(t.date, 'dd/mm/yyyy') AS date,
-    pg.game_id,
-    p.username as Player,
-    pg.wins,
-    g.round
-
-    from game g
+      l.name AS league_name,
+      t.name AS tournament_name,
+      TO_CHAR(t.date, 'dd/mm/yyyy') AS date,
+      pg.game_id,
+      p.username as Player,
+      pg.wins,
+      g.round
+    FROM
+      game g
     INNER JOIN
-    player_game pg
+      player_game pg
     ON pg.game_id = g.id
     INNER JOIN
-    player p
+      player p
     on pg.player_id = p.id
     INNER JOIN
-    tournament t
+      tournament t
     on g.tournament_id = t.id
     INNER JOIN
-    league l
+      league l
     on t.league_id = l.id
+    WHERE
+      pg.game_id
+    IN
+     (SELECT pg.game_id
+      FROM
+        game g
+      INNER JOIN
+        player_game pg
+      ON
+        pg.game_id = g.id
+      INNER JOIN
+        player p
+      ON
+        pg.player_id = p.id
 
     WHERE
-    (SELECT p.username FROM player p WHERE p.id = pg.player_id) ILIKE ${`%${query}%`}
+        g.id = pg.game_id AND pg.player_id = p.id AND p.username ILIKE ${`%${query}%`})
 
-    ORDER BY
+ORDER BY
     g.id
 
     LIMIT ${ITEMS_PER_PAGE * 2} OFFSET ${offset};
     `
-    //console.log(data.rows);
+    console.log(filteredGames);
 
     /* transforms the query results (with two rows each game)
     in a new array with player 1 and player 2 and only one row for game */
-    const games = data.rows
+    
     //console.log(games);
     let allGamesJoinedWith2Players: GameJoinedWith2Players[] = []
     let currentGameIndex = 0
     let currentGameJoinedIndex = 0
     let currentGameId = ''
 
-    games.sort(gamesByDate)
+    //filteredGames.sort(gamesByDate)
 
-    games.map((game) => {
+    filteredGames.map((game) => {
       //console.log("analizing game: "+ game.game_id);
       if (currentGameId === game.game_id) {
         //console.log("game is old, updating");
@@ -389,6 +404,7 @@ export async function fetchFilteredGames(query: string, currentPage: number) {
 
     //console.log(allGamesJoinedWith2Players)
 
+    allGamesJoinedWith2Players.sort(gamesByDate)
     return allGamesJoinedWith2Players
   } catch (error) {
     console.error('Database Error:', error)
