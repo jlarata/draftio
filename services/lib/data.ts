@@ -2,31 +2,15 @@ import { sql } from '@vercel/postgres'
 import { unstable_noStore as noStore } from 'next/cache'
 import {
   Game,
-  GameAxis,
   GameJoinedWith2Players,
   GamesTable,
   LatestGames,
-  League,
   Player,
   Tournament,
-  TournamentAxis,
-} from './definitions'
+  } from './definitions'
 import { gamesByDate } from './utils'
 
-export async function fetchSelectLeagueData() {
-  try {
-    const leaguesPromise = await sql<League>`SELECT id, name FROM leagues;`
 
-    const data = await Promise.all([leaguesPromise])
-    const leagues = data[0].rows ?? 'No leagues in database'
-    return {
-      leagues,
-    }
-  } catch (error) {
-    console.error('Database Error:', error)
-    throw new Error('Failed to fetch selectLeague data.')
-  }
-}
 
 export async function fetchPlayersByLeague(leagueId: string) {
   // noStore();

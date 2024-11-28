@@ -1,4 +1,5 @@
-import { fetchPlayersByLeague, fetchSelectLeagueData } from '@/services/lib/data'
+import { leagueServices } from '@/services/league'
+import { fetchPlayersByLeague } from '@/services/lib/data'
 import Breadcrumbs from '@/src/ui/games/breadcrumbs'
 import CreateForm from '@/src/ui/games/create-form'
 import SelectLeagueForm from '@/src/ui/games/select-league-form'
@@ -11,12 +12,17 @@ export default async function Page(props: {
     player1id?: string
   }>
 }) {
-  const { leagues } = await fetchSelectLeagueData()
+
+  /* const { fetchSelectTournamentData } = tournamentServices
+  const { tournaments } = await fetchSelectTournamentData({ leagueId }) */
+
+  const { fetchSelectLeagueData } = leagueServices;
+  const { leagues } = await fetchSelectLeagueData();
+
   const leagueSearchParams = await props.searchParams
   const tournamentSearchParams = await props.searchParams
   const leagueId = leagueSearchParams?.leagueid || ''
   const tournamentId = tournamentSearchParams?.tournamentid || ''
-  const player1Id = tournamentSearchParams?.player1id || ''
 
   const { players } = await fetchPlayersByLeague('here should go the leagueId eventually')
 
@@ -32,18 +38,6 @@ export default async function Page(props: {
           },
         ]}
       />
-
-      {/* for debugging purposes {leagueId && (<div>League id: {leagueId}</div>)}
-      {tournamentId && (
-        
-        <div>Tournament id: {tournamentId}</div>
-        
-      )}
-      {player1Id && (
-        
-        <div>Player1 id: {player1Id}</div>
-        
-      )} */}
 
       {!leagueId && <SelectLeagueForm leagues={leagues} />}
 

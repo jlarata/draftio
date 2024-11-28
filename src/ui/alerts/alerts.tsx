@@ -1,7 +1,7 @@
 'use client'
 
 import { showSwal } from "@/services/lib/alerts";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 
 
