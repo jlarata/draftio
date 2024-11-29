@@ -9,9 +9,12 @@ import { GamesTableSkeleton } from "@/src/ui/skeletons";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
+
+
 export const metadata: Metadata = {
   title: "Games | Draftio Dashboard",
 };
+
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -24,13 +27,15 @@ export default async function Page(props: {
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const totalPages = await fetchGamesPages(query);
-  const gameCreatedMessage = searchParams?.gamecreated || "";
+
+  let gameCreatedMessage = searchParams?.gamecreated || "";
 
   return (
     <>
-       {gameCreatedMessage && (
-        <AlertsPage someText={"Game successfully created"}></AlertsPage> 
-      )}
+    
+      {gameCreatedMessage && (
+        <AlertsPage someText={'Game succesfully created'}></AlertsPage> 
+      )} 
 
       <div className="w-full">
         <div className="flex w-full items-center justify-between">

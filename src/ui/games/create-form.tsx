@@ -1,7 +1,5 @@
 "use client";
-import { showSwal } from "@/services/lib/alerts";
-import { useState, useCallback } from "react";
-
+import { useState } from "react";
 import { PlayerField } from "@/services/lib/definitions";
 import Link from "next/link";
 import {

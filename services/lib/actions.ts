@@ -4,6 +4,10 @@ import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
 
+/* export async function redirectTo(someUrl : string) {
+   redirect(someUrl);
+} */
+
 export async function createGame(
   formData: FormData) {
     let rawFormData : {
