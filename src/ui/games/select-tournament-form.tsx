@@ -5,13 +5,13 @@ import { Button } from '../button'
 import { tournamentServices } from '@/services/tournament'
 
 type Props = {
-  leagueId: string
+  league_id: string
 }
 
-export default async function SelectTournamentForm({ leagueId }: Props) {
+export default async function SelectTournamentForm({ league_id }: Props) {
   const { fetchSelectTournamentData } = tournamentServices
-  const { tournaments } = await fetchSelectTournamentData({ leagueId })
-  const properUrl = encodeURIComponent('&leagueid=' + leagueId)
+  const { tournaments } = await fetchSelectTournamentData({ league_id })
+  const properUrl = encodeURIComponent('&league_id=' + league_id)
 
   return (
     <form action=''>
@@ -23,13 +23,13 @@ export default async function SelectTournamentForm({ leagueId }: Props) {
           </label>
           <div className='relative'>
             <select
-              id='leagueid'
-              name='leagueid'
+              id='league_id'
+              name='league_id'
               className='peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500'
               defaultValue=''
             >
-              <option key={leagueId} value={leagueId}>
-                {leagueId}
+              <option key={league_id} value={league_id}>
+                {league_id}
               </option>
             </select>
             <TableCellsIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500' />
@@ -43,8 +43,8 @@ export default async function SelectTournamentForm({ leagueId }: Props) {
           </label>
           <div className='relative'>
             <select
-              id='tournamentid'
-              name='tournamentid'
+              id='tournament_id'
+              name='tournament_id'
               className='peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500'
               defaultValue=''
               required

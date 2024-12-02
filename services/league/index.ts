@@ -3,7 +3,7 @@ import { League } from "../lib/definitions"
 
 const fetchSelectLeagueData = async () => {
     try {
-        const {rows : leaguesPromise} = await sql<League>`SELECT id, name FROM leagues;`
+        const {rows : leaguesPromise} = await sql<League>`SELECT id, name FROM league;`
     
         const leagues = leaguesPromise ?? 'No leagues in database'
         return {

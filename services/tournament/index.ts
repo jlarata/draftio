@@ -1,15 +1,15 @@
 import { sql } from '@vercel/postgres'
 import { TournamentForCreateQuery } from '../lib/definitions'
 
-const fetchSelectTournamentData = async ({ leagueId }: { leagueId: string }) => {
+const fetchSelectTournamentData = async ({ league_id }: { league_id: string }) => {
   try {
     const {rows : tournamentsPromise} = await sql<TournamentForCreateQuery>`
       SELECT
-      leagueid, id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date
+      league_id, id, name, TO_CHAR(t.date, 'dd/mm/yyyy') AS date
       
       FROM
-      tournaments t
-      WHERE t.leagueid = ${leagueId};
+      tournament t
+      WHERE t.league_id = ${league_id};
       
       `
 

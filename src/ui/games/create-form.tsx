@@ -11,19 +11,23 @@ import { createGame } from "@/services/lib/actions";
 import { Button } from "../button";
 
 export default function CreateForm({
-  leagueId,
-  tournamentId,
+  league_id,
+  tournament_id,
   players,
 }: {
-  leagueId: string;
-  tournamentId: string;
+  league_id: string;
+  tournament_id: string;
   players: PlayerField[];
 }) {
+  const [round, setRound] = useState("0")
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
-  const [match1, setMatch1] = useState("z");
+  const [p1Wins, setP1Wins] = useState("0");
+  const [p2Wins, setP2Wins] = useState("0");
+
+/*   const [match1, setMatch1] = useState("z");
   const [match2, setMatch2] = useState("z");
-  const [match3, setMatch3] = useState("z");
+  const [match3, setMatch3] = useState("z"); */
 
   const setThisPlayer = (playerName: string, playerPos: number) => {
     if (playerPos === 1) {
@@ -33,7 +37,7 @@ export default function CreateForm({
     }
   };
 
-  const setThisMatch = (playerWinner: string, matchNumber: number) => {
+/*   const setThisMatch = (playerWinner: string, matchNumber: number) => {
     switch (matchNumber) {
       case 1:
         setMatch1(playerWinner);
@@ -44,12 +48,14 @@ export default function CreateForm({
       case 3:
         setMatch3(playerWinner);
     }
-  };
+  }; */
 
   return (
     <>
       <form action={createGame}>
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
+
           {/* League */}
           <div className="mb-4 visibility: hidden">
             <label
@@ -60,13 +66,13 @@ export default function CreateForm({
             </label>
             <div className="relative">
               <select
-                id="leagueid"
-                name="leagueid"
+                id="league_id"
+                name="league_id"
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 defaultValue=""
               >
-                <option key={leagueId} value={leagueId}>
-                  {leagueId}
+                <option key={league_id} value={league_id}>
+                  {league_id}
                 </option>
               </select>
               <TableCellsIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
@@ -84,17 +90,41 @@ export default function CreateForm({
             <div className="relative">
               <div className="relative">
                 <select
-                  id="tournamentid"
-                  name="tournamentid"
+                  id="tournament_id"
+                  name="tournament_id"
                   className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                   defaultValue=""
                 >
-                  <option key={tournamentId} value={tournamentId}>
-                    {tournamentId}
+                  <option key={tournament_id} value={tournament_id}>
+                    {tournament_id}
                   </option>
                 </select>
                 <TrophyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
               </div>
+            </div>
+          </div>
+
+          {/* Round */}
+          <div className="mb-4">
+            <label
+              htmlFor="round"
+              className="mb-2 block text-sm font-medium"
+            >
+              Choose Tournament Round
+            </label>
+            <div className="relative">
+              <select
+                id="round"
+                name="round"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                defaultValue=""
+                onChange={(e) => setRound(e.target.value)}
+                required
+              >
+                <option value="" disabled>Set Round</option>
+                <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>  
+              </select>
+              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
           </div>
 
@@ -108,12 +138,13 @@ export default function CreateForm({
             </label>
             <div className="relative">
               <select
-                id="player1id"
-                name="player1id"
+                id="player1_id"
+                name="player1_id"
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 defaultValue=""
                 onChange={(e) => setThisPlayer(e.target.value, 1)}
                 required
+                disabled={round===""}
               >
                 <option value="" disabled>
                   Select a player
@@ -132,21 +163,55 @@ export default function CreateForm({
             </div>
           </div>
 
+          {/* p1w */}
+          <div className="mb-4">
+            <label htmlFor="p1wins" className="mb-2 block text-sm font-normal">
+              
+              { player1 ? 
+              players.map((player) => (
+                player.id === player1 ?
+                player.nick +' Wins' : null
+              )) : 'Player Wins'}
+              
+            </label>
+            <div className="relative">
+              <select
+                id="player1_wins"
+                name="player1_wins"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                defaultValue="0"
+                onChange={(e) => setP1Wins(e.target.value)}
+                disabled={player1 === ""}
+              >
+                <option value="" disabled>
+                  matchs
+                </option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+          </div>
+
+
+
           {/* Player 2 */}
           <div className="mb-4">
             <label
-              htmlFor="player 1"
+              htmlFor="player 2"
               className="mb-2 block text-sm font-medium"
             >
               Choose Player 2
             </label>
             <div className="relative">
               <select
-                id="player2id"
-                name="player2id"
+                id="player2_id"
+                name="player2_id"
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 defaultValue=""
                 onChange={(e) => setThisPlayer(e.target.value, 2)}
+                disabled={player1 === ""}
                 required
               >
                 <option value="" disabled>
@@ -166,8 +231,39 @@ export default function CreateForm({
             </div>
           </div>
 
-          {/* Match 1 */}
+          {/* p2w */}
           <div className="mb-4">
+            <label htmlFor="p2wins" className="mb-2 block text-sm font-normal">
+              
+              { player2 ? 
+              players.map((player) => (
+                player.id === player2 ?
+                player.nick +' Wins' : null
+              )) : 'Player Wins'}
+              
+            </label>
+            <div className="relative">
+              <select
+                id="player2_wins"
+                name="player2_wins"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                defaultValue="0"
+                onChange={(e) => setP2Wins(e.target.value)}
+                disabled={player2 === ""}
+              >
+                <option value="" disabled>
+                  matchs
+                </option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2" disabled={p1Wins=== "2" }>2</option>
+              </select>
+              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+          </div>
+
+          {/* Match 1 */}
+          {/* <div className="mb-4">
             <label htmlFor="match 1" className="mb-2 block text-sm font-medium">
               Match 1 result
             </label>
@@ -188,10 +284,10 @@ export default function CreateForm({
               </select>
               <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
-          </div>
+          </div> */}
 
           {/* Match 2 */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label htmlFor="match 2" className="mb-2 block text-sm font-medium">
               Match 2 result
             </label>
@@ -213,10 +309,10 @@ export default function CreateForm({
               </select>
               <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
-          </div>
+          </div> */}
 
           {/* Match 3 */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label htmlFor="match 3" className="mb-2 block text-sm font-medium">
               Match 3 result
             </label>
@@ -227,7 +323,7 @@ export default function CreateForm({
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 defaultValue=""
                 onChange={(e) => setThisMatch(e.target.value, 3)}
-                /* user cant set n3 in case m2 is not yet setted. also in case same player win m1 and m2 (but not if double tie) */
+                // user cant set n3 in case m2 is not yet setted. also in case same player win m1 and m2 (but not if double tie) 
                 disabled={
                   match2 === "z" || (match1 === match2 && match1 !== "0")
                 }
@@ -241,7 +337,7 @@ export default function CreateForm({
               </select>
               <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="mt-6 flex justify-end gap-4">
           <Link

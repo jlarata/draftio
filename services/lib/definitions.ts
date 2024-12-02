@@ -128,6 +128,16 @@ export type LeagueField = {
   name: string;
 };
 
+export type uuid = {
+  gen_random_uuid : string
+} 
+
+export type uuidField = {
+  uuid : uuid;
+}
+
+
+
 //eliminar todas estas luego
 export type Revenue = {
     month: string;

@@ -1,10 +1,11 @@
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { inter } from '../fonts';
-import { fetchLatestGames } from '@/services/lib/data';
 import { gamesByDate } from '@/services/lib/utils';
+import { gameServices } from '@/services/game';
 
 
+const { fetchLatestGames } = gameServices;
 const latestGames = await fetchLatestGames();
 latestGames.sort(gamesByDate)
 

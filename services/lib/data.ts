@@ -1,32 +1,14 @@
 import { sql } from '@vercel/postgres'
 import { unstable_noStore as noStore } from 'next/cache'
 import {
-  Game,
   GameJoinedWith2Players,
   GamesTable,
-  LatestGames,
-  Player,
-  Tournament,
   } from './definitions'
 import { gamesByDate } from './utils'
 
+/* Old Methods: to be deleted soon: */
 
-
-export async function fetchPlayersByLeague(leagueId: string) {
-  // noStore();
-  try {
-    const { rows: players } = await sql<Player>`SELECT id, nick FROM players;`
-
-    return {
-      players: players ?? 'No players in database',
-    }
-  } catch (error) {
-    console.error('Database Error:', error)
-    throw new Error('Failed to fetch players data.')
-  }
-}
-
-export async function fetchGames() {
+/* export async function fetchGames() {
   // noStore();
   try {
     const { rows: games } = await sql<Game>`SELECT * FROM games`
@@ -49,84 +31,7 @@ export async function fetchTournaments() {
     console.error('Database Error:', error)
     throw new Error('Failed to fetch tournaments data.')
   }
-}
-
-export async function fetchLatestGames() {
-  // noStore();
-  try {
-    const { rows: latestGames } = await sql<LatestGames>`
-    SELECT
-    l.name AS league_name,
-    t.name AS tournament_name,
-    TO_CHAR(t.date, 'dd/mm/yyyy') AS date,
-    pg.game_id,
-    p.username as Player,
-    pg.wins
-
-    from game g
-    INNER JOIN
-    player_game pg
-    ON pg.game_id = g.id
-    INNER JOIN
-    player p
-    on pg.player_id = p.id
-    INNER JOIN
-    tournament t
-    on g.tournament_id = t.id
-    INNER JOIN
-    league l
-    on t.league_id = l.id
-
-    ORDER BY
-    g.id
-
-    limit 40;
-    `
-
-    /* transforms the query results (with two rows each game)
-    in a new array with player 1 and player 2 and only one row for game */
-
-    let latestGamesJoinedWith2Players: GameJoinedWith2Players[] = []
-    let currentGameIndex = 0
-    let currentGameJoinedIndex = 0
-    let currentGameId = ''
-
-    /* this map replaces the commented for loop ahead. apparently nailed at first attempt.  */
-    latestGames.map((game) => {
-      currentGameId === game.game_id
-        ? ((latestGamesJoinedWith2Players[currentGameJoinedIndex].player2 = game.player),
-          (latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = game.wins),
-          latestGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins >
-          latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins
-            ? (latestGamesJoinedWith2Players[currentGameJoinedIndex].result = 1)
-            : latestGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins <
-              latestGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins
-            ? (latestGamesJoinedWith2Players[currentGameJoinedIndex].result = 2)
-            : null,
-          currentGameJoinedIndex++)
-        : (currentGameId = game.game_id)
-      let newGame: GameJoinedWith2Players = {
-        league_name: game.league_name,
-        tournament_name: game.tournament_name,
-        date: game.date,
-        game_id: game.game_id,
-        player1: game.player,
-        player1Wins: game.wins,
-        player2: 'string',
-        player2Wins: 0,
-        result: 0,
-        round: game.round,
-      }
-      latestGamesJoinedWith2Players.push(newGame)
-      currentGameIndex++
-    })
-
-    return latestGamesJoinedWith2Players
-  } catch (error) {
-    console.error('Database Error:', error)
-    throw new Error('Failed to fetch the latest games.')
-  }
-}
+} */
 
 export async function fetchCardData() {
   noStore()
@@ -160,64 +65,7 @@ export async function fetchCardData() {
   }
 }
 
-/* export async function fetchCardData() {
-  try {
-    // You can probably combine these into a single SQL query
-    // However, we are intentionally splitting them to demonstrate
-    // how to initialize multiple queries in parallel with JS.
-    const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
-    const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
-    const invoiceStatusPromise = sql`SELECT
-         SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
-         SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
-         FROM invoices`;
-
-    const data = await Promise.all([
-      invoiceCountPromise,
-      customerCountPromise,
-      invoiceStatusPromise,
-    ]);
-
-    const numberOfInvoices = Number(data[0].rows[0].count ?? '0');
-    const numberOfCustomers = Number(data[1].rows[0].count ?? '0');
-    const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? '0');
-    const totalPendingInvoices = formatCurrency(data[2].rows[0].pending ?? '0');
-
-    return {
-      numberOfCustomers,
-      numberOfInvoices,
-      totalPaidInvoices,
-      totalPendingInvoices,
-    };
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch card data.');
-  }
-} */
-
-// LA ANTERIOR QUERY DE INVOICES TableCellsIcon
-// SELECT
-//         invoices.id,
-//         invoices.amount,
-//         invoices.date,
-//         invoices.status,
-//         customers.name,
-//         customers.email,
-//         customers.image_url
-//       FROM invoices
-//       JOIN customers ON invoices.customer_id = customers.id
-//       WHERE
-//         customers.name ILIKE ${`%${query}%`} OR
-//         customers.email ILIKE ${`%${query}%`} OR
-//         invoices.amount::text ILIKE ${`%${query}%`} OR
-//         invoices.date::text ILIKE ${`%${query}%`} OR
-//         invoices.status ILIKE ${`%${query}%`}
-//       ORDER BY invoices.date DESC
-//       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
-//     `;
-
 const ITEMS_PER_PAGE = 6
-
 export async function fetchFilteredGames(query: string, currentPage: number) {
   const offset = (currentPage - 1) * (ITEMS_PER_PAGE * 2)
   //console.log("current page: "+currentPage+" items per page: "+ITEMS_PER_PAGE+" offset: "+ offset);
