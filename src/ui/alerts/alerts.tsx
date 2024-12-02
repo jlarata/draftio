@@ -1,6 +1,6 @@
 'use client'
 
-import { showSwal } from "@/services/lib/alerts";
+import { successShowSwal } from "@/services/lib/alerts";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -13,7 +13,7 @@ export default function AlertsPage(props :
    
    useEffect(() => {
       setMessage(props.someText);
-      showSwal(message);
+      successShowSwal(message);
       router.replace('/dashboard/games')
    })
    return (<></>)
