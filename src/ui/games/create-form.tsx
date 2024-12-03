@@ -25,9 +25,6 @@ export default function CreateForm({
   const [p1Wins, setP1Wins] = useState("0");
   const [p2Wins, setP2Wins] = useState("0");
 
-/*   const [match1, setMatch1] = useState("z");
-  const [match2, setMatch2] = useState("z");
-  const [match3, setMatch3] = useState("z"); */
 
   const setThisPlayer = (playerName: string, playerPos: number) => {
     if (playerPos === 1) {
@@ -36,19 +33,6 @@ export default function CreateForm({
       setPlayer2(playerName);
     }
   };
-
-/*   const setThisMatch = (playerWinner: string, matchNumber: number) => {
-    switch (matchNumber) {
-      case 1:
-        setMatch1(playerWinner);
-        break;
-      case 2:
-        setMatch2(playerWinner);
-        break;
-      case 3:
-        setMatch3(playerWinner);
-    }
-  }; */
 
   return (
     <>
@@ -262,82 +246,6 @@ export default function CreateForm({
             </div>
           </div>
 
-          {/* Match 1 */}
-          {/* <div className="mb-4">
-            <label htmlFor="match 1" className="mb-2 block text-sm font-medium">
-              Match 1 result
-            </label>
-            <div className="relative">
-              <select
-                id="match1"
-                name="match1"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                defaultValue=""
-                onChange={(e) => setThisMatch(e.target.value, 1)}
-              >
-                <option value="" disabled>
-                  Select a winner
-                </option>
-                <option value="1">Player 1</option>
-                <option value="2">Player 2</option>
-                <option value="0">Tie!</option>
-              </select>
-              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            </div>
-          </div> */}
-
-          {/* Match 2 */}
-          {/* <div className="mb-4">
-            <label htmlFor="match 2" className="mb-2 block text-sm font-medium">
-              Match 2 result
-            </label>
-            <div className="relative">
-              <select
-                id="match2"
-                name="match2"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                defaultValue=""
-                onChange={(e) => setThisMatch(e.target.value, 2)}
-                disabled={match1 === "z"}
-              >
-                <option value="" disabled>
-                  Select a winner
-                </option>
-                <option value="1">Player 1</option>
-                <option value="2">Player 2</option>
-                <option value="0">Tie!</option>
-              </select>
-              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            </div>
-          </div> */}
-
-          {/* Match 3 */}
-          {/* <div className="mb-4">
-            <label htmlFor="match 3" className="mb-2 block text-sm font-medium">
-              Match 3 result
-            </label>
-            <div className="relative">
-              <select
-                id="match3"
-                name="match3"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                defaultValue=""
-                onChange={(e) => setThisMatch(e.target.value, 3)}
-                // user cant set n3 in case m2 is not yet setted. also in case same player win m1 and m2 (but not if double tie) 
-                disabled={
-                  match2 === "z" || (match1 === match2 && match1 !== "0")
-                }
-              >
-                <option value="" disabled>
-                  Select a winner
-                </option>
-                <option value="1">Player 1</option>
-                <option value="2">Player 2</option>
-                <option value="0">Tie!</option>
-              </select>
-              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            </div>
-          </div> */}
         </div>
         <div className="mt-6 flex justify-end gap-4">
           <Link

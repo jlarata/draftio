@@ -132,13 +132,7 @@ export type uuid = {
   id : string
 } 
 
-export type uuidField = {
-  uuid : uuid;
-}
-
-
-
-//eliminar todas estas luego
+//delete all this>
 export type Revenue = {
     month: string;
     revenue: number;

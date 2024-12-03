@@ -1,4 +1,3 @@
-import { fetchCardData } from '@/services/lib/data';
 import {
   PuzzlePieceIcon,
   UserGroupIcon,
@@ -6,6 +5,7 @@ import {
   TableCellsIcon
 } from '@heroicons/react/24/outline';
 import { inter } from '../fonts';
+import { cardServices } from '@/services/card';
 
 const iconMap = {
   games: PuzzlePieceIcon,
@@ -13,6 +13,8 @@ const iconMap = {
   leagues: TableCellsIcon,
   tournaments: TrophyIcon,
 };
+
+const { fetchCardData } = cardServices;
 
 //export const dynamic = 'force-dynamic';
 export default async function CardWrapper() {

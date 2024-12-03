@@ -1,5 +1,5 @@
-import { fetchFilteredGames } from "@/services/lib/data";
-import { UpdateGame } from "./buttons";
+import { DeleteGame, UpdateGame } from "./buttons";
+import { gameServices } from "@/services/game";
 
 
 export default async function GamesTable({
@@ -9,6 +9,8 @@ export default async function GamesTable({
   query: string;
   currentPage: number;
 }) {
+
+  const { fetchFilteredGames } = gameServices;
   const games = await fetchFilteredGames(query, currentPage);
   /* console.log(query);
   console.log(currentPage);
@@ -154,7 +156,7 @@ export default async function GamesTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateGame id={game.game_id} />
-                      <UpdateGame id={game.game_id} />
+                      <DeleteGame id={game.game_id} />
                     </div>
                   </td>
                 </tr>

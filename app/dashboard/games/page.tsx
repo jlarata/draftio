@@ -1,4 +1,4 @@
-import { fetchGamesPages } from "@/services/lib/data";
+import { gameServices } from "@/services/game";
 import AlertsPage from "@/src/ui/alerts/alerts";
 import { inter } from "@/src/ui/fonts";
 import { CreateGame } from "@/src/ui/games/buttons";
@@ -24,6 +24,9 @@ export default async function Page(props: {
     gamecreated?: string;
   }>;
 }) {
+
+  const { fetchGamesPages } = gameServices;
+
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
