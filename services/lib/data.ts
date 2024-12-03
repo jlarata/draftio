@@ -134,7 +134,7 @@ ORDER BY
 
 
       filteredGames.map((game) => {
-        if (currentGameIndex < 7) {
+        if (currentGameIndex < 13) {
           //console.log("analizing game: "+ game.game_id);
         if (currentGameId === game.game_id) {
           //console.log("game is old, updating");
