@@ -1,6 +1,7 @@
 import { fetchFilteredGames } from "@/services/lib/data";
 import { UpdateGame } from "./buttons";
 
+
 export default async function GamesTable({
   query,
   currentPage,
@@ -9,6 +10,9 @@ export default async function GamesTable({
   currentPage: number;
 }) {
   const games = await fetchFilteredGames(query, currentPage);
+  /* console.log(query);
+  console.log(currentPage);
+  console.log(games.length); */
 
   return (
     <div className="mt-6 flow-root">

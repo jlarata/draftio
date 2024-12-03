@@ -1,8 +1,10 @@
 import { sql } from "@vercel/postgres"
 import { GameAxis, TournamentAxis } from "../lib/definitions"
+import { unstable_noStore as noStore } from 'next/cache'
+
 
 const fetchGamesAndTournamentsForChart = async () => {
-    // noStore();
+    noStore()
     try {
       const {rows : gamesDataPromise} = await sql<GameAxis>`SELECT * FROM game`
       const {rows : tournamentsDataPromise} = await sql<TournamentAxis>`SELECT * FROM tournament`

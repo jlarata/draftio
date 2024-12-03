@@ -129,7 +129,7 @@ export type LeagueField = {
 };
 
 export type uuid = {
-  gen_random_uuid : string
+  id : string
 } 
 
 export type uuidField = {

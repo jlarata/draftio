@@ -5,6 +5,7 @@ import { gamesByDate } from '@/services/lib/utils';
 import { gameServices } from '@/services/game';
 
 
+
 const { fetchLatestGames } = gameServices;
 const latestGames = await fetchLatestGames();
 latestGames.sort(gamesByDate)

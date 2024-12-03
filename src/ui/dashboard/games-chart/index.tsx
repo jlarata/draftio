@@ -3,8 +3,11 @@ import { inter } from '../../fonts'
 import { gamesChartUtils } from './utils'
 import { gamesChartConfig } from './config'
 import { ChartServices } from '@/services/games-chart'
+import { unstable_noStore as noStore } from 'next/cache'
+
 
 export default async function GamesChart() {
+  noStore()
   /* const { fetchSelectTournamentData } = tournamentServices
   const { tournaments } = await fetchSelectTournamentData({ leagueId }) */
   const { fetchGamesAndTournamentsForChart } = ChartServices;

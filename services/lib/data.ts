@@ -67,6 +67,7 @@ export async function fetchCardData() {
 
 const ITEMS_PER_PAGE = 6
 export async function fetchFilteredGames(query: string, currentPage: number) {
+  noStore()
   const offset = (currentPage - 1) * (ITEMS_PER_PAGE * 2)
   //console.log("current page: "+currentPage+" items per page: "+ITEMS_PER_PAGE+" offset: "+ offset);
 
@@ -131,54 +132,62 @@ ORDER BY
 
     //filteredGames.sort(gamesByDate)
 
-    filteredGames.map((game) => {
-      //console.log("analizing game: "+ game.game_id);
-      if (currentGameId === game.game_id) {
-        //console.log("game is old, updating");
-        allGamesJoinedWith2Players[currentGameJoinedIndex].player2 = game.player
-        allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = game.wins
 
-        allGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins >
-        allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins
-          ? (allGamesJoinedWith2Players[currentGameJoinedIndex].result = 1)
-          : allGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins <
-            allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins
-          ? (allGamesJoinedWith2Players[currentGameJoinedIndex].result = 2)
-          : null
-        currentGameJoinedIndex++
-      } else {
-        //console.log("game is new, creating one");
-        currentGameId = game.game_id
-
-        let newGame: GameJoinedWith2Players = {
-          league_name: game.league_name,
-          tournament_name: game.tournament_name,
-          date: game.date,
-          game_id: game.game_id,
-          player1: game.player,
-          player1Wins: game.wins,
-          player2: 'string',
-          player2Wins: 0,
-          result: 0,
-          round: game.round,
+      filteredGames.map((game) => {
+        if (currentGameIndex < 7) {
+          //console.log("analizing game: "+ game.game_id);
+        if (currentGameId === game.game_id) {
+          //console.log("game is old, updating");
+          allGamesJoinedWith2Players[currentGameJoinedIndex].player2 = game.player
+          allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins = game.wins
+  
+          allGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins >
+          allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins
+            ? (allGamesJoinedWith2Players[currentGameJoinedIndex].result = 1)
+            : allGamesJoinedWith2Players[currentGameJoinedIndex].player1Wins <
+              allGamesJoinedWith2Players[currentGameJoinedIndex].player2Wins
+            ? (allGamesJoinedWith2Players[currentGameJoinedIndex].result = 2)
+            : null
+          currentGameJoinedIndex++
+        } else {
+          //console.log("game is new, creating one");
+          currentGameId = game.game_id
+  
+          let newGame: GameJoinedWith2Players = {
+            league_name: game.league_name,
+            tournament_name: game.tournament_name,
+            date: game.date,
+            game_id: game.game_id,
+            player1: game.player,
+            player1Wins: game.wins,
+            player2: 'string',
+            player2Wins: 0,
+            result: 0,
+            round: game.round,
+          }
+          allGamesJoinedWith2Players.push(newGame)
+          //console.log("allGamesJoinedWith2Players lenght: "+allGamesJoinedWith2Players.length)
         }
-        allGamesJoinedWith2Players.push(newGame)
-        //console.log("allGamesJoinedWith2Players lenght: "+allGamesJoinedWith2Players.length)
-      }
-      currentGameIndex++
-    })
+        currentGameIndex++
+        }
+      })        
+    
+
+    
 
     //console.log(allGamesJoinedWith2Players)
 
-    allGamesJoinedWith2Players.sort(gamesByDate)
+    allGamesJoinedWith2Players.sort(gamesByDate);
+    //console.log(filteredGames.length, allGamesJoinedWith2Players.length);
     return allGamesJoinedWith2Players
   } catch (error) {
-    console.error('Database Error:', error)
+    //console.error('Database Error:', error)
     throw new Error('Failed to fetch games.')
   }
 }
 
 export async function fetchGamesPages(query: string) {
+  noStore()
   try {
     const count = await sql`SELECT COUNT(*)
     FROM game g

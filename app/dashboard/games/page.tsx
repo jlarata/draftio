@@ -11,6 +11,7 @@ import { Suspense } from "react";
 
 
 
+
 export const metadata: Metadata = {
   title: "Games | Draftio Dashboard",
 };

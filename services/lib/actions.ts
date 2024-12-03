@@ -4,6 +4,8 @@ import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
 import { uuid, uuidField } from "./definitions";
+import { unstable_noStore as noStore } from 'next/cache'
+
 
 
 /* reformular create game:
@@ -16,6 +18,7 @@ import { uuid, uuidField } from "./definitions";
 
 export async function createGame(
   formData: FormData) {
+    noStore()
     let rawFormData : {
       /*data for the new game record*/
       tournament_id : string,
@@ -58,12 +61,12 @@ export async function createGame(
       if ((rawFormData.pre_player2_wins !== null)) { 
         rawFormData.player2_wins = parseInt(formData.get('player2_wins') as string);
       } 
-      //console.log("creating game");
-      //console.log(rawFormData);
+      console.log("creating game");
+      console.log(rawFormData);
 
-      const returnRandomUUID = async ()  => {
+/*       const returnRandomUUID = async ()  => {
         try {
-          const { rows : uuid }= await sql<uuid>`select gen_random_uuid();`;
+          const { rows : uuid } = await sql<uuid>`select gen_random_uuid();`;
         return {
             uuid : uuid
           }
@@ -71,29 +74,47 @@ export async function createGame(
           console.error('Database Error:', error)
           throw new Error('Failed to return a random uuid.')
         }
-      }
+      } */
 
-      const { uuid } = await returnRandomUUID();
-      //console.log(uuid)
-      const random_uuid = uuid[0].gen_random_uuid;
-      //console.log(random_uuid)
+      const { uuid } = await createGameAndReturnID(rawFormData.tournament_id, rawFormData.round);
+
+      console.log(uuid)
+      const this_game_id = uuid[0].id;
+      console.log(this_game_id)
 
  
-      await sql`
-      INSERT INTO game (id, tournament_id, round)
-      VALUES(${random_uuid}, ${rawFormData.tournament_id}, ${rawFormData.round});`
+     /*  await sql`
+      INSERT INTO game (tournament_id, round)
+      VALUES(${rawFormData.tournament_id}, ${rawFormData.round})
+      RETURNUNG id;` */
       
       await sql`
       INSERT INTO player_game (player_id, game_id, wins)
-         VALUES (${rawFormData.player1_id}, ${random_uuid}, ${rawFormData.player1_wins});`
+         VALUES (${rawFormData.player1_id}, ${this_game_id}, ${rawFormData.player1_wins});`
       await sql`
       INSERT INTO player_game (player_id, game_id, wins)
-         VALUES (${rawFormData.player2_id}, ${random_uuid}, ${rawFormData.player2_wins});
+         VALUES (${rawFormData.player2_id}, ${this_game_id}, ${rawFormData.player2_wins});
     `;
 
 
     revalidatePath('/dashboard/games');
     redirect('/dashboard/games?gamecreated=ok');
+  }
+
+  const createGameAndReturnID = async (tournament_id : string, round: number | null)  => {
+    noStore()
+    try {
+      console.log("torneo: "+tournament_id+", ronda: "+round)
+      const { rows : uuid } = await sql<uuid>`INSERT INTO game (tournament_id, round)
+      VALUES(${tournament_id}, ${round})
+      RETURNING id;`;
+    return {
+        uuid : uuid
+      }
+    } catch (error) {
+      console.error('Database Error:', error)
+      throw new Error('Failed to create game and return the uuid.')
+    }
   }
 
 
