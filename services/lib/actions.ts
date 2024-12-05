@@ -86,3 +86,10 @@ export async function createGame(
       throw new Error('Failed to create game and return the uuid.')
     }
   }
+
+  export const redirectWithParams = async (params : string) => {
+    console.log("redirecting?")
+    const param = params;
+
+    redirect(`/dashboard/games/create/${param}`);
+  }

@@ -2,6 +2,7 @@ import { sql } from '@vercel/postgres'
 import { TournamentForCreateQuery } from '../lib/definitions'
 
 const fetchSelectTournamentData = async ({ league_id }: { league_id: string }) => {
+  //console.log("attempting to fetch from league "+league_id)
   try {
     const {rows : tournamentsPromise} = await sql<TournamentForCreateQuery>`
       SELECT

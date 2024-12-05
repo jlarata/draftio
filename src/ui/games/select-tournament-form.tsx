@@ -1,17 +1,35 @@
-import { TournamentField } from '@/services/lib/definitions'
-import Link from 'next/link'
-import { TableCellsIcon, TrophyIcon } from '@heroicons/react/24/outline'
-import { Button } from '../button'
-import { tournamentServices } from '@/services/tournament'
+'use client';
+
+import { TournamentField, TournamentForCreateQuery } from '@/services/lib/definitions';
+import Link from 'next/link';
+import { TableCellsIcon, TrophyIcon } from '@heroicons/react/24/outline';
+import { Button } from '../button';
+import { tournamentServices } from '@/services/tournament';
+import { redirectWithParams } from "@/services/lib/actions";
+
 
 type Props = {
   league_id: string
 }
 
-export default async function SelectTournamentForm({ league_id }: Props) {
-  const { fetchSelectTournamentData } = tournamentServices
+/* export default async function SelectTournamentForm({ league_id, }: Props)  */
+
+export default function SelectTournamentForm({
+  league_id, tournaments
+}: {
+  league_id: string, tournaments: TournamentForCreateQuery[]
+})
+
+{
+  /* const { fetchSelectTournamentData } = tournamentServices
   const { tournaments } = await fetchSelectTournamentData({ league_id })
-  const properUrl = encodeURIComponent('&league_id=' + league_id)
+   const properUrl = encodeURIComponent('&league_id=' + league_id)*/
+   
+
+  const redirect = (params : string) => {
+    const fixUrl = "?league_id="+league_id+"&tournament_id="+params;
+   redirectWithParams(fixUrl);
+  }
 
   return (
     <form action=''>
@@ -47,12 +65,13 @@ export default async function SelectTournamentForm({ league_id }: Props) {
               name='tournament_id'
               className='peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500'
               defaultValue=''
+              onChange={(e) => redirect(e.target.value)}
               required
             >
               <option value='' disabled>
                 Select tournament
               </option>
-              {tournaments.map((tournament) => (
+              {tournaments.map((tournament : TournamentForCreateQuery) => (
                 <option key={tournament.id} value={tournament.id}>
                   {tournament.name + ' | ' + tournament.date}
                 </option>
@@ -69,7 +88,7 @@ export default async function SelectTournamentForm({ league_id }: Props) {
         >
           Cancel
         </Link>
-        <Button type='submit'>Select Tournament</Button>
+        {/* <Button type='submit'>Select Tournament</Button> */}
       </div>
     </form>
   )
