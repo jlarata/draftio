@@ -59,8 +59,8 @@ export default async function GamesTable({
                     )}
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateGame id={game.game_id} />
-                    <UpdateGame id={game.game_id} />
+                    <UpdateGame game_id={game.game_id} />
+                    <UpdateGame game_id={game.game_id} />
                   </div>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default async function GamesTable({
                   )}
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateGame id={game.game_id} />
+                      <UpdateGame game_id={game.game_id} />
                       <DeleteGame id={game.game_id} />
                     </div>
                   </td>

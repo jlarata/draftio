@@ -193,3 +193,16 @@ export type InvoiceForm = {
   amount: number;
   status: 'pending' | 'paid';
 };
+
+export type GameForm = {
+  league_name : string;
+  tournament_name : string;
+  date: string;
+  game_id: string;
+  player1: string;
+  player1Wins: 0 | 1 | 2, 
+  player2: string;
+  player2Wins : 0 | 1 | 2,
+  result : 0 | 1 | 2,
+  round : 1 | 2 | 3
+};

@@ -89,6 +89,84 @@ const fetchLatestGames = async () =>  {
     }
   }
 
+  const fetchGameById = async (game_id : string) => {
+    try {
+      /* console.log("trying to fetch "+game_id); */
+      const { rows: twoPlayer_Game }  = await sql<GamesTable>`
+
+      SELECT
+        l.name AS league_name,
+        t.name AS tournament_name,
+        TO_CHAR(t.date, 'dd/mm/yyyy') AS date,
+        pg.game_id,
+        p.username as Player,
+        pg.wins,
+        g.round
+      FROM
+        game g
+      INNER JOIN
+        player_game pg
+      ON pg.game_id = g.id
+      INNER JOIN
+        player p
+      on pg.player_id = p.id
+      INNER JOIN
+        tournament t
+      on g.tournament_id = t.id
+      INNER JOIN
+        league l
+      on t.league_id = l.id
+      
+      WHERE
+        pg.game_id
+      IN
+      (SELECT pg.game_id
+        FROM
+          game g
+        INNER JOIN
+          player_game pg
+        ON
+          pg.game_id = g.id
+        INNER JOIN
+          player p
+        ON
+          pg.player_id = p.id
+
+      WHERE
+          g.id = ${game_id})
+
+        ORDER BY
+        g.id`
+  
+    /* console.log("fetched: "+twoPlayer_Game); */
+    let gameResult : 0 | 1 | 2 = 0;
+    twoPlayer_Game[0].wins > twoPlayer_Game[1].wins ?
+      gameResult = 1 : 
+      twoPlayer_Game[0].wins < twoPlayer_Game[1].wins ?
+      gameResult = 2
+    : null;
+
+    let oneGameJoinedWith2Players: GameJoinedWith2Players = {
+      league_name : twoPlayer_Game[0].league_name,
+      tournament_name : twoPlayer_Game[0].tournament_name,
+      date : twoPlayer_Game[0].date,
+      game_id : twoPlayer_Game[0].game_id,
+      player1: twoPlayer_Game[0].player,
+      player1Wins : twoPlayer_Game[0].wins,
+      player2 : twoPlayer_Game[1].player,
+      player2Wins : twoPlayer_Game[1].wins,
+      result : gameResult,
+      round : twoPlayer_Game[0].round,
+    }
+
+    //console.log(oneGameJoinedWith2Players)  
+              
+      return oneGameJoinedWith2Players;
+    } catch (error) {
+      throw new Error(`Failed to fetch game id ${game_id}`)
+    }
+  }
+
   const ITEMS_PER_PAGE = 6
 
   const fetchFilteredGames = async (query:string, currentPage:number) => {
@@ -238,6 +316,7 @@ const fetchGamesPages = async (query: string) => {
 
 export const gameServices = {
   fetchLatestGames,
+  fetchGameById,
   fetchFilteredGames,
   fetchGamesPages
 }
