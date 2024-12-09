@@ -22,6 +22,7 @@ export default async function Page(props: {
     query?: string;
     page?: string;
     gamecreated?: string;
+    gameedited?: string;
   }>;
 }) {
 
@@ -33,12 +34,18 @@ export default async function Page(props: {
   const totalPages = await fetchGamesPages(query);
 
   let gameCreatedMessage = searchParams?.gamecreated || "";
+  let gameEditedMeesage = searchParams?.gameedited || "";
+
 
   return (
     <>
     
       {gameCreatedMessage && (
         <AlertsPage someText={'Game succesfully created'}></AlertsPage> 
+      )} 
+
+      {gameEditedMeesage && (
+        <AlertsPage someText={'Game succesfully edited!'}></AlertsPage> 
       )} 
 
       <div className="w-full">

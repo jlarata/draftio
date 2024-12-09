@@ -6,6 +6,48 @@ import { redirect } from 'next/navigation';
 import { uuid } from "./definitions";
 
 
+export async function updateGame(id : string, previousPlayer1 : string, previousPlayer2 : string, formData : FormData) {
+  let { tournament_id, round, player1, player1Wins, player2, player2Wins } = ({
+    tournament_id : formData.get('tournament_id') as string,
+    round : parseInt(formData.get('round') as string),
+    player1 : formData.get('player1') as string,
+    player1Wins : parseInt(formData.get('player1Wins') as string),
+    player2 : formData.get('player2') as string,
+    player2Wins : parseInt(formData.get('player2Wins') as string),
+  })
+
+  try {
+    //console.log("updating game. id: "+id+" tournament id: "+tournament_id+" round: "+round);
+    await sql`
+    UPDATE game
+    SET tournament_id = ${tournament_id}, round = ${round}
+    WHERE id = ${id};`
+
+    // console.log("updating player_game player_id: "+previousPlayer1+" wins: "+player1Wins)
+
+    await sql`
+    UPDATE player_game
+    SET player_id = ${player1}, wins = ${player1Wins}
+    WHERE (player_id = ${previousPlayer1} AND game_id = ${id})`
+    
+    // console.log("updating player_game player_id: "+previousPlayer2+" wins: "+player2Wins)
+
+    await sql`
+    UPDATE player_game
+    SET player_id = ${player2}, wins = ${player2Wins}
+    WHERE (player_id = ${previousPlayer2} AND game_id = ${id})`
+
+
+    
+  } catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to edit game and player_game.')
+  }
+
+  revalidatePath('/dashboard/games');
+  redirect('/dashboard/games?gameedited=ok');
+
+}
 
 export async function createGame(
   formData: FormData) {

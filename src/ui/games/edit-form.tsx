@@ -8,7 +8,8 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '../button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { updateGame } from '@/services/lib/actions';
 
 export default function EditGameForm({
   game,
@@ -22,18 +23,28 @@ export default function EditGameForm({
   players : PlayerField[];
 }) {
 
-  //console.log(game.player1)
-  
-
   const [player1, setPlayer1] = useState(game.player1);
+  const [previousPlayer1, setPreviousPlayer1] = useState("");  
   const [player1_id, setPlayer1_id] = useState("");
   const [player1Wins, setPlayer1Wins] = useState(game.player1Wins.toString());
   const [player2, setPlayer2] = useState(game.player2);
+  const [previousPlayer2, setPreviousPlayer2] = useState("");  
   const [player2_id, setPlayer2_id] = useState(game.player2);
   const [player2Wins, setPlayer2Wins] = useState(game.player2Wins.toString());
-  //console.log(player1)
-  
-   const setThisPlayer = (player_id : string, player : number) => {
+ 
+
+  useEffect(() => {
+    players.map((player) => {
+      if (player.nick === player1 ) {
+        setPreviousPlayer1(player.id);
+      }
+      if (player.nick === player2 ) {
+        setPreviousPlayer2(player.id);
+      }
+    })
+ },[])
+
+  const setThisPlayer = (player_id : string, player : number) => {
     
     if (player === 1) {
       players.map((player, i) => (
@@ -49,17 +60,20 @@ export default function EditGameForm({
         setPlayer2_id(player.id)) : null
       ))
     } 
+
   }
 
+  const updateGameWithId = updateGame.bind(null, game.game_id, previousPlayer1, previousPlayer2);
 
+  //console.log("previous player 1 id: "+previousPlayer1+" previous player 2 id: "+ previousPlayer2)
 
   return (
-    <form>
+    <form action={updateGameWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
 
           {/* Tournament */}
           <div className="mb-4">
-          <label htmlFor="amount" className="mb-2 block text-sm font-medium">
+          <label htmlFor="tournament_id" className="mb-2 block text-sm font-medium">
             Tournament
           </label>
           <div className="relative mt-2 rounded-md">
@@ -78,6 +92,29 @@ export default function EditGameForm({
                   {tournament.name}, {tournament.date}
                 </option>
               ))}
+                </select>
+              < ClipboardIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+        </div>
+
+          {/* Round */}
+          <div className="mb-4">
+          <label htmlFor="round" className="mb-2 block text-sm font-medium">
+            Round
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+            <select
+              id="round"
+              name="round"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              defaultValue={game.round}
+            >
+              <option value="" disabled>
+                Select round
+              </option>
+                <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>  
                 </select>
               < ClipboardIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
