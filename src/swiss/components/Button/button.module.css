@@ -1,0 +1,27 @@
+.button {
+  padding-block: 4px;
+  padding-inline: 12px;
+  border-radius: 4px;
+  height: 40px;
+  transition: all 0.2s ease;
+}
+
+.button.outlined {
+  background-color: white;
+  border: 1px solid var(--purple-800);
+  color: var(--purple-800);
+}
+
+.button.button-primary {
+  background-color: var(--purple-800);
+  color: white;
+}
+
+.button.button-primary:disabled {
+  background-color: var(--purple-200);
+  color: white;
+}
+
+.button.button-primary:enabled:hover {
+  background-color: var(--purple-700);
+}

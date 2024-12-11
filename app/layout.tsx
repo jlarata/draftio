@@ -1,14 +1,14 @@
+import { TournamentProvider } from "@/src/swiss/providers/tournament";
 import { inter } from "@/src/ui/fonts";
 import '@/src/ui/global.css';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
-    </html>
+    <html><body>
+    <TournamentProvider>
+      {children}
+    </TournamentProvider>
+    </body></html>
   );
 }
