@@ -1,16 +1,11 @@
 /* this file is not being used anymore. */
 
-
-import MainLayout from "@/src/swiss/components/Layout/MainLayout"
-import { TournamentProvider } from "@/src/swiss/providers/tournament"
+import MainLayout from '@/src/swiss/components/Layout/MainLayout'
+import { TournamentProvider } from '@/src/swiss/providers/tournament'
 import '@/src/swiss/styles/index.css'
-import { AppProps } from "next/app"
-import { Inter } from "next/font/google"
-import Head from "next/head"
-import Home from "@/src/swiss/views/Home";
-
-
-
+import { AppProps } from 'next/app'
+import { Inter } from 'next/font/google'
+import Head from 'next/head'
 
 const inter = Inter({ subsets: ['latin'] })
 

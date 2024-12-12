@@ -1,12 +1,11 @@
-import Home from "@/src/swiss/views/Home";
+import Home from '@/src/swiss/views/Home'
 
 export default function Page() {
-    
-    return (
-        <>
-          <Home />
-        </>
-      )
+  return (
+    <>
+      <Home />
+    </>
+  )
 }
 
 // import MainLayout from "@/src/swiss/components/Layout/MainLayout"

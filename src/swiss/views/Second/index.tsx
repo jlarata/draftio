@@ -18,11 +18,12 @@ const Second = () => {
   const [roundConfirmed, setRoundConfirmed] = useState<Record<number, boolean>>({})
   const [refreshScore, setRefreshScore] = useState(false)
 
+  var counter = 0
   useEffect(() => {
-    console.log('tournament.createRound()')
-    //acá está fallando
-    //console.log(tournament) //<- esto tira un objeto vacío
-    tournament.createRound()
+    if (tournament.rounds.length === 0 ) {
+      tournament.createRound()
+      
+    }
     setVisibleRounds([0])
     setCurrentRoundMatches(tournament.rounds[0].matches)
   }, [])
@@ -63,7 +64,9 @@ const Second = () => {
         config: tournamentConfig,
       })
     })
+
     tournament.createRound()
+    console.log("Crea ronda en Log value")
     const nextRoundIndex = tournament.rounds.length - 1 //next 7 lines are add for reset the selectValues to avoid using a previous values in the next round
     const nextRoundMatches = tournament.rounds[nextRoundIndex].matches
     const newSelectedValues: Record<string, string> = {}

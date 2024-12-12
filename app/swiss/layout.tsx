@@ -7,7 +7,7 @@ import { Html, Head, Main, NextScript } from 'next/document'
 
 
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function SwissLayout({ children }: { children: React.ReactNode }) {
   return (
     <html>
       {/* <Head>
