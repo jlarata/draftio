@@ -38,24 +38,30 @@ const TournamentConfig = ({ config, onConfigChange }: Props) => {
   return (
     <>
       <div>
-        <label>Bo</label>
-        <NumberInput min={1} max={7} step={2} defaultValue={3} onChange={handleNumberInputChange('Bo')} />
+        <p className='mb-2 font-bold text-lg'>Tournament Configuration</p>
       </div>
-      <div>
-        <label>Points per match win</label>
-        <NumberInput min={0} max={100} step={1} defaultValue={3} onChange={handleNumberInputChange('win')} />
-      </div>
-      <div>
-        <label>Points per match draw</label>
-        <NumberInput min={0} max={100} step={1} defaultValue={1} onChange={handleNumberInputChange('draw')} />
-      </div>
-      <div>
-        <label>Points per game/set win</label>
-        <NumberInput min={0} max={100} step={1} defaultValue={0} onChange={handleNumberInputChange('gameWin')} />
-      </div>
-      <div>
-        <label>Points per bye</label>
-        <NumberInput min={0} max={100} step={1} defaultValue={0} onChange={handleNumberInputChange('bye')} />
+      <div className='flex flex-col md:items-end md:gap-2'>
+        <div className='flex items-center gap-2 flex-col md:flex-row'>
+          <label>Bo</label>
+          <NumberInput min={1} max={7} step={2} defaultValue={3} onChange={handleNumberInputChange('Bo')} 
+          className='md:w-16'/>
+        </div>
+        <div className='flex items-center gap-2 flex-col md:flex-row'>
+          <label>Points per match win</label>
+          <NumberInput min={0} max={100} step={1} defaultValue={3} onChange={handleNumberInputChange('win')} />
+        </div>
+        <div className='flex items-center gap-2 flex-col md:flex-row'>
+          <label>Points per match draw</label>
+          <NumberInput min={0} max={100} step={1} defaultValue={1} onChange={handleNumberInputChange('draw')} />
+        </div>
+        <div className='flex items-center gap-2 flex-col md:flex-row'>
+          <label>Points per game/set win</label>
+          <NumberInput min={0} max={100} step={1} defaultValue={0} onChange={handleNumberInputChange('gameWin')} />
+        </div>
+        <div className='flex items-center gap-2 flex-col md:flex-row'>
+          <label>Points per bye</label>
+          <NumberInput min={0} max={100} step={1} defaultValue={0} onChange={handleNumberInputChange('bye')} />
+        </div>
       </div>
     </>
   )

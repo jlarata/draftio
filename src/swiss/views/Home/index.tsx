@@ -61,7 +61,6 @@ const Home = () => {
           <PlayerForm submitPlayers={submitPlayers} />
         </div>
         <div>
-          <p>Tournament Configuration</p>
           <TournamentConfig config={config} onConfigChange={handleConfigChange}/>
         </div>
       </div>
