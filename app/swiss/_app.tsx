@@ -1,3 +1,6 @@
+/* this file is not being used anymore. */
+
+
 import MainLayout from "@/src/swiss/components/Layout/MainLayout"
 import { TournamentProvider } from "@/src/swiss/providers/tournament"
 import '@/src/swiss/styles/index.css'

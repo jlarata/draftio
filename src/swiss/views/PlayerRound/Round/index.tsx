@@ -1,7 +1,9 @@
-import { useTournament } from '@/src/context/tournament'
+'use client';
+
+import { useTournament } from '@/src/swiss/context/tournament'
 import MatchInput from '../Match'
 import { useEffect, useState } from 'react'
-import { Match } from '@/src/classes/Match'
+import { Match } from '@/src/swiss/classes/Match'
 
 type Props = {
   round: number

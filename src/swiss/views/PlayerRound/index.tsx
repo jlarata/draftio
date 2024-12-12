@@ -1,7 +1,9 @@
-import { useTournament } from '@/src/context/tournament'
+'use client';
+
 import classNames from 'classnames'
 import css from './style.module.css'
 import PlayerRoundRow from './PlayerRoundRow'
+import { useTournament } from '../../context/tournament'
 
 type Props = {
   containerClassName?: string

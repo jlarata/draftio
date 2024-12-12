@@ -4,9 +4,9 @@ import Second from "@/src/swiss/views/Second";
 export default function RoundsPage() {
   return (
     <>
-    <TournamentProvider>
+    
       <Second />
-    </TournamentProvider>
+    
       
     </>
   )

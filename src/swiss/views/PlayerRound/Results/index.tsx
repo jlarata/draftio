@@ -1,6 +1,6 @@
-import { useTournament } from '@/src/context/tournament'
+import { useTournament } from '@/src/swiss/context/tournament'
 import css from './style.module.css'
-import PlayerScoreDiv from '@/src/views/PlayerRound'
+import PlayerScoreDiv from '@/src/swiss/views/PlayerRound'
 
 const Result = () => {
   //const { tournament } = useTournament()  

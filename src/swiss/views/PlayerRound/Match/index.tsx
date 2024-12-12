@@ -1,8 +1,8 @@
-import Select from '@/src/components/Select'
+import { Match } from '@/src/swiss/classes/Match'
 import css from './style.module.css'
-import { Match } from '@/src/classes/Match'
-import { useTournament } from '@/src/context/tournament'
 import { useState } from 'react'
+import { useTournament } from '@/src/swiss/context/tournament'
+import Select from '@/src/swiss/components/Select'
 
 type Props = {
   matches: Match[]

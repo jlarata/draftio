@@ -1,5 +1,5 @@
-import { Config } from '@/src/classes/Config'
-import NumberInput from '@/src/components/NumberInput'
+import { Config } from '@/src/swiss/classes/Config'
+import NumberInput from '@/src/swiss/components/NumberInput'
 import { ChangeEvent, useState } from 'react'
 
 type Props = {

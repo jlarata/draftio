@@ -1,3 +1,5 @@
+/* this file is not being used anymore. */
+
 import { Html, Head, Main, NextScript } from 'next/document'
 
 export default function Document() {

@@ -1,8 +1,10 @@
+'use client';
+
 import { useState } from 'react'
-import Button from '@/src/components/Button'
+import Button from '@/src/swiss/components/Button'
 import cssInput from './Input/style.module.css'
 import PlayerInputField from './Input'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import RandomSeatStep from '../RandomSeat'
 import { randomSeatsUtils } from '../RandomSeat/utils'
 
@@ -81,7 +83,7 @@ const PlayerForm = ({ submitPlayers }: Props) => {
         <Button
           label={'Get first Round'}
           disabled={players.length < 2 || new Set(players).size !== players.length}
-          onClick={() => (submitPlayers(players), router.push('./rounds'))}
+          onClick={() => (submitPlayers(players), router.push('./swiss/rounds'))}
         />
       </div>
     </div>

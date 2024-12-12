@@ -1,5 +1,5 @@
-import Icon from '@/src/components/Icon'
-import Input from '@/src/components/Input'
+import Icon from '@/src/swiss/components/Icon'
+import Input from '@/src/swiss/components/Input'
 import css from './style.module.css'
 
 type Props = {

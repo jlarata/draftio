@@ -1,11 +1,13 @@
-import { Match } from '@/src/classes/Match'
-import Button from '@/src/components/Button'
-import { useTournament } from '@/src/context/tournament'
-import PlayerScoreDiv from '@/src/views/PlayerRound'
+'use client';
+
+import { Match } from '@/src/swiss/classes/Match'
+import Button from '@/src/swiss/components/Button'
+import { useTournament } from '@/src/swiss/context/tournament'
+import PlayerScoreDiv from '@/src/swiss/views/PlayerRound'
 import React, { useEffect, useState } from 'react'
 import css from './styles.module.css'
 import RoundInput from '../PlayerRound/Round'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 const Second = () => {
   const { tournament } = useTournament()
@@ -18,6 +20,8 @@ const Second = () => {
 
   useEffect(() => {
     console.log('tournament.createRound()')
+    //acá está fallando
+    //console.log(tournament) //<- esto tira un objeto vacío
     tournament.createRound()
     setVisibleRounds([0])
     setCurrentRoundMatches(tournament.rounds[0].matches)
