@@ -1,9 +1,20 @@
+
+import { playerServices } from '@/services/player';
 import Home from '@/src/swiss/views/Home'
 
-export default function Page() {
+export default async function Page() {
+
+  const { fetchPlayersByLeague } = playerServices;
+  const fetchedPlayers = await fetchPlayersByLeague("here should go a league id")
+
   return (
     <>
-      <Home />
+
+
+
+
+      <Home fetchedPlayers={fetchedPlayers.players} />
+
     </>
   )
 }

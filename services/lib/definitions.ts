@@ -6,15 +6,21 @@ export type Message =
 export type Player = 
     {
         id : string,
-        nick : string,
-        password : string
+
+        username : string,
+    }
+    
+export type FetchedPlayer = 
+    {
+        id : string,
+        username : string,
+
     }
 
 export type League =
     {
         id : string,
         name : string,
-        password : string
     }
 
 export type Tournament =
@@ -109,7 +115,7 @@ export type GamesTable = {
 
 export type PlayerField = {
   id: string;
-  nick: string;
+  username: string;
 };
 
 export type TournamentForCreateQuery = {
@@ -131,6 +137,13 @@ export type LeagueField = {
 export type uuid = {
   id : string
 } 
+
+
+export type PlayersTableType = {
+  id : string;
+  username : string;
+  role : string;
+};
 
 //delete all this>
 export type Revenue = {
