@@ -139,7 +139,7 @@ export default function CreateForm({
                     key={player.id}
                     value={player.id}
                   >
-                    {player.nick}
+                    {player.username}
                   </option>
                 ))}
               </select>
@@ -154,7 +154,7 @@ export default function CreateForm({
               { player1 ? 
               players.map((player) => (
                 player.id === player1 ?
-                player.nick +' Wins' : null
+                player.username +' Wins' : null
               )) : 'Player Wins'}
               
             </label>
@@ -207,7 +207,7 @@ export default function CreateForm({
                     key={player.id}
                     value={player.id}
                   >
-                    {player.nick}
+                    {player.username}
                   </option>
                 ))}
               </select>
@@ -222,7 +222,7 @@ export default function CreateForm({
               { player2 ? 
               players.map((player) => (
                 player.id === player2 ?
-                player.nick +' Wins' : null
+                player.username +' Wins' : null
               )) : 'Player Wins'}
               
             </label>

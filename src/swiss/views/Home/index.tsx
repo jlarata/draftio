@@ -6,8 +6,11 @@ import TournamentConfig from '../TournamentConfig'
 import { useState } from 'react'
 import { useTournament } from '../../context/tournament'
 import { Config } from '../../classes/Config'
+import { Player } from '@/services/lib/definitions';
 
-const Home = () => {
+const Home = (
+  {fetchedPlayers} : {fetchedPlayers : Player[]}
+) => {
   const { tournament } = useTournament()
 
   const submitPlayers = (players: string[]) => {
@@ -58,7 +61,7 @@ const Home = () => {
     <>
       <div className={css.container}>
         <div>
-          <PlayerForm submitPlayers={submitPlayers} />
+          <PlayerForm submitPlayers={submitPlayers} fetchedPlayers={fetchedPlayers} />
         </div>
         <div>
           <TournamentConfig config={config} onConfigChange={handleConfigChange}/>
