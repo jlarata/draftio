@@ -35,10 +35,10 @@ export default function EditGameForm({
 
   useEffect(() => {
     players.map((player) => {
-      if (player.nick === player1 ) {
+      if (player.username === player1 ) {
         setPreviousPlayer1(player.id);
       }
-      if (player.nick === player2 ) {
+      if (player.username === player2 ) {
         setPreviousPlayer2(player.id);
       }
     })
@@ -49,14 +49,14 @@ export default function EditGameForm({
     if (player === 1) {
       players.map((player, i) => (
         player.id === player_id ? 
-        (setPlayer1(player.nick),
+        (setPlayer1(player.username),
         setPlayer1_id(player.id)) : null
       ))  
     }
     if (player === 2) {
       players.map((player, i) => (
         player.id === player_id ? 
-        (setPlayer2(player.nick),
+        (setPlayer2(player.username),
         setPlayer2_id(player.id)) : null
       ))
     } 
@@ -140,8 +140,8 @@ export default function EditGameForm({
               </option>
               {/* <option value="">{player1}</option> */}
               {players.map((player, i) => (
-                <option key={player.id} value={player.id} selected={player.nick === player1} disabled={player.id===player2_id}>
-                  {player.nick}
+                <option key={player.id} value={player.id} selected={player.username === player1} disabled={player.id===player2_id}>
+                  {player.username}
                 </option>
               ))}
             </select>
@@ -189,8 +189,8 @@ export default function EditGameForm({
                 Select Player 2
               </option>
               {players.map((player) => (
-                <option key={player.id} value={player.id} selected={player.nick === player2} disabled={player.id===player1_id}>
-                  {player.nick}
+                <option key={player.id} value={player.id} selected={player.username === player2} disabled={player.id===player1_id}>
+                  {player.username}
                 </option>
               ))}
             </select>
