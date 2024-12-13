@@ -95,6 +95,8 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
             inputValue={player}
             removePlayer={removePlayer}
             handlePlayerNameChange={handlePlayerNameChange}
+            selectedPlayers={players}
+            inputProps={{disabled: disablePlayerForm, className: isDuplicated ? cssInput.inputDuplicate : ''}}
             />
           )
         })}

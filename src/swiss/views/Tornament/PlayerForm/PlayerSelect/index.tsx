@@ -11,10 +11,11 @@ type Props = {
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>
   fetchedPlayers : string[]
   handlePlayerNameChange: ({ name, index }: { name: string; index: number }) => void;
+  selectedPlayers: string[]
 }
 
 
-const PlayerSelectField = ({ inputValue, index, removePlayer, inputProps, fetchedPlayers, handlePlayerNameChange }: Props) => {
+const PlayerSelectField = ({ inputValue, index, removePlayer, inputProps, fetchedPlayers, handlePlayerNameChange, selectedPlayers }: Props) => {
 
   const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {return fetchedPlayer})
   const [options, setOptions] = useState<string[]>(fetchedPlayersArray)
@@ -40,7 +41,7 @@ const PlayerSelectField = ({ inputValue, index, removePlayer, inputProps, fetche
           Choose a player
         </option>
         {fetchedPlayers.map((player, idx) => (
-          <option key={idx} value={player}>
+          <option key={idx} value={player} disabled={selectedPlayers.includes(player)}>
             {player}
           </option>
         ))}
