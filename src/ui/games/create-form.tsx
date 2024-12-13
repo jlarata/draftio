@@ -222,6 +222,7 @@ export default function CreateForm({
               { player2 ? 
               players.map((player) => (
                 player.id === player2 ?
+
                 player.username +' Wins' : null
               )) : 'Player Wins'}
               

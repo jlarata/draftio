@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react'
+
 import Button from '@/src/swiss/components/Button'
 import cssInput from './Input/style.module.css'
 import PlayerInputField from './Input'
@@ -10,12 +11,9 @@ import { randomSeatsUtils } from '../RandomSeat/utils'
 import { playerServices } from '@/services/player';
 import { FetchedPlayer, Player } from '@/services/lib/definitions';
 
-
-
 type Props = { submitPlayers: (players: string[]) => void, fetchedPlayers : Player[] }
 
 const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
-
 
   const router = useRouter()
   const [players, setPlayers] = useState<string[]>(['J1', 'J2',"J3","J4"])
@@ -71,6 +69,7 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
         </select>
       </div>
       <div>
+
         <p className='mb-2 font-bold text-lg'>Players Management</p>
       </div>
       <div>

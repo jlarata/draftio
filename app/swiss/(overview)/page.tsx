@@ -1,3 +1,4 @@
+
 import { playerServices } from '@/services/player';
 import Home from '@/src/swiss/views/Home'
 
@@ -13,6 +14,7 @@ export default async function Page() {
 
 
       <Home fetchedPlayers={fetchedPlayers.players} />
+
     </>
   )
 }

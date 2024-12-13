@@ -6,6 +6,7 @@ export type Message =
 export type Player = 
     {
         id : string,
+
         username : string,
     }
     
@@ -13,6 +14,7 @@ export type FetchedPlayer =
     {
         id : string,
         username : string,
+
     }
 
 export type League =
@@ -136,12 +138,12 @@ export type uuid = {
   id : string
 } 
 
+
 export type PlayersTableType = {
   id : string;
   username : string;
   role : string;
 };
-
 
 //delete all this>
 export type Revenue = {
