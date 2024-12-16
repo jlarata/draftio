@@ -63,9 +63,8 @@ const Home = (
     <>
       <div className={css.container}>
         <div>
-
+        <div>Add new player</div>          
           <PlayerForm submitPlayers={submitPlayers} fetchedPlayers={fetchedPlayers} />
-
         </div>
         <div>
           <TournamentConfig config={config} onConfigChange={handleConfigChange}/>

@@ -81,12 +81,10 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
           value={newOption}
           onChange={(e) => setNewOption(e.target.value)}
         />
-        <button type="button" onClick={handleAddOption}>
+        <button type="button" onClick={handleAddOption} className="ml-1 mt-1 bg-transparent hover:bg-green-300 text-green-600 font-semibold hover:text-white py-2 px-4 border border-green-300 hover:border-transparent rounded disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed">
           <p>Agregar jugador sin registro</p>
         </button>
       {players.map((player, i) => {
-          const isDuplicated =
-            players.lastIndexOf(player) !== i || players.indexOf(player) !== players.lastIndexOf(player)
           return (
             <PlayerSelectField
             key={i}
@@ -96,44 +94,25 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
             removePlayer={removePlayer}
             handlePlayerNameChange={handlePlayerNameChange}
             selectedPlayers={players}
-            inputProps={{disabled: disablePlayerForm, className: isDuplicated ? cssInput.inputDuplicate : ''}}
+            inputProps={{disabled: disablePlayerForm}}
             />
           )
         })}
-
-
 
         <p className='mb-2 font-bold text-lg'>Players Management</p>
       </div>
-      {/* <div>
-        {players.map((player, i) => {
-          const isDuplicated =
-            players.lastIndexOf(player) !== i || players.indexOf(player) !== players.lastIndexOf(player)
-          return (
-            <PlayerInputField
-              key={`${player}${i}`}
-              index={i}
-              inputValue={player}
-              handlePlayerNameChange={handlePlayerNameChange}
-              removePlayer={removePlayer}
-              inputProps={{disabled: disablePlayerForm, className: isDuplicated ? cssInput.inputDuplicate : ''}}
-            />
-          )
-        })}
-      </div> */}
+
       <div>
         <Button
           disabled={players.length > 7}
           label={'Add Player'}
           onClick={handleAddPlayer}
-          className='ml-1 mt-1 bg-transparent hover:bg-green-300 text-green-600 font-semibold hover:text-white py-2 px-4 border border-green-300 hover:border-transparent rounded'  
           //className='button-primary'
         />
         <Button
           label={'Get draft positions'}
           disabled={players.length < 2 || new Set(players).size !== players.length}
           onClick={handleStartTournament}
-          className='ml-1 mt-1 bg-transparent hover:bg-green-300 text-green-600 font-semibold hover:text-white py-2 px-4 border border-green-300 hover:border-transparent rounded'  
         />
         {/* Esto esta mal, pero no se como hacerlo */}
         {showRandomSeatStep && <RandomSeatStep players={players} randomPlayers={randomSeatsUtils.getRandomPlayers(players)} />}
@@ -141,7 +120,6 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
           label={'Get first Round'}
           disabled={players.length < 2 || new Set(players).size !== players.length}
           onClick={() => (submitPlayers(players), router.push('./swiss/rounds'))}
-          className='ml-1 mt-1 mr-1 bg-transparent hover:bg-green-300 text-green-600 font-semibold hover:text-white py-2 px-4 border border-green-300 hover:border-transparent rounded' 
         />
       </div>
     </div>
