@@ -9,12 +9,7 @@ export default async function Page() {
 
   return (
     <>
-
-
-
-
       <Home fetchedPlayers={fetchedPlayers.players} />
-
     </>
   )
 }

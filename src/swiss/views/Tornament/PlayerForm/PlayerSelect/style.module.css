@@ -1,0 +1,15 @@
+.icon {
+    fill: #cf4141;
+    height: 24px;
+    border-radius: 20px;
+}
+
+.icon:hover {
+    fill: #ac1c1c;
+}
+
+.inputDuplicate {
+    border: 2px solid #ac1c1c;
+    border-radius: 4px;
+    color: #ac1c1c;
+}

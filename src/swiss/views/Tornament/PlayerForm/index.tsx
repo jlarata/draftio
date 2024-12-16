@@ -10,15 +10,35 @@ import RandomSeatStep from '../RandomSeat'
 import { randomSeatsUtils } from '../RandomSeat/utils'
 import { playerServices } from '@/services/player';
 import { FetchedPlayer, Player } from '@/services/lib/definitions';
+import PlayerSelectField from './PlayerSelect';
 
 type Props = { submitPlayers: (players: string[]) => void, fetchedPlayers : Player[] }
 
 const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
 
   const router = useRouter()
-  const [players, setPlayers] = useState<string[]>(['J1', 'J2',"J3","J4"])
+  
+  const [players, setPlayers] = useState<string[]>(['', ''])
   const [showRandomSeatStep, setShowRandomSeatStep] = useState(false)
   const [disablePlayerForm, setDisablePlayerForm] = useState(false)
+
+  // Custom option on select test
+  const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {return fetchedPlayer.username})
+  const [options, setOptions] = useState<string[]>(fetchedPlayersArray)
+  const [newOption, setNewOption] = useState<string>("")
+
+  const handleAddOption = () => {
+
+    if (newOption.trim() && !options.includes(newOption)) {
+      setOptions((prev) => [...prev, newOption]);
+      setNewOption("");
+      
+  }
+  console.log(options)
+}
+ 
+  //End of testing
+  
 
   const handlePlayerNameChange = ({ name, index }: { name: string; index: number }) => {
     if (name === '') return
@@ -55,24 +75,37 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
   return (
     <div>
       <div>
-        <h1>hola lauti esto ya funca:</h1>
-        <select>
-          {fetchedPlayers.map((fetchedPlayer, i) => {
-            return (
-              <option 
-              key={fetchedPlayer.id+i}
-              value={fetchedPlayer.id}>
-                {fetchedPlayer.username}
-              </option>
-            )})
-          }
-        </select>
-      </div>
-      <div>
+      <input
+          type="text"
+          placeholder="Add a new player to the list"
+          value={newOption}
+          onChange={(e) => setNewOption(e.target.value)}
+        />
+        <button type="button" onClick={handleAddOption}>
+          <p>Agregar jugador sin registro</p>
+        </button>
+      {players.map((player, i) => {
+          const isDuplicated =
+            players.lastIndexOf(player) !== i || players.indexOf(player) !== players.lastIndexOf(player)
+          return (
+            <PlayerSelectField
+            key={i}
+            index={i}
+            fetchedPlayers={options}
+            inputValue={player}
+            removePlayer={removePlayer}
+            handlePlayerNameChange={handlePlayerNameChange}
+            selectedPlayers={players}
+            inputProps={{disabled: disablePlayerForm, className: isDuplicated ? cssInput.inputDuplicate : ''}}
+            />
+          )
+        })}
+
+
 
         <p className='mb-2 font-bold text-lg'>Players Management</p>
       </div>
-      <div>
+      {/* <div>
         {players.map((player, i) => {
           const isDuplicated =
             players.lastIndexOf(player) !== i || players.indexOf(player) !== players.lastIndexOf(player)
@@ -87,7 +120,7 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
             />
           )
         })}
-      </div>
+      </div> */}
       <div>
         <Button
           disabled={players.length > 7}
