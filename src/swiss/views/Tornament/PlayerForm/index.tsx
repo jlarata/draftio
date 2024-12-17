@@ -1,55 +1,44 @@
-'use client';
+'use client'
 
 import { useEffect, useState } from 'react'
-
 import Button from '@/src/swiss/components/Button'
-import cssInput from './Input/style.module.css'
-import PlayerInputField from './Input'
 import { useRouter } from 'next/navigation'
 import RandomSeatStep from '../RandomSeat'
 import { randomSeatsUtils } from '../RandomSeat/utils'
-import { playerServices } from '@/services/player';
-import { FetchedPlayer, Player } from '@/services/lib/definitions';
-import PlayerSelectField from './PlayerSelect';
+import { FetchedPlayer, Player } from '@/services/lib/definitions'
+import PlayerSelectField from './PlayerSelect'
+import Input from '@/src/swiss/components/Input'
 
-type Props = { submitPlayers: (players: string[]) => void, fetchedPlayers : Player[] }
 
-const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
+type Props = { submitPlayers: (players: string[]) => void; fetchedPlayers: Player[] }
 
+const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props) => {
   const router = useRouter()
-  
+  const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {
+    return fetchedPlayer.username
+  })
   const [players, setPlayers] = useState<string[]>(['', ''])
   const [showRandomSeatStep, setShowRandomSeatStep] = useState(false)
   const [disablePlayerForm, setDisablePlayerForm] = useState(false)
-
-  // Custom option on select test
-  const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {return fetchedPlayer.username})
   const [options, setOptions] = useState<string[]>(fetchedPlayersArray)
-  const [newOption, setNewOption] = useState<string>("")
+  const [newOption, setNewOption] = useState<string>('')
+
+  const isPlayerNameValid = (name: string): boolean => {
+    const normalizedOptions = options.map((player) => player.toLowerCase())
+    return name.trim() !== '' && !normalizedOptions.includes(name.toLowerCase())
+  }
 
   const handleAddOption = () => {
-
-    if (newOption.trim() && !options.includes(newOption)) {
-      setOptions((prev) => [...prev, newOption]);
-      setNewOption("");
-      
+    if (isPlayerNameValid(newOption)) {
+      setOptions((prevPlayers) => [...prevPlayers, newOption])
+      setNewOption('')
+    }
   }
-  console.log(options)
-}
- 
-  //End of testing
-  
 
-  const handlePlayerNameChange = ({ name, index }: { name: string; index: number }) => {
-    if (name === '') return
-    setPlayers((prevPlayers) => {
-      return prevPlayers.map((player, playerIndex) => {
-        if (playerIndex === index) {
-          return name
-        }
-        return player
-      })
-    })
+  const handlePlayerNameChange = ({ name, index }: { name: string; index: number }) => {   
+    setPlayers((prevPlayers) => 
+      prevPlayers.map((player, i) => (i === index ? name : player))
+    );  
   }
 
   const removePlayer = (index: number) => {
@@ -66,7 +55,6 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
 
   const handleStartTournament = () => {
     if (players.length >= 2 && new Set(players).size === players.length) {
-      console.log('Entro start Tournament Handler')
       setDisablePlayerForm(true)
       setShowRandomSeatStep(true)
     }
@@ -74,27 +62,26 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
 
   return (
     <div>
-      <div>
-      <input
-          type="text"
-          placeholder="Add a new player to the list"
-          value={newOption}
+      <div>        
+        {/* Revisar esto con alguien mas. Creo que el input puede entrar como un nuevo objeto pero el button tienen que quedar afuera  */}
+        <Input
+          placeholder={'Add new player to the list'}
           onChange={(e) => setNewOption(e.target.value)}
+          value={newOption}
         />
-        <button type="button" onClick={handleAddOption} className="ml-1 mt-1 bg-transparent hover:bg-green-300 text-green-600 font-semibold hover:text-white py-2 px-4 border border-green-300 hover:border-transparent rounded disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed">
-          <p>Agregar jugador sin registro</p>
-        </button>
-      {players.map((player, i) => {
+
+        <Button label={'Agregar jugador'} onClick={handleAddOption} disabled={!isPlayerNameValid(newOption)} />
+
+        {players.map((player, i) => {
           return (
             <PlayerSelectField
-            key={i}
-            index={i}
-            fetchedPlayers={options}
-            inputValue={player}
-            removePlayer={removePlayer}
-            handlePlayerNameChange={handlePlayerNameChange}
-            selectedPlayers={players}
-            inputProps={{disabled: disablePlayerForm}}
+              key={i}
+              index={i}
+              fetchedPlayers={options}
+              inputValue={player}
+              removePlayer={removePlayer}
+              handlePlayerNameChange={(name) => handlePlayerNameChange(name)}
+              selectedPlayers={players}
             />
           )
         })}
@@ -107,15 +94,15 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
           disabled={players.length > 7}
           label={'Add Player'}
           onClick={handleAddPlayer}
-          //className='button-primary'
         />
         <Button
           label={'Get draft positions'}
           disabled={players.length < 2 || new Set(players).size !== players.length}
           onClick={handleStartTournament}
         />
-        {/* Esto esta mal, pero no se como hacerlo */}
-        {showRandomSeatStep && <RandomSeatStep players={players} randomPlayers={randomSeatsUtils.getRandomPlayers(players)} />}
+        {showRandomSeatStep && (
+          <RandomSeatStep players={players} randomPlayers={randomSeatsUtils.getRandomPlayers(players)} />
+        )}
         <Button
           label={'Get first Round'}
           disabled={players.length < 2 || new Set(players).size !== players.length}
