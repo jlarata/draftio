@@ -3,6 +3,7 @@ import { Config } from './Config'
 export class Player {
   //Para ir puliendo el fairness se le puede agregar ademas de wins, loss y sets win loss
   public name: string
+  public uuid: string = "-1"
   public wins: number = 0
   public loss: number = 0
   public draws: number = 0
@@ -12,6 +13,7 @@ export class Player {
   public buchholz: number = 0
   constructor({
     name,
+    uuid,
     wins,
     loss,
     draws,
@@ -21,6 +23,7 @@ export class Player {
     buchholz,
   }: {
     name: string
+    uuid: string
     wins: number
     loss: number
     draws: number
@@ -30,6 +33,7 @@ export class Player {
     buchholz: number
   }) {
     this.name = name
+    this.uuid = uuid
     this.wins = wins
     this.loss = loss
     this.draws = draws

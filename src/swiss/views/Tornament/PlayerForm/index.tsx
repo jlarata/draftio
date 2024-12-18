@@ -17,6 +17,7 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props) => {
   const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {
     return fetchedPlayer.username
   })
+
   const [players, setPlayers] = useState<string[]>(['', ''])
   const [showRandomSeatStep, setShowRandomSeatStep] = useState(false)
   const [disablePlayerForm, setDisablePlayerForm] = useState(false)
