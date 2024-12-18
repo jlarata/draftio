@@ -26,7 +26,7 @@ export class Tournament {
 
   private createPlayers({ playersNames }: { playersNames: string[] }) {
     this.players = playersNames.map(
-      (name) => new Player({ name, wins: 0, loss: 0, draws: 0, gameWins: 0, gameLoss: 0, rivals: [], buchholz: 0 })
+      (name) => new Player({ name, uuid: "-1", wins: 0, loss: 0, draws: 0, gameWins: 0, gameLoss: 0, rivals: [], buchholz: 0 })
     )
   }
 

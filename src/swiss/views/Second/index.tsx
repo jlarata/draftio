@@ -8,8 +8,11 @@ import React, { useEffect, useState } from 'react'
 import css from './styles.module.css'
 import RoundInput from '../PlayerRound/Round'
 import { useRouter } from 'next/navigation'
+import { FetchedPlayer, Player } from '@/services/lib/definitions'
 
-const Second = () => {
+type Props = {fetchedPlayers: Player[] }
+
+const Second = ({fetchedPlayers} : Props) => {
   const { tournament } = useTournament()
   const router = useRouter()
   const [visibleRounds, setVisibleRounds] = useState<number[]>([])
@@ -18,8 +21,19 @@ const Second = () => {
   const [roundConfirmed, setRoundConfirmed] = useState<Record<number, boolean>>({})
   const [refreshScore, setRefreshScore] = useState(false)
 
-  var counter = 0
+
+ 
+
   useEffect(() => {
+  // Esto no es escalable 
+    Object.entries(fetchedPlayers).forEach(([playerKey, player]) =>
+      Object.entries(tournament.players).forEach(([tournamentPlayerKey, playerInTournament]) => {
+        if (playerInTournament.name === player.username) {
+          playerInTournament.uuid = player.id
+        }
+      })
+    );
+
     if (tournament.rounds.length === 0 ) {
       tournament.createRound()
       
