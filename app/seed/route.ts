@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+/* import bcrypt from 'bcrypt';
 import { db } from '@vercel/postgres';
 import { users, leagues, tournaments, games, player_games, league_players, players } from '../../services/lib/placeholder-data';
 
@@ -183,7 +183,7 @@ async function SeedGames() {
    
   const insertedLeague_Players = await Promise.all(
      league_players.map(
-      /* DEFAULT constraint of player_role is not working as it should. so i'll just constrain it from the backend */
+      //DEFAULT constraint of player_role is not working as it should. so i'll just constrain it from the backend
        (player_game) => {
         client.sql`
          INSERT INTO league_player (league_id, player_id, player_role)
@@ -259,4 +259,4 @@ export async function GET() {
      await client.sql`ROLLBACK`;
      return Response.json({ error }, { status: 500 });
    }
-}
+} */
