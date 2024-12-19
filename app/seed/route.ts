@@ -1,10 +1,10 @@
-/* import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { db } from '@vercel/postgres';
 import { users, leagues, tournaments, games, player_games, league_players, players } from '../../services/lib/placeholder-data';
 
 const client = await db.connect();
 
-async function SeedPlayers() {
+/* async function SeedPlayers() {
    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
    await client.sql`
      CREATE TABLE IF NOT EXISTS player (
@@ -259,4 +259,4 @@ export async function GET() {
      await client.sql`ROLLBACK`;
      return Response.json({ error }, { status: 500 });
    }
-} */
+}  */
