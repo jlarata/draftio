@@ -38,15 +38,15 @@ export default async function Page(props: {
     <>
     
       {gameCreatedMessage && (
-        <AlertsPage someText={'Game succesfully created'}></AlertsPage> 
+        <AlertsPage someText={'Game succesfully created'} originalPath="/dashboard/games"></AlertsPage> 
       )} 
 
       {gameEditedMessage && (
-        <AlertsPage someText={'Game succesfully edited!'}></AlertsPage> 
+        <AlertsPage someText={'Game succesfully edited!'} originalPath="/dashboard/games"></AlertsPage> 
       )} 
 
       {gameDeletedMessage && (
-        <AlertsPage someText={'Game succesfully deleted!'}></AlertsPage> 
+        <AlertsPage someText={'Game succesfully deleted!'} originalPath="/dashboard/games"></AlertsPage> 
       )}
 
       <div className="w-full">

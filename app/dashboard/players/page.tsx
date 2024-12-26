@@ -2,9 +2,10 @@ import { playerServices } from "@/services/player";
 import AlertsPage from "@/src/ui/alerts/alerts";
 import { inter } from "@/src/ui/fonts";
 import Pagination from "@/src/ui/games/pagination";
+import CreateForm from "@/src/ui/players/create-form";
 import PlayersTable from "@/src/ui/players/table";
 import Search from "@/src/ui/search";
-import { GamesTableSkeleton } from "@/src/ui/skeletons";
+import DashboardSkeleton, { GamesTableSkeleton, LatestGamesSkeleton } from "@/src/ui/skeletons";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -39,11 +40,11 @@ export default async function Page(props: {
     <>
     
       {playerCreatedMessage && (
-        <AlertsPage someText={'Game succesfully created'}></AlertsPage> 
+        <AlertsPage someText={'Player succesfully created'} originalPath="/dashboard/players"></AlertsPage> 
       )} 
 
       {playerEditedMeesage && (
-        <AlertsPage someText={'Game succesfully edited!'}></AlertsPage> 
+        <AlertsPage someText={'Player succesfully edited!'} originalPath="/dashboard/players"></AlertsPage> 
       )} 
 
       <div className="w-full">
@@ -58,9 +59,13 @@ export default async function Page(props: {
            //<CreatePlayer />
        
         </div> */}
-        <Suspense key={query + currentPage} fallback={<GamesTableSkeleton />}>
+        <div className="flex flex-row gap-4">
+        <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
            <PlayersTable query={query} currentPage={currentPage}></PlayersTable>
+           <CreateForm></CreateForm>
         </Suspense>
+        </div>
+        
         {/* <div className="mt-5 flex w-full justify-center">
           <Pagination totalPages={totalPages} />
         </div> */}

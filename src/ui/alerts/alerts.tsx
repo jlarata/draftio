@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 
+
 export default function AlertsPage(props :
-   {someText : string} ) {
+   {someText : string, originalPath : string} ) {
 
    const [message, setMessage] = useState('');
    const router = useRouter()
@@ -14,7 +15,7 @@ export default function AlertsPage(props :
    useEffect(() => {
       setMessage(props.someText);
       successShowSwal(message);
-      router.replace('/dashboard/games')
+      router.replace(`${props.originalPath}`)
    })
    return (<></>)
 } 
