@@ -135,6 +135,25 @@ export async function createGame(
   }
 
 
+  export async function createPlayer(
+    formData: FormData) {
+      let rawFormData : {
+        nickname : string,        
+      } = {
+          nickname: formData.get('nickname') as string,
+        };
+        //console.log(rawFormData); 
+        console.log("creating player");
+        console.log(rawFormData);
+        
+        await sql`
+        INSERT INTO player (username)
+           VALUES (${rawFormData.nickname});`;
+  
+      //revalidatePath('/dashboard/players');
+      redirect('/dashboard/players?playercreated=ok');
+    }
+
   export const redirectWithParams = async (params : string) => {
     console.log("redirecting?")
     const param = params;

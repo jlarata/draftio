@@ -22,8 +22,8 @@ export default async function PlayersTable({
   const players : Player[] = (await fetchPlayersByLeague("someLeagueId-> thats where the props leaguefield is going")).players;
   
   return (
-    <div className="w-full">
- 
+    <>
+    <div className="w-full md:w-1/2">
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
@@ -108,6 +108,7 @@ export default async function PlayersTable({
         </div>
       </div>
     </div>
+  </>
   );
 }
 
