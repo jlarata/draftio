@@ -4,7 +4,10 @@ import { Player } from '../lib/definitions'
 const fetchPlayersByLeague = async (league_id: string) => {
   // noStore();
   try {
-    const { rows: players } = await sql<Player>`SELECT id, username FROM player;`
+    const { rows: players } = await sql<Player>`
+    SELECT id, username
+    FROM player
+    ORDER BY username;`
 
     return {
       players: players ?? 'No players in database',

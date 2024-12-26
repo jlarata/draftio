@@ -134,6 +134,13 @@ export async function createGame(
     redirect('/dashboard/games?gamedeleted=ok');
   }
 
+  export async function deletePlayer(id: string) {
+    await sql`DELETE FROM player WHERE id = ${id}`;
+    revalidatePath('/dashboard/players');
+    redirect('/dashboard/players?playerdeleted=ok');
+  }
+
+
 
   export async function createPlayer(
     formData: FormData) {
