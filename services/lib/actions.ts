@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
 import { uuid } from "./definitions";
 
-
 export async function updateGame(id : string, previousPlayer1 : string, previousPlayer2 : string, formData : FormData) {
   let { tournament_id, round, player1, player1Wins, player2, player2Wins } = ({
     tournament_id : formData.get('tournament_id') as string,
@@ -128,6 +127,13 @@ export async function createGame(
       throw new Error('Failed to create game and return the uuid.')
     }
   }
+
+  export async function deleteGame(id: string) {
+    await sql`DELETE FROM game WHERE id = ${id}`;
+    revalidatePath('/dashboard/games');
+    redirect('/dashboard/games?gamedeleted=ok');
+  }
+
 
   export const redirectWithParams = async (params : string) => {
     console.log("redirecting?")

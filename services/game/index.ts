@@ -1,6 +1,6 @@
 import { sql } from '@vercel/postgres'
 import { GameJoinedWith2Players, GamesTable, LatestGames } from '../lib/definitions'
-import { unstable_noStore } from 'next/cache';
+import { revalidatePath, unstable_noStore } from 'next/cache';
 import { gamesByDate } from '../lib/utils';
 
 
@@ -313,6 +313,11 @@ const fetchGamesPages = async (query: string) => {
     throw new Error('Failed to fetch total number of pages.')
   }
 }
+
+// const deleteGame = async (id : string) => {
+//   await sql`DELETE FROM game WHERE id = $${id}`;
+//   revalidatePath('dashboard/games');
+// } 
 
 export const gameServices = {
   fetchLatestGames,
