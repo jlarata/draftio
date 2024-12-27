@@ -12,6 +12,7 @@ export default async function GamesTable({
 
   const { fetchFilteredGames } = gameServices;
   const games = await fetchFilteredGames(query, currentPage);
+  
   /* console.log(query);
   console.log(currentPage);
   console.log(games.length); */
