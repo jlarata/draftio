@@ -1,20 +1,49 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   UserIcon,
 } from "@heroicons/react/24/outline";
 import { createPlayer } from "@/services/lib/actions";
 import { Button } from "../button";
 import TableCellsIcon from "@heroicons/react/20/solid/TableCellsIcon";
+import { Player } from "@/services/lib/definitions";
 
-export default function CreateForm({
+export default function CreateForm(
+
+  {fetchedPlayers} : {fetchedPlayers : Player[]}
+  
+  //{
   /* league_id, */
-}: {
+  //}: {
   /* league_id: string; */
-}) {
+  //  }
+  ) {
 
-  const [nickname, setNickname] = useState("");
+  const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {
+    return fetchedPlayer.username
+  })
+  const [options, setOptions] = useState<string[]>(fetchedPlayersArray)
+  const [newOption, setNewOption] = useState<string>('')
 
+
+  const isPlayerNameValid = (name: string): boolean => {
+    const normalizedOptions = options.map((player) => player.toLowerCase())
+    return name.trim() !== '' && !normalizedOptions.includes(name.toLowerCase())
+  }
+
+  const handleAddOption = () => { 
+    if (isPlayerNameValid(newOption))
+      {
+      setOptions((prevPlayers) => [...prevPlayers, newOption])
+      setNewOption('')
+    }
+  }
+
+  useEffect(() => {
+    handleAddOption();
+  },[fetchedPlayers]);
+
+  //console.log(fetchedPlayersArray)
   return (
     <>
     <div className="w-full md:w-1/2">
@@ -22,7 +51,8 @@ export default function CreateForm({
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
-              <form action={createPlayer}>
+              {/* <form action={createPlayer}> */}
+              <form>
                 <div className="rounded-md bg-gray-50 p-4 md:p-6">
                     <div className="mb-4 visibility: hidden">
                         {/* hidden input with league. not using it for now */}
@@ -57,8 +87,10 @@ export default function CreateForm({
                             id="nickname"
                             name="nickname"
                             className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                            defaultValue=""
-                            onChange={(e) => setNickname(e.target.value)}
+                            /* defaultValue="" */
+                            onChange={(e) => setNewOption(e.target.value)}
+                            value={newOption}                  
+                            /* onChange={(e) => setNickname(e.target.value)} */
                             required
                         >
                         </input>
@@ -66,8 +98,10 @@ export default function CreateForm({
                         </div>
                     </div>
                     <div className="mt-6 flex justify-end gap-4">
-          <Button type="submit">Create New Player</Button>
-        </div>
+                      <Button
+                        type="submit"
+                        formAction={createPlayer} disabled={!isPlayerNameValid(newOption)}>Create New Player</Button>
+                    </div>
                 </div>
         
       </form>

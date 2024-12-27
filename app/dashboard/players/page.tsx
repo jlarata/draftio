@@ -27,6 +27,9 @@ export default async function Page(props: {
 
   const { fetchPlayersPages } = playerServices
 
+  const { fetchPlayersByLeague } = playerServices;
+  const fetchedPlayers = await fetchPlayersByLeague("here should go a league id")
+
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
@@ -67,7 +70,7 @@ export default async function Page(props: {
         <div className="flex flex-row gap-4">
         <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
            <PlayersTable query={query} currentPage={currentPage}></PlayersTable>
-           <CreateForm></CreateForm>
+           <CreateForm fetchedPlayers={fetchedPlayers.players} ></CreateForm>
         </Suspense>
         </div>
         
