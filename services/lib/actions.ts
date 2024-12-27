@@ -134,6 +134,28 @@ export async function createGame(
     redirect('/dashboard/games?gamedeleted=ok');
   }
 
+  export async function deletePlayer(id: string) {
+
+    /* first: delete all games that are referenced in a player_game registry */
+    await sql`      
+      DELETE FROM game
+      WHERE game.id IN
+         (
+      SELECT
+        game_id
+      FROM
+        player_game pg
+      WHERE
+      pg.player_id = ${id})
+      `
+
+    /* then delete the player: the CASCADE constraint will delete the player_game record*/
+    await sql`DELETE FROM player WHERE id = ${id}`;
+    revalidatePath('/dashboard/players');
+    redirect('/dashboard/players?playerdeleted=ok');
+  }
+
+
 
   export async function createPlayer(
     formData: FormData) {
@@ -150,7 +172,7 @@ export async function createGame(
         INSERT INTO player (username)
            VALUES (${rawFormData.nickname});`;
   
-      //revalidatePath('/dashboard/players');
+      revalidatePath('/dashboard/players');
       redirect('/dashboard/players?playercreated=ok');
     }
 

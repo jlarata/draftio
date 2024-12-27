@@ -19,6 +19,7 @@ export default async function Page(props: {
     page?: string;
     playercreated?: string;
     playeredited?: string;
+    playerdeleted?:string;
   }>;
 }) {
 
@@ -33,8 +34,8 @@ export default async function Page(props: {
   const totalPages = await fetchPlayersPages(query);
 
   let playerCreatedMessage = searchParams?.playercreated || "";
-  let playerEditedMeesage = searchParams?.playeredited || "";
-
+  let playerEditedMessage = searchParams?.playeredited || "";
+  let playerDeletedMessage = searchParams?.playerdeleted || "";
 
   return (
     <>
@@ -43,8 +44,12 @@ export default async function Page(props: {
         <AlertsPage someText={'Player succesfully created'} originalPath="/dashboard/players"></AlertsPage> 
       )} 
 
-      {playerEditedMeesage && (
+      {playerEditedMessage && (
         <AlertsPage someText={'Player succesfully edited!'} originalPath="/dashboard/players"></AlertsPage> 
+      )} 
+
+      {playerDeletedMessage && (
+        <AlertsPage someText={'Player succesfully deleted!'} originalPath="/dashboard/players"></AlertsPage> 
       )} 
 
       <div className="w-full">
