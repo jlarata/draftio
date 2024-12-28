@@ -8,6 +8,7 @@ import { randomSeatsUtils } from '../RandomSeat/utils'
 import { FetchedPlayer, Player } from '@/services/lib/definitions'
 import PlayerSelectField from './PlayerSelect'
 import Input from '@/src/swiss/components/Input'
+import CreateForm from '@/src/ui/players/create-form'
 
 
 type Props = { submitPlayers: (players: string[]) => void; fetchedPlayers: Player[] }
@@ -27,6 +28,10 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props) => {
   const isPlayerNameValid = (name: string): boolean => {
     const normalizedOptions = options.map((player) => player.toLowerCase())
     return name.trim() !== '' && !normalizedOptions.includes(name.toLowerCase())
+  }
+
+  const handleRefreshOptions = () => {
+    setOptions(fetchedPlayersArray)
   }
 
   const handleAddOption = () => {
@@ -61,9 +66,16 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props) => {
     }
   }
 
+  useEffect(() => {
+    handleRefreshOptions();
+  },[fetchedPlayers]);
+
   return (
     <div>
       <div>        
+        
+        <CreateForm fetchedPlayers={fetchedPlayers} ></CreateForm>
+        
         {/* Revisar esto con alguien mas. Creo que el input puede entrar como un nuevo objeto pero el button tienen que quedar afuera  */}
         <Input
           placeholder={'Add new player to the list'}
