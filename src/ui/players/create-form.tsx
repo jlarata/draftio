@@ -9,7 +9,6 @@ import TableCellsIcon from "@heroicons/react/20/solid/TableCellsIcon";
 import { Player } from "@/services/lib/definitions";
 
 export default function CreateForm(
-
   {fetchedPlayers} : {fetchedPlayers : Player[]}
   
   //{
@@ -57,7 +56,7 @@ export default function CreateForm(
                     <div className="mb-4 visibility: hidden">
                         {/* hidden input with league. not using it for now */}
                         <label
-                            htmlFor="player 1"
+                            htmlFor="league_id"
                             className="mb-2 block text-sm font-medium"
                         >
                         League
@@ -71,6 +70,26 @@ export default function CreateForm(
                         >
                         </select>
                         <TableCellsIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+                        </div>
+                    </div>
+                    <div className="mb-4 visibility: hidden">
+                        {/* hidden input with originUrl. */}
+                        <label
+                            htmlFor="origin_url"
+                            className="mb-2 block text-sm font-medium"
+                        >
+                        origin_url
+                        </label>
+                        <div className="relative">
+                        <input
+                        id="origin_url"
+                        name="origin_url"
+                        className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                        defaultValue="/dashboard/players"
+                        value={"/dashboard/players"}
+                        >
+                        </input>
+                        
                         </div>
                     </div>
 

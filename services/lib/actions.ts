@@ -160,9 +160,11 @@ export async function createGame(
   export async function createPlayer(
     formData: FormData) {
       let rawFormData : {
-        nickname : string,        
+        nickname : string,
+        origin_url : string,        
       } = {
           nickname: formData.get('nickname') as string,
+          origin_url: formData.get('origin_url') as string,
         };
         //console.log(rawFormData); 
         console.log("creating player");
@@ -172,8 +174,8 @@ export async function createGame(
         INSERT INTO player (username)
            VALUES (${rawFormData.nickname});`;
   
-      revalidatePath('/dashboard/players');
-      redirect('/dashboard/players?playercreated=ok');
+      revalidatePath(`${rawFormData.origin_url}`);
+      redirect(`${rawFormData.origin_url}?playercreated=ok`);
     }
 
   export const redirectWithParams = async (params : string) => {
