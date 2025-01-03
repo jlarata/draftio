@@ -3,20 +3,20 @@
 import PlayerForm from '../Tornament/PlayerForm'
 import css from './style.module.css'
 import TournamentConfig from '../TournamentConfig'
+import TournamentName from '../Tornament/TournamentName'
 import { useState } from 'react'
 import { useTournament } from '../../context/tournament'
 import { Config } from '../../classes/Config'
-
 import { Player } from '@/services/lib/definitions';
 
 const Home = (
-  {fetchedPlayers} : {fetchedPlayers : Player[]}
+  {fetchedPlayers, leagueID} : {fetchedPlayers : Player[], leagueID: string}
 ) => {
-
-  const { tournament } = useTournament()
+  const { tournament } = useTournament()  
+  tournament.databaseInfo.leagueID = leagueID
 
   const submitPlayers = (players: string[]) => {
-    const date = '2016-07-19T20:23:01.804Z'
+    const date = new Date().toISOString()
     tournament.startTournament({ playersNames: players, date: date, config: config })
     console.log('Start Tournament: ', tournament)
   }
@@ -29,7 +29,7 @@ const Home = (
       pointsPerGameWin: 0,
       pointsPerBye: 0,
     })
-  );
+ );
 
   const handleConfigChange = (key: string, value: string) => { //pasar a utils o algo asi el switch ? 
     setConfig((prevConfig) => {
@@ -62,8 +62,12 @@ const Home = (
   return (
     <>
       <div className={css.container}>
+        
         <div>
-        <div>Add new player</div>          
+        <div>
+        <TournamentName />
+        </div>
+                 
           <PlayerForm submitPlayers={submitPlayers} fetchedPlayers={fetchedPlayers} />
         </div>
         <div>

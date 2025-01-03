@@ -1,4 +1,5 @@
 import { Config } from './Config'
+import { DatabaseInfo } from './DatabaseInfo'
 import { Match } from './Match'
 import { Player } from './Player'
 import { Round } from './Round'
@@ -11,22 +12,25 @@ export class Tournament {
   private seed: number | undefined
   public rounds: Round[] = []
   public config: Config[] = [] //Este array esta mal, pero me tira error si saco esto y cambio setConfig
+  //Add all this variables into a single object
+  public databaseInfo: DatabaseInfo = new DatabaseInfo({})
 
-  public startTournament({ playersNames, date, config }: { playersNames: string[]; date: string ; config: Config}) {
+  public startTournament({ playersNames, date, config }: { playersNames: string[]; date: string; config: Config }) {
+    this.databaseInfo.date = date
     this.createPlayers({ playersNames })
     this.setAllMatchMatrix()
-    this.setConfig({config})
+    this.setConfig({ config })
     this.seed = this.setSeed({ date })
-    
   }
 
-  private setConfig({config}:{config:Config}) {
+  private setConfig({ config }: { config: Config }) {
     this.config = [config]
   }
 
   private createPlayers({ playersNames }: { playersNames: string[] }) {
     this.players = playersNames.map(
-      (name) => new Player({ name, uuid: "-1", wins: 0, loss: 0, draws: 0, gameWins: 0, gameLoss: 0, rivals: [], buchholz: 0 })
+      (name) =>
+        new Player({ name, uuid: '-1', wins: 0, loss: 0, draws: 0, gameWins: 0, gameLoss: 0, rivals: [], buchholz: 0 })
     )
   }
 
@@ -132,7 +136,7 @@ export class Tournament {
     })
   }
 
-  public restartTournament() {    
+  public restartTournament() {
     this.rounds = []
     this.unplayedMatches = []
     this.players.map((player) => {

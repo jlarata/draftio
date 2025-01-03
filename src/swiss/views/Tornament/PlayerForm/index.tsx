@@ -23,22 +23,9 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props) => {
   const [showRandomSeatStep, setShowRandomSeatStep] = useState(false)
   const [disablePlayerForm, setDisablePlayerForm] = useState(false)
   const [options, setOptions] = useState<string[]>(fetchedPlayersArray)
-  const [newOption, setNewOption] = useState<string>('')
-
-  const isPlayerNameValid = (name: string): boolean => {
-    const normalizedOptions = options.map((player) => player.toLowerCase())
-    return name.trim() !== '' && !normalizedOptions.includes(name.toLowerCase())
-  }
 
   const handleRefreshOptions = () => {
     setOptions(fetchedPlayersArray)
-  }
-
-  const handleAddOption = () => {
-    if (isPlayerNameValid(newOption)) {
-      setOptions((prevPlayers) => [...prevPlayers, newOption])
-      setNewOption('')
-    }
   }
 
   const handlePlayerNameChange = ({ name, index }: { name: string; index: number }) => {   
@@ -73,17 +60,7 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props) => {
   return (
     <div>
       <div>        
-        
-        <CreateForm fetchedPlayers={fetchedPlayers} ></CreateForm>
-        
-        {/* Revisar esto con alguien mas. Creo que el input puede entrar como un nuevo objeto pero el button tienen que quedar afuera  */}
-        <Input
-          placeholder={'Add new player to the list'}
-          onChange={(e) => setNewOption(e.target.value)}
-          value={newOption}
-        />
-
-        <Button label={'Agregar jugador'} onClick={handleAddOption} disabled={!isPlayerNameValid(newOption)} />
+        <CreateForm fetchedPlayers={fetchedPlayers} ></CreateForm>        
 
         {players.map((player, i) => {
           return (

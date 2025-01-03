@@ -13,6 +13,8 @@ import { FetchedPlayer, Player } from '@/services/lib/definitions'
 type Props = {fetchedPlayers: Player[] }
 
 const Second = ({fetchedPlayers} : Props) => {
+  
+
   const { tournament } = useTournament()
   const router = useRouter()
   const [visibleRounds, setVisibleRounds] = useState<number[]>([])
@@ -21,6 +23,8 @@ const Second = ({fetchedPlayers} : Props) => {
   const [roundConfirmed, setRoundConfirmed] = useState<Record<number, boolean>>({})
   const [refreshScore, setRefreshScore] = useState(false)
 
+  //testing
+  console.log(tournament)
 
  
 
