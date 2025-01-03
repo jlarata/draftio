@@ -7,7 +7,7 @@ import PlayerScoreDiv from '@/src/swiss/views/PlayerRound'
 import React, { useEffect, useState } from 'react'
 import css from './styles.module.css'
 import RoundInput from '../PlayerRound/Round'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { FetchedPlayer, Player } from '@/services/lib/definitions'
 import { DatabaseRoundInfo } from '../../classes/classesDb/DatabaseRoundInfo'
 
@@ -21,7 +21,10 @@ const Second = ({ fetchedPlayers }: Props) => {
   const [selectedValues, setSelectedValues] = useState<Record<string, string>>({})
   const [roundConfirmed, setRoundConfirmed] = useState<Record<number, boolean>>({})
   const [refreshScore, setRefreshScore] = useState(false)
+  const urlPathname = usePathname()
+  tournament.databaseInfo.touranmentID = "00000000-0000-0000-0000-000000000301"
  
+
   useEffect(() => {
     // Esto no es escalable
     Object.entries(fetchedPlayers).forEach(([playerKey, player]) =>
@@ -90,7 +93,8 @@ const Second = ({ fetchedPlayers }: Props) => {
         player2_wins: player2GameWins,
       })
     })
-    console.log('log interno', tournament)
+    
+    tournament.createRoundsInDB(roundNumber,urlPathname)
 
     tournament.createRound()
     console.log('Crea ronda en Log value')

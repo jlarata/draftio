@@ -5,6 +5,7 @@ import { Player } from './Player'
 import { Round } from './Round'
 import { gameUtils } from './utils/utils'
 import { DatabaseRoundInfo } from './classesDb/DatabaseRoundInfo'
+import { createGame } from '@/services/lib/actions'
 
 export class Tournament {
   public players: Player[] = []
@@ -13,12 +14,9 @@ export class Tournament {
   private seed: number | undefined
   public rounds: Round[] = []
   public config: Config[] = [] //Este array esta mal, pero me tira error si saco esto y cambio setConfig
-  //Add all this variables into a single object
   public databaseInfo: DatabaseInfo = new DatabaseInfo({})
   public databaseRoundInfo: DatabaseRoundInfo[] = []
-  
 
-  //
   public startTournament({ playersNames, date, config }: { playersNames: string[]; date: string; config: Config }) {
     this.databaseInfo.date = date
     this.createPlayers({ playersNames })
@@ -154,4 +152,20 @@ export class Tournament {
     })
     this.setAllMatchMatrix()
   }
+
+  public createRoundsInDB(round: number, origin_url: string) {
+    this.databaseRoundInfo[round-1].match.map((singlematch) => {
+      const formData = new FormData()
+      formData.append('league_id', this.databaseInfo.leagueID)
+      formData.append('tournament_id', this.databaseInfo.touranmentID)
+      formData.append('round', round.toString())
+      formData.append('origin_url', origin_url)
+      formData.append('player1_id', singlematch.player1_id)
+      formData.append('player1_wins', singlematch.player1_wins.toString())
+      formData.append('player2_id', singlematch.player2_id)
+      formData.append('player2_wins', singlematch.player2_wins.toString())
+      createGame(formData)
+    })
+  }
+
 }

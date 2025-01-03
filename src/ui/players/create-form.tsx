@@ -108,7 +108,6 @@ export default function CreateForm({ fetchedPlayers }: { fetchedPlayers: Player[
                     <div className='mt-6 flex justify-end gap-4 '>
                       <Button
                         type='submit'
-                        //formAction={createPlayer}
                         disabled={!isPlayerNameValid(newOption) || isLoading}
                         onClick={handleCreatePlayer}
                       >
