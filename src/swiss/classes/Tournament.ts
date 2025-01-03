@@ -4,6 +4,7 @@ import { Match } from './Match'
 import { Player } from './Player'
 import { Round } from './Round'
 import { gameUtils } from './utils/utils'
+import { DatabaseRoundInfo } from './classesDb/DatabaseRoundInfo'
 
 export class Tournament {
   public players: Player[] = []
@@ -14,7 +15,10 @@ export class Tournament {
   public config: Config[] = [] //Este array esta mal, pero me tira error si saco esto y cambio setConfig
   //Add all this variables into a single object
   public databaseInfo: DatabaseInfo = new DatabaseInfo({})
+  public databaseRoundInfo: DatabaseRoundInfo[] = []
+  
 
+  //
   public startTournament({ playersNames, date, config }: { playersNames: string[]; date: string; config: Config }) {
     this.databaseInfo.date = date
     this.createPlayers({ playersNames })
