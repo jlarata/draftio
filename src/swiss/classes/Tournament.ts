@@ -1,5 +1,5 @@
 import { Config } from './Config'
-import { DatabaseInfo } from './DatabaseInfo'
+import { DatabaseInfo } from './classesDb/DatabaseInfo'
 import { Match } from './Match'
 import { Player } from './Player'
 import { Round } from './Round'

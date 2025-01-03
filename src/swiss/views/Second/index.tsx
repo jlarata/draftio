@@ -81,7 +81,9 @@ const Second = ({fetchedPlayers} : Props) => {
         player2GameWins: player2GameWins,
         config: tournamentConfig,
       })
-    })
+    }
+  )
+  console.log("log interno", tournament.rounds[tournament.rounds.length-1])
 
     tournament.createRound()
     console.log("Crea ronda en Log value")
