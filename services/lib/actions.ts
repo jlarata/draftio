@@ -55,6 +55,7 @@ export async function createGame(
       tournament_id : string,
       pre_round : string,
       round : number | null, // 0 to 8?
+      
 
       /* data for the new player_game records
          game_id is generated in the create game query. */
@@ -65,6 +66,7 @@ export async function createGame(
       pre_player2_wins: string,
       player2_id: string,
       player2_wins: number | null,
+      origin_url : string
 
     } = {
         tournament_id: formData.get('tournament_id') as string,
@@ -78,9 +80,12 @@ export async function createGame(
         pre_player2_wins: formData.get('player2_wins') as string,
 
         player1_wins: null, 
-        player2_wins: null
+        player2_wins: null,
+        origin_url: formData.get('origin_url') as string,
       };
-      //console.log(rawFormData); 
+      formData.forEach((value,key) => console.log("en action formData", `${key}: ${value}`))
+
+      console.log("rawfromData ",rawFormData); 
 
       //parses matchs data
       if ((rawFormData.pre_round !== null)) { 
@@ -108,12 +113,13 @@ export async function createGame(
       INSERT INTO player_game (player_id, game_id, wins)
          VALUES (${rawFormData.player2_id}, ${this_game_id}, ${rawFormData.player2_wins});
     `;
+    revalidatePath(`${rawFormData.origin_url}`);
+    redirect(`${rawFormData.origin_url}?gamecreated=ok`)
 
-    revalidatePath('/dashboard/games');
-    redirect('/dashboard/games?gamecreated=ok');
   }
 
   const createGameAndReturnID = async (tournament_id : string, round: number | null)  => {
+    console.log("Entro a creategameReturnID")
     try {
       console.log("torneo: "+tournament_id+", ronda: "+round)
       const { rows : uuid } = await sql<uuid>`INSERT INTO game (tournament_id, round)
