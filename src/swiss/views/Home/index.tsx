@@ -73,6 +73,8 @@ const Home = (
         <div>
           <TournamentConfig config={config} onConfigChange={handleConfigChange}/>
         </div>
+        
+
       </div>
     </>
   )

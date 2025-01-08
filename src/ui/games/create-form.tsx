@@ -111,7 +111,6 @@ export default function CreateForm({
               Choose Tournament Round
             </label>
             <div className='relative'>
-              {/* porque es un option y no un input number ?  */}
               <select
                 id='round'
                 name='round'
