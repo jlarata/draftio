@@ -1,8 +1,11 @@
 import { Config } from './Config'
+import { DatabaseInfo } from './classesDb/DatabaseInfo'
 import { Match } from './Match'
 import { Player } from './Player'
 import { Round } from './Round'
 import { gameUtils } from './utils/utils'
+import { DatabaseRoundInfo } from './classesDb/DatabaseRoundInfo'
+import { createGame } from '@/services/lib/actions'
 
 export class Tournament {
   public players: Player[] = []
@@ -11,22 +14,25 @@ export class Tournament {
   private seed: number | undefined
   public rounds: Round[] = []
   public config: Config[] = [] //Este array esta mal, pero me tira error si saco esto y cambio setConfig
+  public databaseInfo: DatabaseInfo = new DatabaseInfo({})
+  public databaseRoundInfo: DatabaseRoundInfo[] = []
 
-  public startTournament({ playersNames, date, config }: { playersNames: string[]; date: string ; config: Config}) {
+  public startTournament({ playersNames, date, config }: { playersNames: string[]; date: string; config: Config }) {
+    this.databaseInfo.date = date
     this.createPlayers({ playersNames })
     this.setAllMatchMatrix()
-    this.setConfig({config})
+    this.setConfig({ config })
     this.seed = this.setSeed({ date })
-    
   }
 
-  private setConfig({config}:{config:Config}) {
+  private setConfig({ config }: { config: Config }) {
     this.config = [config]
   }
 
   private createPlayers({ playersNames }: { playersNames: string[] }) {
     this.players = playersNames.map(
-      (name) => new Player({ name, uuid: "-1", wins: 0, loss: 0, draws: 0, gameWins: 0, gameLoss: 0, rivals: [], buchholz: 0 })
+      (name) =>
+        new Player({ name, uuid: '-1', wins: 0, loss: 0, draws: 0, gameWins: 0, gameLoss: 0, rivals: [], buchholz: 0 })
     )
   }
 
@@ -132,7 +138,7 @@ export class Tournament {
     })
   }
 
-  public restartTournament() {    
+  public restartTournament() {
     this.rounds = []
     this.unplayedMatches = []
     this.players.map((player) => {
@@ -146,4 +152,20 @@ export class Tournament {
     })
     this.setAllMatchMatrix()
   }
+
+  public createRoundsInDB(round: number, origin_url: string) {
+    this.databaseRoundInfo[round-1].match.map((singlematch) => {
+      const formData = new FormData()
+      formData.append('league_id', this.databaseInfo.leagueID)
+      formData.append('tournament_id', this.databaseInfo.touranmentID)
+      formData.append('round', round.toString())
+      formData.append('origin_url', origin_url)
+      formData.append('player1_id', singlematch.player1_id)
+      formData.append('player1_wins', singlematch.player1_wins.toString())
+      formData.append('player2_id', singlematch.player2_id)
+      formData.append('player2_wins', singlematch.player2_wins.toString())
+      createGame(formData)
+    })
+  }
+
 }
