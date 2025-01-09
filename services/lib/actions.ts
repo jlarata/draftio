@@ -4,6 +4,8 @@ import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
 import { uuid } from "./definitions";
+import { prefetchDNS } from "react-dom";
+import { read } from "fs";
 
 export async function updateGame(id : string, previousPlayer1 : string, previousPlayer2 : string, formData : FormData) {
   let { tournament_id, round, player1, player1Wins, player2, player2Wins } = ({
@@ -142,7 +144,7 @@ export async function createGame(
 
   export async function deletePlayer(id: string) {
 
-    /* first: delete all games that are referenced in a player_game registry */
+    /* first: delete all games that are referenced in a player_game record */
     await sql`      
       DELETE FROM game
       WHERE game.id IN
@@ -161,7 +163,20 @@ export async function createGame(
     redirect('/dashboard/players?playerdeleted=ok');
   }
 
+  export async function deleteTournament(id: string) {
 
+    /* first: delete all games that references the tournament */
+    await sql`      
+    DELETE
+    FROM game
+    WHERE tournament_id = ${id}
+    `
+    /* then delete the tournament*/
+
+    await sql`DELETE FROM tournament WHERE id = ${id}`;
+    revalidatePath('/dashboard/tournament');
+    redirect('/dashboard/tournaments?tournamentdeleted=ok');
+  }
 
   export async function createPlayer(
     formData: FormData) {
@@ -183,6 +198,35 @@ export async function createGame(
       revalidatePath(`${rawFormData.origin_url}`);
       redirect(`${rawFormData.origin_url}?playercreated=ok`);
     }
+
+    export async function createTournament(
+      formData: FormData) {
+        let rawFormData : {
+          seed : string | null,
+          name : string,
+          league_id : string,
+          champion_id : string | null,
+          date : string | null,
+          origin_url : string,        
+        } = {
+          seed: formData.get('seed') as string,
+          name: formData.get('name') as string,
+          league_id: formData.get('league_id') as string,
+          champion_id: formData.get('champion_id') as string,
+          date: formData.get('date') as string,
+          origin_url: formData.get('origin_url') as string,
+        };
+
+        if (rawFormData.seed === "") { rawFormData.seed = null}
+        if (rawFormData.champion_id === "") { rawFormData.champion_id = null}
+
+        await sql`
+        INSERT INTO tournament (seed, name, league_id, champion_id, date)
+          VALUES (${rawFormData.seed}, ${rawFormData.name}, ${rawFormData.league_id}, ${rawFormData.champion_id}, ${rawFormData.date});`;
+    
+        revalidatePath(`${rawFormData.origin_url}`);
+        redirect(`${rawFormData.origin_url}?tournamentcreated=ok`);
+      }
 
   export const redirectWithParams = async (params : string) => {
     console.log("redirecting?")
