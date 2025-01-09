@@ -115,16 +115,33 @@ const Second = ({ fetchedPlayers }: Props) => {
     if (Object.keys(roundConfirmed).length < tournament.rounds.length) {
       router.push('./results')
     } else {
+      const roundNumber = tournament.rounds.length
+      tournament.databaseRoundInfo.push(new DatabaseRoundInfo())
       Object.entries(currentRoundMatches).forEach(([tournamentPlayerKey, match]) => {
+        var player1name = match.player1.player.name
+        var player1uuid = match.player1.player.uuid
+        var player2name = match.player2.player.name
+        var player2uuid = match.player2.player.uuid
+  
         var player1GameWins = Number(selectedValues[match.player1.player.name]) || 0
         var player2GameWins = Number(selectedValues[match.player2.player.name]) || 0
-
         match.setMatchResult({
           player1GameWins: player1GameWins,
           player2GameWins: player2GameWins,
           config: tournamentConfig,
         })
+        tournament.databaseRoundInfo[roundNumber - 1].addMatch({
+          round: roundNumber,
+          player1_id: player1uuid,
+          player1_wins: player1GameWins,
+          player1_name: player1name,
+          player2_id: player2uuid,
+          player2_name: player2name,
+          player2_wins: player2GameWins,
+        })
       })
+      
+      tournament.createRoundsInDB(roundNumber,urlPathname)
 
       setRefreshScore((prev) => !prev)
       router.push('./results')
