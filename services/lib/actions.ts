@@ -4,6 +4,28 @@ import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
 import { uuid } from "./definitions";
+import { signIn } from "@/auth";
+import { AuthError } from "next-auth";
+
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials';
+          default:
+            return 'Oh no i dont believe it, something went wrong';
+      }
+    }
+    throw error;
+  }
+}
+
 
 export async function updateGame(id : string, previousPlayer1 : string, previousPlayer2 : string, formData : FormData) {
   let { tournament_id, round, player1, player1Wins, player2, player2Wins } = ({

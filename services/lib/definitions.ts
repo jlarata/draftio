@@ -1,60 +1,67 @@
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+};
+
 export type Message =
-    {
-      text: string,
-    }
+  {
+    text: string,
+  }
 
-export type Player = 
-    {
-        id : string,
+export type Player =
+  {
+    id: string,
 
-        username : string,
-    }
-    
-export type FetchedPlayer = 
-    {
-        id : string,
-        username : string,
+    username: string,
+  }
 
-    }
+export type FetchedPlayer =
+  {
+    id: string,
+    username: string,
+
+  }
 
 export type League =
-    {
-        id : string,
-        name : string,
-    }
+  {
+    id: string,
+    name: string,
+  }
 
 export type Tournament =
-    {
-        id : string,
-        leagueid : string,
-        championid: string | null,
-        date: Date,
-        name : string
-    }
+  {
+    id: string,
+    leagueid: string,
+    championid: string | null,
+    date: Date,
+    name: string
+  }
 export type TournamentAxis =
-    {
-        id : string,
-        name : string,
-        date: Date,
-    }
+  {
+    id: string,
+    name: string,
+    date: Date,
+  }
 
-export type Game = 
-    {
-        id : string,
-        tournamentid : string,
-        player1 : string,
-        player2 : string,
-        match1 : 0 | 1 | 2 | null,
-        match2 : 0 | 1 | 2 | null,
-        match3 : 0 | 1 | 2 | null,
-        result : 0 | 1 | 2 | null,
-    }
+export type Game =
+  {
+    id: string,
+    tournamentid: string,
+    player1: string,
+    player2: string,
+    match1: 0 | 1 | 2 | null,
+    match2: 0 | 1 | 2 | null,
+    match3: 0 | 1 | 2 | null,
+    result: 0 | 1 | 2 | null,
+  }
 
-export type GameAxis = 
-    {
-        id : string,
-        tournament_id : string
-    }    
+export type GameAxis =
+  {
+    id: string,
+    tournament_id: string
+  }
 
 /* export type LatestGames = {
   id: string;
@@ -74,8 +81,8 @@ export type LatestGames = {
   date: string;
   game_id: string;
   player: string;
-  wins : 0 | 1 | 2,
-  round : 1 | 2 | 3
+  wins: 0 | 1 | 2,
+  round: 1 | 2 | 3
 };
 export type GameJoinedWith2Players = {
   league_name: string;
@@ -83,11 +90,11 @@ export type GameJoinedWith2Players = {
   date: string;
   game_id: string;
   player1: string;
-  player1Wins: 0 | 1 | 2, 
+  player1Wins: 0 | 1 | 2,
   player2: string;
-  player2Wins : 0 | 1 | 2,
-  result : 0 | 1 | 2,
-  round : 1 | 2 | 3
+  player2Wins: 0 | 1 | 2,
+  result: 0 | 1 | 2,
+  round: 1 | 2 | 3
 };
 
 export type GamesTable = {
@@ -96,8 +103,8 @@ export type GamesTable = {
   date: string;
   game_id: string;
   player: string;
-  wins : 0 | 1 | 2,
-  round : 1 | 2 | 3
+  wins: 0 | 1 | 2,
+  round: 1 | 2 | 3
 };
 
 /* export type GamesTable = {
@@ -135,21 +142,21 @@ export type LeagueField = {
 };
 
 export type uuid = {
-  id : string
-} 
+  id: string
+}
 
 
 export type PlayersTableType = {
-  id : string;
-  username : string;
-  role : string;
+  id: string;
+  username: string;
+  role: string;
 };
 
 //delete all this>
 export type Revenue = {
-    month: string;
-    revenue: number;
-    };
+  month: string;
+  revenue: number;
+};
 
 export type LatestInvoice = {
   id: string;
@@ -208,14 +215,14 @@ export type InvoiceForm = {
 };
 
 export type GameForm = {
-  league_name : string;
-  tournament_name : string;
+  league_name: string;
+  tournament_name: string;
   date: string;
   game_id: string;
   player1: string;
-  player1Wins: 0 | 1 | 2, 
+  player1Wins: 0 | 1 | 2,
   player2: string;
-  player2Wins : 0 | 1 | 2,
-  result : 0 | 1 | 2,
-  round : 1 | 2 | 3
+  player2Wins: 0 | 1 | 2,
+  result: 0 | 1 | 2,
+  round: 1 | 2 | 3
 };
