@@ -1,9 +1,30 @@
 export type User = {
+  player_id: string;
+  name: string;
+  email: string;
+  password: string;
+};
+
+export type NormalizedUser = {
   id: string;
   name: string;
   email: string;
   password: string;
 };
+
+/* export type Session = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+}; */
+
+/* export class Session {
+  public player_id: string = "";
+  public name: string = "";
+  public email: string = "";
+  public password: string = "";
+  } */
 
 export type Message =
   {
