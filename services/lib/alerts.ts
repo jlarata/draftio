@@ -21,3 +21,19 @@ export function successShowSwal(text: string) {
     }
   )
 }
+
+export function errorShowSwal(text: string) {
+  withReactContent(Swal).fire({
+    
+    icon: 'error',
+    title: 'Error!',
+    text: `${text}`,
+    backdrop: `
+    rgba(134, 239, 172,0.4)
+    no-repeat`,
+    customClass: {
+      popup : 'custom-class',
+    },
+    }
+  )
+}

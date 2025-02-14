@@ -7,22 +7,26 @@ import {
   HomeIcon,
   TrophyIcon,
   TableCellsIcon,
-  PuzzlePieceIcon
+  PuzzlePieceIcon, 
+  UserIcon,
 } from '@heroicons/react/24/outline';
+import { User } from '@/services/lib/definitions';
 
-const links = [
-  { name: 'Home', href: '/dashboard', icon: HomeIcon },
-  {
-    name: 'Players',
-    href: '/dashboard/players',
-    icon: UserGroupIcon,
-  },
-  { name: 'Games', href: '/dashboard/games', icon: PuzzlePieceIcon },
-  { name: 'Tournaments', href: '/dashboard/tournaments', icon: TrophyIcon },
-  { name: 'Leagues', href: '/dashboard/leagues', icon: TableCellsIcon },
-];
+export default function NavLinks(user : User) {
 
-export default function NavLinks() {
+  const links = [
+    { name: 'Home', href: '/dashboard', icon: HomeIcon },
+    {
+      name: 'Players',
+      href: '/dashboard/players',
+      icon: UserGroupIcon,
+    },
+    { name: 'Games', href: '/dashboard/games', icon: PuzzlePieceIcon },
+    { name: 'Tournaments', href: '/dashboard/tournaments', icon: TrophyIcon },
+    { name: 'Leagues', href: '/dashboard/leagues', icon: TableCellsIcon },
+    { name: `${user.email} | Control Panel`, href: '/dashboard/cp', icon: UserIcon}
+  ];
+
 
   const pathname = usePathname();
   return (
