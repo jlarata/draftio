@@ -3,18 +3,59 @@
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
-import { uuid } from "./definitions";
+import { User, uuid } from "./definitions";
+import { signIn } from "@/auth";
+import { AuthError } from "next-auth";
 import { prefetchDNS } from "react-dom";
 import { read } from "fs";
 
-export async function updateGame(id : string, previousPlayer1 : string, previousPlayer2 : string, formData : FormData) {
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials';
+        default:
+          return 'Oh no i dont believe it, something went wrong';
+      }
+    }
+    throw error;
+  }
+}
+
+/* export async function getId(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials';
+          default:
+            return 'Oh no i dont believe it, something went wrong';
+      }
+    }
+    throw error;
+  }
+} */
+
+
+export async function updateGame(id: string, previousPlayer1: string, previousPlayer2: string, formData: FormData) {
   let { tournament_id, round, player1, player1Wins, player2, player2Wins } = ({
-    tournament_id : formData.get('tournament_id') as string,
-    round : parseInt(formData.get('round') as string),
-    player1 : formData.get('player1') as string,
-    player1Wins : parseInt(formData.get('player1Wins') as string),
-    player2 : formData.get('player2') as string,
-    player2Wins : parseInt(formData.get('player2Wins') as string),
+    tournament_id: formData.get('tournament_id') as string,
+    round: parseInt(formData.get('round') as string),
+    player1: formData.get('player1') as string,
+    player1Wins: parseInt(formData.get('player1Wins') as string),
+    player2: formData.get('player2') as string,
+    player2Wins: parseInt(formData.get('player2Wins') as string),
   })
 
   try {
@@ -30,7 +71,7 @@ export async function updateGame(id : string, previousPlayer1 : string, previous
     UPDATE player_game
     SET player_id = ${player1}, wins = ${player1Wins}
     WHERE (player_id = ${previousPlayer1} AND game_id = ${id})`
-    
+
     // console.log("updating player_game player_id: "+previousPlayer2+" wins: "+player2Wins)
 
     await sql`
@@ -39,7 +80,7 @@ export async function updateGame(id : string, previousPlayer1 : string, previous
     WHERE (player_id = ${previousPlayer2} AND game_id = ${id})`
 
 
-    
+
   } catch (error) {
     console.error('Database Error:', error)
     throw new Error('Failed to edit game and player_game.')
@@ -52,7 +93,7 @@ export async function updateGame(id : string, previousPlayer1 : string, previous
 
 export async function createGame(
   formData: FormData) {
-    let rawFormData : {
+      let rawFormData : {
       /*data for the new game record*/
       tournament_id : string,
       pre_round : string,
@@ -111,13 +152,12 @@ export async function createGame(
       await sql`
       INSERT INTO player_game (player_id, game_id, wins)
          VALUES (${rawFormData.player1_id}, ${this_game_id}, ${rawFormData.player1_wins});`
-      await sql`
+  await sql`
       INSERT INTO player_game (player_id, game_id, wins)
          VALUES (${rawFormData.player2_id}, ${this_game_id}, ${rawFormData.player2_wins});
     `;
     revalidatePath(`${rawFormData.origin_url}`);
     redirect(`${rawFormData.origin_url}?gamecreated=ok`)
-
   }
 
   const createGameAndReturnID = async (tournament_id : string, round: number | null)  => {
@@ -128,21 +168,55 @@ export async function createGame(
       VALUES(${tournament_id}, ${round})
       RETURNING id;`;
     return {
-        uuid : uuid
-      }
-    } catch (error) {
-      console.error('Database Error:', error)
-      throw new Error('Failed to create game and return the uuid.')
+      uuid: uuid
     }
+  } catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to create game and return the uuid.')
   }
+}
 
-  export async function deleteGame(id: string) {
-    await sql`DELETE FROM game WHERE id = ${id}`;
-    revalidatePath('/dashboard/games');
-    redirect('/dashboard/games?gamedeleted=ok');
+export async function deleteGame(id: string) {
+  await sql`DELETE FROM game WHERE id = ${id}`;
+  revalidatePath('/dashboard/games');
+  redirect('/dashboard/games?gamedeleted=ok');
+}
+
+export async function createLeague(user_id: string, formData: FormData) {
+  let rawFormData: {
+    name: string,
+  } = {
+    name: formData.get('name') as string,
+  };
+
+  try {
+/*     console.log(`Creating league named ${rawFormData.name} for user id ${user_id}`) */
+    const { rows: uuid } = await sql`INSERT INTO league (name)
+      VALUES(${rawFormData.name})
+      RETURNING id;`;
+
+    let thisLeagueUUID = uuid[0].id;
+
+    /* console.log(`Creating league_player table with league id = ${thisLeagueUUID}`) */
+    await sql`INSERT INTO league_player (league_id, player_id, player_role)
+        VALUES(${thisLeagueUUID}, ${user_id}, 'admin');`;
+  } catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to create league.')
   }
+  redirect('/dashboard/leagues?leaguecreated=ok');
+}
 
-  export async function deletePlayer(id: string) {
+export async function deleteLeague(id: string) {
+  /* do we even want this function? VERY dangerous */
+  /* await sql`DELETE FROM league WHERE id = ${id}`; */
+  console.log(`league ${id} would have been eliminated if this was enabled`)
+  revalidatePath('/dashboard/leagues');
+  redirect('/dashboard/leagues?leaguedeleted=ok');
+}
+
+export async function deletePlayer(id: string) {
+
 
     /* first: delete all games that are referenced in a player_game record */
     await sql`      
@@ -157,11 +231,11 @@ export async function createGame(
       pg.player_id = ${id})
       `
 
-    /* then delete the player: the CASCADE constraint will delete the player_game record*/
-    await sql`DELETE FROM player WHERE id = ${id}`;
-    revalidatePath('/dashboard/players');
-    redirect('/dashboard/players?playerdeleted=ok');
-  }
+  /* then delete the player: the CASCADE constraint will delete the player_game record*/
+  await sql`DELETE FROM player WHERE id = ${id}`;
+  revalidatePath('/dashboard/players');
+  redirect('/dashboard/players?playerdeleted=ok');
+}
 
   export async function deleteTournament(id: string) {
 
@@ -232,5 +306,9 @@ export async function createGame(
     console.log("redirecting?")
     const param = params;
 
-    redirect(`/dashboard/games/create/${param}`);
-  }
+export const redirectWithParams = async (params: string) => {
+  console.log("redirecting?")
+  const param = params;
+
+  redirect(`/dashboard/games/create/${param}`);
+}
