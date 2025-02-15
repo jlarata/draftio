@@ -9,6 +9,7 @@ import Search from "@/src/ui/search";
 import DashboardSkeleton, { LatestGamesSkeleton } from "@/src/ui/skeletons";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import middleware from "@/middleware";
 
 export const metadata: Metadata = {
     title: "Leagues | Draftio Dashboard",
