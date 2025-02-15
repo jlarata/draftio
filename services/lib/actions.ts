@@ -93,78 +93,78 @@ export async function updateGame(id: string, previousPlayer1: string, previousPl
 
 export async function createGame(
   formData: FormData) {
-      let rawFormData : {
-      /*data for the new game record*/
-      tournament_id : string,
-      pre_round : string,
-      round : number | null, // 0 to 8?
-      
+  let rawFormData: {
+    /*data for the new game record*/
+    tournament_id: string,
+    pre_round: string,
+    round: number | null, // 0 to 8?
 
-      /* data for the new player_game records
-         game_id is generated in the create game query. */
-      
-      player1_id: string,
-      pre_player1_wins: string,
-      player1_wins: number | null,
-      pre_player2_wins: string,
-      player2_id: string,
-      player2_wins: number | null,
-      origin_url : string
 
-    } = {
-        tournament_id: formData.get('tournament_id') as string,
-        pre_round: formData.get('round') as string,
-        round : null,
+    /* data for the new player_game records
+       game_id is generated in the create game query. */
 
-        player1_id: formData.get('player1_id') as string,
-        pre_player1_wins: formData.get('player1_wins') as string,
-      
-        player2_id: formData.get('player2_id') as string,
-        pre_player2_wins: formData.get('player2_wins') as string,
+    player1_id: string,
+    pre_player1_wins: string,
+    player1_wins: number | null,
+    pre_player2_wins: string,
+    player2_id: string,
+    player2_wins: number | null,
+    origin_url: string
 
-        player1_wins: null, 
-        player2_wins: null,
-        origin_url: formData.get('origin_url') as string,
-      };
-      formData.forEach((value,key) => console.log("en action formData", `${key}: ${value}`))
+  } = {
+    tournament_id: formData.get('tournament_id') as string,
+    pre_round: formData.get('round') as string,
+    round: null,
 
-      console.log("rawfromData ",rawFormData); 
+    player1_id: formData.get('player1_id') as string,
+    pre_player1_wins: formData.get('player1_wins') as string,
 
-      //parses matchs data
-      if ((rawFormData.pre_round !== null)) { 
-        rawFormData.round = parseInt(formData.get('round') as string);
-       }
-      if ((rawFormData.pre_player1_wins !== null)) { 
-      rawFormData.player1_wins = parseInt(formData.get('player1_wins') as string);
-      }
-      if ((rawFormData.pre_player2_wins !== null)) { 
-        rawFormData.player2_wins = parseInt(formData.get('player2_wins') as string);
-      } 
-      console.log("creating game");
-      console.log(rawFormData);
+    player2_id: formData.get('player2_id') as string,
+    pre_player2_wins: formData.get('player2_wins') as string,
 
-      const { uuid } = await createGameAndReturnID(rawFormData.tournament_id, rawFormData.round);
+    player1_wins: null,
+    player2_wins: null,
+    origin_url: formData.get('origin_url') as string,
+  };
+  formData.forEach((value, key) => console.log("en action formData", `${key}: ${value}`))
 
-      console.log(uuid)
-      const this_game_id = uuid[0].id;
-      console.log(this_game_id)
-      
-      await sql`
+  console.log("rawfromData ", rawFormData);
+
+  //parses matchs data
+  if ((rawFormData.pre_round !== null)) {
+    rawFormData.round = parseInt(formData.get('round') as string);
+  }
+  if ((rawFormData.pre_player1_wins !== null)) {
+    rawFormData.player1_wins = parseInt(formData.get('player1_wins') as string);
+  }
+  if ((rawFormData.pre_player2_wins !== null)) {
+    rawFormData.player2_wins = parseInt(formData.get('player2_wins') as string);
+  }
+  console.log("creating game");
+  console.log(rawFormData);
+
+  const { uuid } = await createGameAndReturnID(rawFormData.tournament_id, rawFormData.round);
+
+  console.log(uuid)
+  const this_game_id = uuid[0].id;
+  console.log(this_game_id)
+
+  await sql`
       INSERT INTO player_game (player_id, game_id, wins)
          VALUES (${rawFormData.player1_id}, ${this_game_id}, ${rawFormData.player1_wins});`
   await sql`
       INSERT INTO player_game (player_id, game_id, wins)
          VALUES (${rawFormData.player2_id}, ${this_game_id}, ${rawFormData.player2_wins});
     `;
-    revalidatePath(`${rawFormData.origin_url}`);
-    redirect(`${rawFormData.origin_url}?gamecreated=ok`)
-  }
+  revalidatePath(`${rawFormData.origin_url}`);
+  redirect(`${rawFormData.origin_url}?gamecreated=ok`)
+}
 
-  const createGameAndReturnID = async (tournament_id : string, round: number | null)  => {
-    console.log("Entro a creategameReturnID")
-    try {
-      console.log("torneo: "+tournament_id+", ronda: "+round)
-      const { rows : uuid } = await sql<uuid>`INSERT INTO game (tournament_id, round)
+const createGameAndReturnID = async (tournament_id: string, round: number | null) => {
+  console.log("Entro a creategameReturnID")
+  try {
+    console.log("torneo: " + tournament_id + ", ronda: " + round)
+    const { rows: uuid } = await sql<uuid>`INSERT INTO game (tournament_id, round)
       VALUES(${tournament_id}, ${round})
       RETURNING id;`;
     return {
@@ -190,7 +190,7 @@ export async function createLeague(user_id: string, formData: FormData) {
   };
 
   try {
-/*     console.log(`Creating league named ${rawFormData.name} for user id ${user_id}`) */
+    /*     console.log(`Creating league named ${rawFormData.name} for user id ${user_id}`) */
     const { rows: uuid } = await sql`INSERT INTO league (name)
       VALUES(${rawFormData.name})
       RETURNING id;`;
@@ -218,8 +218,8 @@ export async function deleteLeague(id: string) {
 export async function deletePlayer(id: string) {
 
 
-    /* first: delete all games that are referenced in a player_game record */
-    await sql`      
+  /* first: delete all games that are referenced in a player_game record */
+  await sql`      
       DELETE FROM game
       WHERE game.id IN
          (
@@ -237,74 +237,70 @@ export async function deletePlayer(id: string) {
   redirect('/dashboard/players?playerdeleted=ok');
 }
 
-  export async function deleteTournament(id: string) {
+export async function deleteTournament(id: string) {
 
-    /* first: delete all games that references the tournament */
-    await sql`      
+  /* first: delete all games that references the tournament */
+  await sql`      
     DELETE
     FROM game
     WHERE tournament_id = ${id}
     `
-    /* then delete the tournament*/
+  /* then delete the tournament*/
 
-    await sql`DELETE FROM tournament WHERE id = ${id}`;
-    revalidatePath('/dashboard/tournament');
-    redirect('/dashboard/tournaments?tournamentdeleted=ok');
-  }
+  await sql`DELETE FROM tournament WHERE id = ${id}`;
+  revalidatePath('/dashboard/tournament');
+  redirect('/dashboard/tournaments?tournamentdeleted=ok');
+}
 
-  export async function createPlayer(
-    formData: FormData) {
-      let rawFormData : {
-        nickname : string,
-        origin_url : string,        
-      } = {
-          nickname: formData.get('nickname') as string,
-          origin_url: formData.get('origin_url') as string,
-        };
-        //console.log(rawFormData); 
-        console.log("creating player");
-        console.log(rawFormData);
-        
-        await sql`
+export async function createPlayer(
+  formData: FormData) {
+  let rawFormData: {
+    nickname: string,
+    origin_url: string,
+  } = {
+    nickname: formData.get('nickname') as string,
+    origin_url: formData.get('origin_url') as string,
+  };
+  //console.log(rawFormData); 
+  console.log("creating player");
+  console.log(rawFormData);
+
+  await sql`
         INSERT INTO player (username)
            VALUES (${rawFormData.nickname});`;
-  
-      revalidatePath(`${rawFormData.origin_url}`);
-      redirect(`${rawFormData.origin_url}?playercreated=ok`);
-    }
 
-    export async function createTournament(
-      formData: FormData) {
-        let rawFormData : {
-          seed : string | null,
-          name : string,
-          league_id : string,
-          champion_id : string | null,
-          date : string | null,
-          origin_url : string,        
-        } = {
-          seed: formData.get('seed') as string,
-          name: formData.get('name') as string,
-          league_id: formData.get('league_id') as string,
-          champion_id: formData.get('champion_id') as string,
-          date: formData.get('date') as string,
-          origin_url: formData.get('origin_url') as string,
-        };
+  revalidatePath(`${rawFormData.origin_url}`);
+  redirect(`${rawFormData.origin_url}?playercreated=ok`);
+}
 
-        if (rawFormData.seed === "") { rawFormData.seed = null}
-        if (rawFormData.champion_id === "") { rawFormData.champion_id = null}
+export async function createTournament(
+  formData: FormData) {
+  let rawFormData: {
+    seed: string | null,
+    name: string,
+    league_id: string,
+    champion_id: string | null,
+    date: string | null,
+    origin_url: string,
+  } = {
+    seed: formData.get('seed') as string,
+    name: formData.get('name') as string,
+    league_id: formData.get('league_id') as string,
+    champion_id: formData.get('champion_id') as string,
+    date: formData.get('date') as string,
+    origin_url: formData.get('origin_url') as string,
+  };
 
-        await sql`
+  if (rawFormData.seed === "") { rawFormData.seed = null }
+  if (rawFormData.champion_id === "") { rawFormData.champion_id = null }
+
+  await sql`
         INSERT INTO tournament (seed, name, league_id, champion_id, date)
           VALUES (${rawFormData.seed}, ${rawFormData.name}, ${rawFormData.league_id}, ${rawFormData.champion_id}, ${rawFormData.date});`;
-    
-        revalidatePath(`${rawFormData.origin_url}`);
-        redirect(`${rawFormData.origin_url}?tournamentcreated=ok`);
-      }
 
-  export const redirectWithParams = async (params : string) => {
-    console.log("redirecting?")
-    const param = params;
+  revalidatePath(`${rawFormData.origin_url}`);
+  redirect(`${rawFormData.origin_url}?tournamentcreated=ok`);
+}
 
 export const redirectWithParams = async (params: string) => {
   console.log("redirecting?")

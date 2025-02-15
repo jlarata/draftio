@@ -10,14 +10,13 @@ import Search from "@/src/ui/search";
 import DashboardSkeleton, { LatestGamesSkeleton } from "@/src/ui/skeletons";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import middleware from "@/middleware";
 
 export const metadata: Metadata = {
     title: "Leagues | Draftio Dashboard",
 };
 
-const session = await auth();
 
-const user_id : string = session?.user?.id!
 
 
 export default async function Page(props: {
@@ -29,6 +28,10 @@ export default async function Page(props: {
         leaguedeleted?: string;
     }>;
 }) {
+
+    const session = await auth();
+    const user_id : string = session?.user?.id!
+
     const { fetchSelectLeagueData } = leagueServices
     
     const fetchedLeagues = await fetchSelectLeagueData()
