@@ -47,7 +47,6 @@ export async function authenticate(
   }
 } */
 
-
 export async function updateGame(id: string, previousPlayer1: string, previousPlayer2: string, formData: FormData) {
   let { tournament_id, round, player1, player1Wins, player2, player2Wins } = ({
     tournament_id: formData.get('tournament_id') as string,
@@ -182,6 +181,9 @@ export async function deleteGame(id: string) {
   redirect('/dashboard/games?gamedeleted=ok');
 }
 
+
+
+
 export async function createLeague(user_id: string, formData: FormData) {
   let rawFormData: {
     name: string,
@@ -205,6 +207,25 @@ export async function createLeague(user_id: string, formData: FormData) {
     throw new Error('Failed to create league.')
   }
   redirect('/dashboard/leagues?leaguecreated=ok');
+}
+
+export async function updateLeague(id: string, formData: FormData) {
+  let { name } = ({
+    name: formData.get('name') as string,
+  }) 
+  try {
+    await sql`
+    UPDATE league
+    SET name = ${name}
+    WHERE id = ${id};`
+  }
+  catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to edit league.')
+  }
+
+  revalidatePath('/dashboard/leagues');
+  redirect('/dashboard/leagues?leagueedited=ok');
 }
 
 export async function deleteLeague(id: string) {
