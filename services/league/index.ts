@@ -46,7 +46,31 @@ IN
   }
 }
 
+const fetchLeagueById = async (league_id: string) => {
+  try {
+    const { rows: leaguesPromise } = await sql<League>`
+  SELECT
+    id, name
+  FROM
+    league
+  WHERE
+    id = ${league_id}`
+
+
+  const leagueName : string = leaguesPromise[0].name
+
+  return {
+    leagueName
+  }
+  } catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch selectLeagueById data.')
+  }
+}
+
 export const leagueServices = {
   fetchSelectLeagueData,
-  fetchLeagueByPlayerId
+  fetchLeagueByPlayerId,
+  fetchLeagueById,
+
 }

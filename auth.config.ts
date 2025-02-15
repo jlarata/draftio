@@ -1,4 +1,3 @@
-import { request } from 'http';
 import type { NextAuthConfig } from 'next-auth';
 
 export const authConfig = {

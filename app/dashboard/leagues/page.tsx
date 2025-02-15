@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { leagueServices } from "@/services/league";
 import AlertsPage, { WrongPage } from "@/src/ui/alerts/alerts";
-
 import { inter } from "@/src/ui/fonts";
 import Pagination from "@/src/ui/games/pagination";
 import LeaguesTable from "@/src/ui/leagues/table";
@@ -10,14 +9,10 @@ import Search from "@/src/ui/search";
 import DashboardSkeleton, { LatestGamesSkeleton } from "@/src/ui/skeletons";
 import { Metadata } from "next";
 import { Suspense } from "react";
-import middleware from "@/middleware";
 
 export const metadata: Metadata = {
     title: "Leagues | Draftio Dashboard",
 };
-
-
-
 
 export default async function Page(props: {
     searchParams?: Promise<{
