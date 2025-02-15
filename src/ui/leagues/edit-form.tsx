@@ -1,6 +1,6 @@
 'use client';
 
-import { CustomerField, GameForm, InvoiceForm, LeagueField, PlayerField, TournamentField } from '@/services/lib/definitions';
+import { CustomerField, GameForm, InvoiceForm, LeagueField, Player, PlayerField, Tournament, TournamentField } from '@/services/lib/definitions';
 import {
   ClipboardIcon,
   TrophyIcon,
@@ -11,17 +11,25 @@ import { Button } from '../button';
 import { useEffect, useState } from 'react';
 import { updateLeague } from '@/services/lib/actions';
 
-export default function EditLeagueForm({
+export default async function EditLeagueForm({
   league_id,
   league_name,
+  players,
+  tournaments
 }: {
   league_id: string,
-  league_name: string
+  league_name: string,
+  players: Player[],
+  tournaments: Tournament[]
 }) {
 
-  const [leagueName, setLeagueName] = useState("");
-  
+  /* not using this. but will be needed to prevent duplicate league name */
+  const [leagueName, setLeagueName] = useState("");  
+
   const updateLeagueWithId = updateLeague.bind(null, league_id);
+
+  /* console.log("tournaments", tournaments)
+  console.log("players", players) */
 
   return (
     <form action={updateLeagueWithId}>

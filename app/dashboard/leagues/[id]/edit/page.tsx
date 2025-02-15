@@ -13,6 +13,9 @@ export default async function Page(props: { params : Promise<{ id:string}>}) {
   
     const { fetchLeagueById } = leagueServices;
     const league = await fetchLeagueById(league_id)
+
+    const { fetchTournamentDataByLeagueId } = tournamentServices
+    const { tournaments } = await fetchTournamentDataByLeagueId(league_id); 
     
     /* should the user be able to edit the players associated with a league in this screen? im guessing so */
     const { fetchPlayersByLeague } = playerServices;
@@ -33,7 +36,7 @@ export default async function Page(props: { params : Promise<{ id:string}>}) {
           },
         ]}
       />
-      <Form league_id={league_id} league_name={league.leagueName} /* players={players} */ />
+      <Form league_id={league_id} league_name={league.leagueName} players={players} tournaments={tournaments} /* players={players} */ />
     </main>
   );
 }

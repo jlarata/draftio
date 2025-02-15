@@ -4,6 +4,7 @@ import { League } from '@/services/lib/definitions';
 import Search from '../search';
 import { leagueServices } from '@/services/league';
 import { DeleteLeague, UpdateLeague } from './buttons';
+import { tournamentServices } from '@/services/tournament';
 
 export default async function LeaguesTable({
   user_id,
@@ -20,8 +21,12 @@ export default async function LeaguesTable({
 
   //const { fetchSelectLeagueData } = leagueServices;
   const { fetchLeagueByPlayerId } = leagueServices
-
   const leagues: League[] = ((await fetchLeagueByPlayerId(user_id)).leagues)
+
+  const { fetchTournamentDataByLeagueId } = tournamentServices
+  /* aca probablemente: meter un for loop que construya un array de tournaments por liga. 
+  const { tournaments } = await fetchTournamentDataByLeagueId(league_id); */
+
 
   return (
     <>
