@@ -1,10 +1,11 @@
 
 
-import { League } from '@/services/lib/definitions';
+import { League, Tournament, TournamentForLeaguesTable } from '@/services/lib/definitions';
 import Search from '../search';
 import { leagueServices } from '@/services/league';
 import { DeleteLeague, UpdateLeague } from './buttons';
 import { tournamentServices } from '@/services/tournament';
+import { tournaments } from '@/services/lib/placeholder-data';
 
 export default async function LeaguesTable({
   user_id,
@@ -17,20 +18,18 @@ export default async function LeaguesTable({
 
   /* the leagues component uses query and currentpage for displaying the leagues.
   is this necessary on the leagues component? dont think so
+  
   const games = await fetchFilteredGames(query, currentPage);*/
 
-  //const { fetchSelectLeagueData } = leagueServices;
   const { fetchLeagueByPlayerId } = leagueServices
+  const { fetchTournamentsByUserId } = tournamentServices
+
   const leagues: League[] = ((await fetchLeagueByPlayerId(user_id)).leagues)
-
-  const { fetchTournamentDataByLeagueId } = tournamentServices
-  /* aca probablemente: meter un for loop que construya un array de tournaments por liga. 
-  const { tournaments } = await fetchTournamentDataByLeagueId(league_id); */
-
+  const tournaments: TournamentForLeaguesTable[] = ((await fetchTournamentsByUserId(user_id)).tournaments)
 
   return (
     <>
-      <div className="w-full md:w-1/2">
+      <div className="w-full">
         <div className="mt-6 flow-root">
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
@@ -44,23 +43,24 @@ export default async function LeaguesTable({
                       <div className="flex items-center justify-between border-b pb-4">
                         <div>
                           <div className="mb-2 flex items-center">
-                            <div className="flex items-center gap-3">
-                              {/* we could have an Avatar for each league?
-                             <Image
-                              src={customer.image_url}
-                              className="rounded-full"
-                              alt={`${customer.name}'s profile picture`}
-                              width={28}
-                              height={28}
-                            /> */}
+                            <div className="text-lg flex items-center gap-3">
                               <p>{league.name}</p>
                             </div>
                           </div>
-                          {/*
-                        WIP: add role <p className="text-sm text-gray-500">
-                          {player.role}
-                        </p> */}
                         </div>
+                      </div>
+                      <div>
+                        <p className='indent-3'>
+                          Tournaments:
+                        </p>
+                        {tournaments.map((tournament, i) => (
+                          (league.id === tournament.league_id) ?
+                            <p key={tournament.id + i} className='text-sm indent-8'>
+                              {tournament.name} | {tournament.date.toString()}
+                              {tournament.champion_id && " | Champion: " + tournament.champion_name}
+                            </p> :
+                            null
+                        ))}
                       </div>
                     </div>
                   ))}
@@ -68,8 +68,8 @@ export default async function LeaguesTable({
                 <table className="hidden min-w-full rounded-md text-gray-900 md:table">
                   <thead className="rounded-md bg-gray-50 text-left text-sm font-normal">
                     <tr>
-                      <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                        Name
+                      <th scope="col" className="px-4 py-1 font-medium sm:pl-6">
+                        {/* better if no tag? Name */}
                       </th>
                     </tr>
                   </thead>
@@ -86,11 +86,24 @@ export default async function LeaguesTable({
                             width={28}
                             height={28}
                           /> */}
-                            <p>{league.name}</p>
+                            <p className="text-3xl">{league.name}</p>
                             <div className='flex items-center gap-2'>
                               <UpdateLeague league_id={league.id} />
                               <DeleteLeague id={league.id} />
                             </div>
+                          </div>
+                          <div>
+                            <p className='text-lg indent-3'>
+                              Tournaments:
+                            </p>
+                            {tournaments.map((tournament, i) => (
+                              (league.id === tournament.league_id) ?
+                                <p key={tournament.id + i} className='indent-8'>
+                                  {tournament.name} | {tournament.date.toString()}
+                                  {tournament.champion_id && " | Champion: " + tournament.champion_name}
+                                </p> :
+                                null
+                            ))}
                           </div>
                         </td>
                         {/* WIP ADD role 

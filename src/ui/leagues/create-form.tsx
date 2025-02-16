@@ -40,10 +40,10 @@ export default function CreateForm(
 
   return (
     <>
-    <div className="w-full md:w-1/2">
-      <div className="mt-6 flow-root">
+    <div className="mt-6 w-full md:w-5/6 ">
+      <div className="mt-6 flow-root ">
         <div className="overflow-x-auto">
-          <div className="inline-block min-w-full align-middle">
+          <div className="inline-block min-w-full align-middle content-center ">
             <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
               <form>
                 <div className="rounded-md bg-gray-50 p-4 md:p-6"> 
