@@ -59,6 +59,18 @@ export type Tournament =
     date: Date,
     name: string
   }
+
+  export type TournamentForLeaguesTable =
+  {
+    id: string,
+    seed: string | null,
+    name: string,
+    league_id: string,
+    champion_id: string | null,
+    champion_name: string | null,
+    date: Date,
+  }
+
 export type TournamentAxis =
   {
     id: string,

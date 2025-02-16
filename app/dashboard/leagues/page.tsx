@@ -56,12 +56,16 @@ export default async function Page(props: {
 
             <div className="w-full">
                 <div className="flex w-full items-center justify-between">
-                    <h1 className={`${inter.className} text-2xl`}>Your leagues</h1>
+                    <h1 className={`${inter.className} text-4xl`}>Your leagues</h1>
                 </div>
 
-                <div className="flex flex-row gap-4">
+                <div className="flex w-full gap-4">
                     <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
                         <LeaguesTable user_id={user_id} query={query} currentPage={currentPage}></LeaguesTable>
+                    </Suspense>
+                </div>
+                <div className="flex flex-row gap-4 justify-center">
+                    <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
                         <CreateForm user_id={user_id}  /* fetchedPlayers={fetchedPlayers.players} */ ></CreateForm>
                     </Suspense>
                 </div>
