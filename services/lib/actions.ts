@@ -184,7 +184,7 @@ export async function deleteGame(id: string) {
 
 
 
-export async function createLeague(user_id: string, formData: FormData) {
+export async function createLeague(user_email: string, formData: FormData) {
   let rawFormData: {
     name: string,
   } = {
@@ -200,8 +200,8 @@ export async function createLeague(user_id: string, formData: FormData) {
     let thisLeagueUUID = uuid[0].id;
 
     /* console.log(`Creating league_player table with league id = ${thisLeagueUUID}`) */
-    await sql`INSERT INTO league_player (league_id, player_id, player_role)
-        VALUES(${thisLeagueUUID}, ${user_id}, 'admin');`;
+    await sql`INSERT INTO league_user (league_id, p_user_email, user_role)
+        VALUES(${thisLeagueUUID}, ${user_email}, 'admin');`;
   } catch (error) {
     console.error('Database Error:', error)
     throw new Error('Failed to create league.')

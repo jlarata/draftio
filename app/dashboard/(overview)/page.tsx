@@ -9,7 +9,7 @@ import { Suspense } from "react";
 export default async function Page() {
 
   const session = await auth()
-  console.log("hola, ", session?.user?.id, session?.user?.email, session?.user?.name)
+  //console.log("hola, ", session?.user?.id, session?.user?.email, session?.user?.name)
 
   return (
     <main>

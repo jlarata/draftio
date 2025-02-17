@@ -11,7 +11,7 @@ import { PlusCircleIcon } from "@heroicons/react/20/solid";
 
 export default function CreateForm(
 
-  {user_id} : {user_id : string}
+  {user_id, user_email} : {user_id : string, user_email: string}
 
   /* {fetchedPlayers} : {fetchedPlayers : Player[]}
   esto es para validar nombres */
@@ -36,7 +36,7 @@ export default function CreateForm(
 
   //console.log(fetchedPlayersArray)
 
-  const createLeagueWithId = createLeague.bind(null, user_id)
+  const createLeagueWithEmail = createLeague.bind(null, user_email)
 
   return (
     <>
@@ -70,7 +70,7 @@ export default function CreateForm(
                     <div className="mt-6 flex justify-end gap-4">
                       <Button
                         type="submit"
-                        formAction={createLeagueWithId} /* disabled={!isPlayerNameValid(newOption)} */>Create New Player</Button>
+                        formAction={createLeagueWithEmail} /* disabled={!isPlayerNameValid(newOption)} */>Create New Player</Button>
                     </div>
                 </div>
         

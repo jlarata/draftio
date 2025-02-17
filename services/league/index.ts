@@ -15,27 +15,31 @@ const fetchSelectLeagueData = async () => {
   }
 }
 
-const fetchLeagueByPlayerId = async (id: string) => {
+const fetchLeaguesByUserEmail = async (user_email: string) => {
+  //console.log(`searching lagues for ${user_email}`)
   try {
     const { rows: leaguesPromise } = await sql<League>`
 SELECT
-  id, name
+  l.id, l.name
 FROM
-  league
+  league l
 WHERE
-    id
-IN
- (
+    l.id IN (
   SELECT
-    league_id
+    lu.league_id
   FROM
-    league_player
+    league_user lu
   WHERE
-    player_role = 'admin'
+    lu.p_user_email = ${user_email}
   AND
-    player_id =${id}
-  )`
-
+    lu.user_role = 'admin'
+  )
+`
+/*add conditional?
+ IF (
+  select user_role from league_user where p_user_email = ${id} and league_id = (
+    SELECT le.id FROM league le WHERE le.id = ${id} )  )
+*/
     const leagues = leaguesPromise ?? 'No leagues in database'
     return {
       leagues: leagues,
@@ -70,7 +74,7 @@ const fetchLeagueById = async (league_id: string) => {
 
 export const leagueServices = {
   fetchSelectLeagueData,
-  fetchLeagueByPlayerId,
   fetchLeagueById,
+  fetchLeaguesByUserEmail,
 
 }
