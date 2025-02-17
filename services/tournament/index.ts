@@ -72,7 +72,8 @@ const fetchTournamentDataByLeagueId = async ( league_id : string ) => {
   }
 }
 
-const fetchTournamentsByUserId = async ( user_id : string ) => {
+const fetchTournamentsByUserEmail = async ( user_email : string ) => {
+  //console.log(`searching tournaments in leagues for ${user_email}`)
   try {
     const {rows : tournamentsPromise} = await sql<TournamentForLeaguesTable>`
       SELECT
@@ -93,20 +94,20 @@ const fetchTournamentsByUserId = async ( user_id : string ) => {
       WHERE t.league_id
       IN (
         SELECT
-          id
+          l.id
         FROM
-          league
+          league l
         WHERE
-          id
+          l.id
         IN (
           SELECT
-            league_id
+            lu.league_id
           FROM
-            league_player
+            league_user lu
           WHERE
-            player_role = 'admin'
+            user_role = 'admin'
           AND
-          player_id =${user_id}
+            p_user_email = ${user_email}
       ))
       `
     const tournaments = tournamentsPromise ?? 'No tournaments for chosen user'
@@ -123,5 +124,5 @@ export const tournamentServices = {
   fetchSelectTournamentData,
   fetchSelectTournamentDataByLeagueName,
   fetchTournamentDataByLeagueId,
-  fetchTournamentsByUserId,
+  fetchTournamentsByUserEmail,
 }

@@ -27,6 +27,7 @@ export default async function Page(props: {
 
     const session = await auth();
     const user_id : string = session?.user?.id!
+    const user_email : string = session?.user?.email!
 
     const { fetchSelectLeagueData } = leagueServices
     
@@ -62,12 +63,12 @@ export default async function Page(props: {
 
                 <div className="flex w-full gap-4">
                     <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
-                        <LeaguesTable user_id={user_id} query={query} currentPage={currentPage}></LeaguesTable>
+                        <LeaguesTable user_id={user_id} user_email={user_email} query={query} currentPage={currentPage}></LeaguesTable>
                     </Suspense>
                 </div>
                 <div className="flex flex-row gap-4 justify-center">
                     <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
-                        <CreateForm user_id={user_id}  /* fetchedPlayers={fetchedPlayers.players} */ ></CreateForm>
+                        <CreateForm user_id={user_id} user_email={user_email}  /* fetchedPlayers={fetchedPlayers.players} */ ></CreateForm>
                     </Suspense>
                 </div>
 

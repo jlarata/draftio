@@ -9,9 +9,11 @@ import { tournaments } from '@/services/lib/placeholder-data';
 
 export default async function LeaguesTable({
   user_id,
+  user_email,
   query, currentPage
 }: {
   user_id: string;
+  user_email: string
   query: string;
   currentPage: number;
 }) {
@@ -21,11 +23,11 @@ export default async function LeaguesTable({
   
   const games = await fetchFilteredGames(query, currentPage);*/
 
-  const { fetchLeagueByPlayerId } = leagueServices
-  const { fetchTournamentsByUserId } = tournamentServices
+  const { fetchLeaguesByUserEmail } = leagueServices
+  const { fetchTournamentsByUserEmail } = tournamentServices
 
-  const leagues: League[] = ((await fetchLeagueByPlayerId(user_id)).leagues)
-  const tournaments: TournamentForLeaguesTable[] = ((await fetchTournamentsByUserId(user_id)).tournaments)
+  const leagues: League[] = ((await fetchLeaguesByUserEmail(user_email)).leagues)
+  const tournaments: TournamentForLeaguesTable[] = ((await fetchTournamentsByUserEmail(user_email)).tournaments)
 
   return (
     <>
