@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres'
-import { Tournament, TournamentForCreateQuery, TournamentForLeaguesTable } from '../lib/definitions'
+import { Tournament, TournamentForCreateQuery, TournamentForEdit, TournamentForLeaguesTable } from '../lib/definitions'
 
 const fetchSelectTournamentData = async ({ league_id }: { league_id: string }) => {
   //console.log("attempting to fetch from league "+league_id)
@@ -22,6 +22,45 @@ const fetchSelectTournamentData = async ({ league_id }: { league_id: string }) =
     console.error('Database Error:', error)
     throw new Error('Failed to fetch selectTournament data.')
   }
+}
+
+const fetchTournamentById = async ( tournament_id : string ) => {
+  try {
+    const {rows : tournamentPromise} = await sql<TournamentForEdit>`
+      SELECT
+        t.id,
+        t.seed,
+        t.name,
+        t.league_id,
+        l.name AS league_name,
+        TO_CHAR(t.date, 'dd/mm/yyyy') AS date,
+        t.champion_id,
+        p.username AS champion_name
+
+      FROM
+        tournament t
+      LEFT JOIN
+        player p
+      ON
+        p.id = t.champion_id
+      LEFT JOIN
+        league l
+      ON
+        t.league_id = l.id
+
+
+      WHERE t.id = ${tournament_id};
+      `
+
+    const tournament = tournamentPromise[0] ?? 'No tournaments in chosen league'
+    return {
+      tournament: tournament,
+    }
+  } catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch selectTournament data.')
+  }
+  
 }
 
 const fetchSelectTournamentDataByLeagueName = async ( league_name : string ) => {
@@ -125,4 +164,5 @@ export const tournamentServices = {
   fetchSelectTournamentDataByLeagueName,
   fetchTournamentDataByLeagueId,
   fetchTournamentsByUserEmail,
+  fetchTournamentById,
 }

@@ -1,14 +1,12 @@
 'use client';
 
-import { CustomerField, GameForm, InvoiceForm, LeagueField, Player, PlayerField, Tournament, TournamentField } from '@/services/lib/definitions';
+import { Player,Tournament } from '@/services/lib/definitions';
 import {
   ClipboardIcon,
-  TrophyIcon,
-  UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '../button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { updateLeague } from '@/services/lib/actions';
 
 export default async function EditLeagueForm({

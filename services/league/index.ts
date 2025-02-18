@@ -76,5 +76,4 @@ export const leagueServices = {
   fetchSelectLeagueData,
   fetchLeagueById,
   fetchLeaguesByUserEmail,
-
 }

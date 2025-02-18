@@ -5,10 +5,17 @@ const fetchPlayersByLeague = async (league_id: string) => {
   // noStore();
   try {
     const { rows: players } = await sql<Player>`
-    SELECT id, username
-    FROM player
-    ORDER BY username
-    COLLATE case_insensitive;`
+    SELECT p.id, p.username
+    FROM
+      player p
+    WHERE
+      p.league_id = ${league_id}
+    ORDER BY
+      p.username
+    COLLATE case_insensitive
+    
+    
+    ;`
 
     /* for this to work i had to run
 

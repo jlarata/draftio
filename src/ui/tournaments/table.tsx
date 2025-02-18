@@ -1,7 +1,7 @@
 
 
 import { League, TournamentForLeaguesTable } from '@/services/lib/definitions';
-import { DeleteTournament } from './buttons';
+import { DeleteTournament, UpdateTournament } from './buttons';
 
 export default async function TournamentsTable({
   //league,
@@ -36,13 +36,13 @@ export default async function TournamentsTable({
                               <DeleteTournament id={tournament.id} />
                             </div>
                             {leagues.map((league, i) => (
-                            league.id == tournament.league_id ?
-                              <div>
-                                <p className='text-xs'>League : {league.name}</p>
-                              </div>
-                              :
-                              null
-                          ))}
+                              league.id == tournament.league_id ?
+                                <div>
+                                  <p className='text-xs'>League : {league.name}</p>
+                                </div>
+                                :
+                                null
+                            ))}
                           </div>
                         </div>
                       </div>
@@ -71,7 +71,11 @@ export default async function TournamentsTable({
                             height={28}
                           /> */}
                             <p>{tournament.name} | <span className='text-base'>{tournament.date.toString()}</span></p>
-                            <DeleteTournament id={tournament.id} />
+                            <div className='flex flex-row items-center'>
+                              <UpdateTournament id={tournament.id} />
+                              <DeleteTournament id={tournament.id} />
+                            </div>
+
                           </div>
                           {leagues.map((league, i) => (
                             league.id == tournament.league_id ?

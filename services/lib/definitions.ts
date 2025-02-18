@@ -164,6 +164,17 @@ export type TournamentForCreateQuery = {
   date: string; // already converted to string in the query.
 };
 
+export type TournamentForEdit = {
+  seed: string;
+  id: string;
+  name: string;
+  league_id: string;
+  league_name: string;
+  date: string;
+  champion_id: string;
+  champion_name: string;
+};
+
 export type TournamentField = {
   id: string;
   name: string;
