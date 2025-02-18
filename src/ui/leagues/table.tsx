@@ -5,7 +5,7 @@ import Search from '../search';
 import { leagueServices } from '@/services/league';
 import { DeleteLeague, UpdateLeague } from './buttons';
 import { tournamentServices } from '@/services/tournament';
-import { tournaments } from '@/services/lib/placeholder-data';
+import { inter } from '../fonts';
 
 export default async function LeaguesTable({
   user_id,
@@ -32,6 +32,16 @@ export default async function LeaguesTable({
   return (
     <>
       <div className="w-full">
+        {leagues.length == 0 ?
+          <div className="flex w-full items-center justify-between">
+            <h4 className={`${inter.className} text-4xl`}>There are no leagues yet. Create one!</h4>
+          </div>
+          :
+          <div className="flex w-full items-center justify-between">
+            <h1 className={`${inter.className} text-4xl`}>Your leagues</h1>
+          </div>
+        }
+
         <div className="mt-6 flow-root">
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
@@ -45,25 +55,34 @@ export default async function LeaguesTable({
                       <div className="flex items-center justify-between border-b pb-4">
                         <div>
                           <div className="mb-2 flex items-center">
-                            <div className="text-lg flex items-center gap-3">
+                            <div className="text-2xl flex items-center gap-3">
                               <p>{league.name}</p>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div>
-                        <p className='indent-3'>
-                          Tournaments:
-                        </p>
-                        {tournaments.map((tournament, i) => (
-                          (league.id === tournament.league_id) ?
-                            <p key={tournament.id + i} className='text-sm indent-8'>
-                              {tournament.name} | {tournament.date.toString()}
-                              {tournament.champion_id && " | Champion: " + tournament.champion_name}
-                            </p> :
-                            null
-                        ))}
-                      </div>
+                      {tournaments.length == 0 ?
+                        <div>
+                          <p className='indent-3'>
+                            No tournaments yet.
+                          </p>
+                        </div>
+                        :
+                        <div>
+                          <p className='indent-3'>
+                            Tournaments:
+                          </p>
+                          {tournaments.map((tournament, i) => (
+                            (league.id === tournament.league_id) ?
+                              <p key={tournament.id + i} className='text-sm indent-8'>
+                                {tournament.name} | {tournament.date.toString()}
+                                {tournament.champion_id && " | Champion: " + tournament.champion_name}
+                              </p> :
+                              null
+                          ))}
+                        </div>
+                      }
+
                     </div>
                   ))}
                 </div>
@@ -94,19 +113,29 @@ export default async function LeaguesTable({
                               <DeleteLeague id={league.id} />
                             </div>
                           </div>
-                          <div>
-                            <p className='text-lg indent-3'>
-                              Tournaments:
-                            </p>
-                            {tournaments.map((tournament, i) => (
-                              (league.id === tournament.league_id) ?
-                                <p key={tournament.id + i} className='indent-8'>
-                                  {tournament.name} | {tournament.date.toString()}
-                                  {tournament.champion_id && " | Champion: " + tournament.champion_name}
-                                </p> :
-                                null
-                            ))}
-                          </div>
+
+{/* ASÍ COMO ESTÁN LAS COSAS, "No tournaments yet" solo va a aparecer si no hay ningun torneo
+asociado a ninguna liga. habría que hacer alguna verificación previa si queremos que esto 
+funcione para cada tarjeta de liga */}
+                          
+                          {tournaments.length == 0 ?
+                            <p>No tournaments yet</p>
+                            :
+                            <div>
+                              <p className='text-lg indent-3'>
+                                Tournaments:
+                              </p>
+                              {tournaments.map((tournament, i) => (
+                                (league.id === tournament.league_id) ?
+                                  <p key={tournament.id + i} className='indent-8'>
+                                    {tournament.name} | {tournament.date.toString()}
+                                    {tournament.champion_id && " | Champion: " + tournament.champion_name}
+                                  </p> :
+                                  null
+                              ))}
+                            </div>
+                          }
+
                         </td>
                         {/* WIP ADD role 
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">

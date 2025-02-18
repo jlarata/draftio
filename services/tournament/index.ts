@@ -86,7 +86,7 @@ const fetchTournamentsByUserEmail = async ( user_email : string ) => {
 
       FROM
         tournament t
-      INNER JOIN
+      LEFT JOIN
         player p
       ON
         p.id = t.champion_id

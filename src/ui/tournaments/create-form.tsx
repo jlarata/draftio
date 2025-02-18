@@ -1,20 +1,24 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { CalendarDaysIcon, TrophyIcon } from '@heroicons/react/24/outline'
-import { createTournament } from '@/services/lib/actions' 
+import { createTournament } from '@/services/lib/actions'
 import { Button } from '../button'
 import TableCellsIcon from '@heroicons/react/20/solid/TableCellsIcon'
 import { usePathname } from 'next/navigation'
+import { League } from '@/services/lib/definitions'
 
-export default function CreateForm() {
+export default function CreateForm(
+  { leagues }:
+    { leagues: League[] }
+) {
 
   const [isLoading, setIsLoading] = useState(false)
-  /* nullable. should we give the user the chance to set this here? i dont think so. */ 
+  /* nullable. should we give the user the chance to set this here? i dont think so. */
   const [seed, setSeed] = useState("")
   const [name, setName] = useState("")
-  /* obviously to be setted as auti associated with user*/ 
-  const [league_id, setLeague_id] = useState("00000000-0000-0000-0000-000000000000")
-  /* nullable. should we give the user the chance to set this here? i dont think so. */ 
+  /* obviously to be setted as auti associated with user*/
+  const [league_id, setLeague_id] = useState("-1")
+  /* nullable. should we give the user the chance to set this here? i dont think so. */
   const [champion_id, setChampion_ud] = useState("")
   let aTime = new Date()
   let aTimeString = aTime.toDateString() //this particular string format is what database will accept 
@@ -50,29 +54,14 @@ export default function CreateForm() {
 
   return (
     <>
-      <div className='w-full h-44 md:w-1/2 bg-gray-200'>
-        <div className='mt-6 flow-root'>
+      <div className='w-full mt-6 h-44 md:w-1/2 bg-gray-200 rounded-md'>
+        <div className='mt-2 flow-root'>
           <div className='overflow-x-auto'>
             <div className='inline-block min-w-full align-middle'>
               <div className='overflow-hidden rounded-md bg-gray-200 p-2 md:pt-0'>
                 {/* <form action={createTournament}> */}
                 <form>
                   <div className='rounded-md bg-gray-200 p-4 md:p-6'>
-                    <div className='mb-4 visibility: hidden'>
-                      {/* hidden input with league. not using it for now */}
-                      <label htmlFor='league_id' className='mb-2 block text-sm font-medium'>
-                        League
-                      </label>
-                      <div className='relative'>
-                        <select
-                          id='league_id'
-                          name='league_id'
-                          className='peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500'
-                          defaultValue=''
-                        ></select>
-                        <TableCellsIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500' />
-                      </div>
-                    </div>
                     <div className='mb-4 visibility: hidden'>
                       {/* hidden input with originUrl. */}
                       <label htmlFor='origin_url' className='mb-2 block text-sm font-medium'>
@@ -82,15 +71,15 @@ export default function CreateForm() {
                         <input
                           id='origin_url'
                           name='origin_url'
-                          className = 'peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500'
+                          className='peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500'
                           defaultValue={pathname}
                         ></input>
                       </div>
                     </div>
 
-                    <div className='mb-4 bg-gray-200'>
+                    <div className='mb-2 bg-gray-200'>
                       <label htmlFor='nickname' className='mb-2 block text-sm font-medium'>
-                        Create New Tournament
+                        Name, Date & League
                       </label>
                       <div className='relative '>
                         <input
@@ -120,10 +109,39 @@ export default function CreateForm() {
                       </div>
 
                     </div>
+
+                    <div className='mb-4'>
+                      {/* <label htmlFor='league_id' className='mb-2 block text-sm font-medium'>
+                        Choose a league
+                      </label> */}
+                      <div className='relative'>
+                        <select
+                          id='league_id'
+                          name='league_id'
+                          defaultValue=''
+                          className='peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500'
+                          /* peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500' */
+                          onChange={(e) => setLeague_id(e.target.value)}
+                          required
+                        >
+                          <option value='' disabled>
+                            Choose a league
+                          </option>
+                          {/* <option hidden value={-1} key={-1} disabled>Choose a League</option> */}
+                          {leagues.map((league, i) =>
+                            <option
+                              value={league.id}
+                            >{league.name}</option>
+
+                          )}
+                        </select>
+                        <TableCellsIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500' />
+                      </div>
+                    </div>
                     <div className='mt-6 flex justify-end gap-4 '>
                       <Button
                         type='submit'
-                        disabled={isLoading}
+                        disabled={isLoading || league_id == "-1" || name == ''}
                         onClick={handleCreateTournament}
                       >
                         {isLoading ? 'Loading...' : 'Create New Tournament'}
