@@ -16,8 +16,8 @@ export default async function Page(props: { params : Promise<{ id:string}>}) {
     const { fetchTournamentById } = tournamentServices
     const { tournament } = await fetchTournamentById(tournament_id); 
 
-    const { fetchLeaguesByUserEmail } = leagueServices
-    const { leagues } = await fetchLeaguesByUserEmail(user_email)
+    const { fetchLeaguesWithTournamentsByUserEmail } = leagueServices
+    const leaguesWithTournaments = (await fetchLeaguesWithTournamentsByUserEmail(user_email)).arrayOfLeaguesWithTournaments
     
     /* probably would be neccesary to create a new query that fetchs players who
      are in player_game tables with tournament_id = tournament_id*/
@@ -38,7 +38,7 @@ export default async function Page(props: { params : Promise<{ id:string}>}) {
           },
         ]}
       />
-      <Form tournament={tournament} players={players.players} leagues={leagues}/>
+      <Form tournament={tournament} players={players.players} leagues={leaguesWithTournaments}/>
     </main>
   );
 }

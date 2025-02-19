@@ -19,7 +19,11 @@ const fetchLeaguesWithTournamentsByUserEmail = async (user_email: string) => {
 
   /* so, we probably should have a simpler method of fetching leagues
   this is a more complex method that returns an array of a version of the object league
-   that has the tournaments associated.  
+   that has the tournaments associated and also the champion name (so, 3 querys just for presenting the
+   dash/leagues component )
+
+   OR i could use this same query for the tournaments component. it took some work but now is very 
+   complete.
   */
 
   try {

@@ -5,11 +5,11 @@ import { createTournament } from '@/services/lib/actions'
 import { Button } from '../button'
 import TableCellsIcon from '@heroicons/react/20/solid/TableCellsIcon'
 import { usePathname } from 'next/navigation'
-import { League } from '@/services/lib/definitions'
+import { LeagueWithTournaments } from '@/services/lib/definitions'
 
 export default function CreateForm(
-  { leagues }:
-    { leagues: League[] }
+  { leaguesWithTournaments }:
+    { leaguesWithTournaments : LeagueWithTournaments[] }
 ) {
 
   const [isLoading, setIsLoading] = useState(false)
@@ -128,10 +128,10 @@ export default function CreateForm(
                             Choose a league
                           </option>
                           {/* <option hidden value={-1} key={-1} disabled>Choose a League</option> */}
-                          {leagues.map((league, i) =>
+                          {leaguesWithTournaments.map((leagueWithTournaments, i) =>
                             <option
-                              value={league.id}
-                            >{league.name}</option>
+                              value={leagueWithTournaments.id}
+                            >{leagueWithTournaments.name}</option>
 
                           )}
                         </select>
