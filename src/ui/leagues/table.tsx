@@ -1,6 +1,6 @@
 
 
-import { League, Tournament, TournamentForLeaguesTable } from '@/services/lib/definitions';
+import { LeagueWithTournaments, Tournament, TournamentForLeaguesTable } from '@/services/lib/definitions';
 import Search from '../search';
 import { leagueServices } from '@/services/league';
 import { DeleteLeague, UpdateLeague } from './buttons';
@@ -8,12 +8,14 @@ import { tournamentServices } from '@/services/tournament';
 import { inter } from '../fonts';
 
 export default async function LeaguesTable({
-  user_id,
   user_email,
+  leagues,
+  tournaments,
   query, currentPage
 }: {
-  user_id: string;
-  user_email: string
+  user_email: string;
+  leagues: LeagueWithTournaments[];
+  tournaments: TournamentForLeaguesTable[];
   query: string;
   currentPage: number;
 }) {
@@ -23,11 +25,7 @@ export default async function LeaguesTable({
   
   const games = await fetchFilteredGames(query, currentPage);*/
 
-  const { fetchLeaguesByUserEmail } = leagueServices
-  const { fetchTournamentsByUserEmail } = tournamentServices
-
-  const leagues: League[] = ((await fetchLeaguesByUserEmail(user_email)).leagues)
-  const tournaments: TournamentForLeaguesTable[] = ((await fetchTournamentsByUserEmail(user_email)).tournaments)
+  console.log(leagues)
 
   return (
     <>
@@ -61,7 +59,10 @@ export default async function LeaguesTable({
                           </div>
                         </div>
                       </div>
-                      {tournaments.length == 0 ?
+
+
+
+                      {league.tournaments.length == 0 ?
                         <div>
                           <p className='indent-3'>
                             No tournaments yet.
@@ -72,17 +73,14 @@ export default async function LeaguesTable({
                           <p className='indent-3'>
                             Tournaments:
                           </p>
-                          {tournaments.map((tournament, i) => (
-                            (league.id === tournament.league_id) ?
-                              <p key={tournament.id + i} className='text-sm indent-8'>
-                                {tournament.name} | {tournament.date.toString()}
-                                {tournament.champion_id && " | Champion: " + tournament.champion_name}
-                              </p> :
-                              null
+                          {league.tournaments.map((tournament, i) => (
+                            <p key={tournament.id + i} className='text-sm indent-8'>
+                              {tournament.name} | {tournament.date.toString()}
+                              {/*  {tournamentChampion_id && " | Champion: " + tournamentChampion_name} */}
+                            </p>
                           ))}
                         </div>
                       }
-
                     </div>
                   ))}
                 </div>
@@ -114,10 +112,10 @@ export default async function LeaguesTable({
                             </div>
                           </div>
 
-{/* ASÍ COMO ESTÁN LAS COSAS, "No tournaments yet" solo va a aparecer si no hay ningun torneo
+                          {/* ASÍ COMO ESTÁN LAS COSAS, "No tournaments yet" solo va a aparecer si no hay ningun torneo
 asociado a ninguna liga. habría que hacer alguna verificación previa si queremos que esto 
 funcione para cada tarjeta de liga */}
-                          
+
                           {tournaments.length == 0 ?
                             <p>No tournaments yet</p>
                             :

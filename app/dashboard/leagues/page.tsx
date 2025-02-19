@@ -8,6 +8,8 @@ import Search from "@/src/ui/search";
 import { LatestGamesSkeleton } from "@/src/ui/skeletons";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import { League, LeagueWithTournaments, TournamentForLeaguesTable } from "@/services/lib/definitions";
+import { tournamentServices } from "@/services/tournament";
 
 export const metadata: Metadata = {
     title: "Leagues | Draftio Dashboard",
@@ -24,12 +26,14 @@ export default async function Page(props: {
 }) {
 
     const session = await auth();
-    const user_id : string = session?.user?.id!
-    const user_email : string = session?.user?.email!
+    const user_email: string = session?.user?.email!
 
-    const { fetchSelectLeagueData } = leagueServices
-    
-    const fetchedLeagues = await fetchSelectLeagueData()
+    const { fetchLeaguesWithTournamentsByUserEmail } = leagueServices
+    const { fetchTournamentsByUserEmail } = tournamentServices
+
+    const leagues: LeagueWithTournaments[] = ((await fetchLeaguesWithTournamentsByUserEmail(user_email)).arrayOfLeaguesWithTournaments)
+    const tournaments: TournamentForLeaguesTable[] = ((await fetchTournamentsByUserEmail(user_email)).tournaments)
+
 
     const searchParams = await props.searchParams;
     const query = searchParams?.query || "";
@@ -55,16 +59,16 @@ export default async function Page(props: {
             )}
 
             <div className="w-full">
-                
+
 
                 <div className="flex w-full gap-4">
                     <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
-                        <LeaguesTable user_id={user_id} user_email={user_email} query={query} currentPage={currentPage}></LeaguesTable>
+                        <LeaguesTable leagues={leagues} tournaments={tournaments} user_email={user_email} query={query} currentPage={currentPage}></LeaguesTable>
                     </Suspense>
                 </div>
                 <div className="flex flex-row gap-4 justify-center">
                     <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
-                        <CreateForm user_id={user_id} user_email={user_email}  /* fetchedPlayers={fetchedPlayers.players} */ ></CreateForm>
+                        <CreateForm user_email={user_email}  /* fetchedPlayers={fetchedPlayers.players} */ ></CreateForm>
                     </Suspense>
                 </div>
 

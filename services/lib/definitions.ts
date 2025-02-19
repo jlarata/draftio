@@ -42,7 +42,6 @@ export type FetchedPlayer =
   {
     id: string,
     username: string,
-
   }
 
 export type League =
@@ -50,12 +49,27 @@ export type League =
     id: string,
     name: string,
   }
+  export type LeagueJoinTournament =
+  {
+    id: string,
+    name: string,
+    tournament_id: string,
+    tournament_name: string,
+    tournament_date: Date,
+    tournament_champion_id: string,
+  }
+  export type LeagueWithTournaments =
+  {
+    id: string,
+    name: string,
+    tournaments: Tournament[]
+  }
 
 export type Tournament =
   {
     id: string,
-    leagueid: string,
-    championid: string | null,
+    league_id: string,
+    champion_id: string | null,
     date: Date,
     name: string
   }
