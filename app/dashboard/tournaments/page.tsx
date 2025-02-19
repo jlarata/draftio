@@ -68,6 +68,7 @@ export default async function Page(props: {
           <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
             <TournamentsTable leaguesWithTournaments={leaguesWithTournaments} query={query} currentPage={currentPage}></TournamentsTable>
             <CreateForm leaguesWithTournaments={leaguesWithTournaments}></CreateForm>
+
           </Suspense>
         </div>
 

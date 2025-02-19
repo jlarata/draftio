@@ -24,6 +24,7 @@ const fetchLeaguesWithTournamentsByUserEmail = async (user_email: string) => {
 
    OR i could use this same query for the tournaments component. it took some work but now is very 
    complete.
+
   */
 
   try {
