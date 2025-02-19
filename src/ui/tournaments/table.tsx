@@ -1,18 +1,15 @@
 
 
-import { League, TournamentForLeaguesTable } from '@/services/lib/definitions';
+import { LeagueWithTournaments } from '@/services/lib/definitions';
 import { DeleteTournament, UpdateTournament } from './buttons';
 
 export default async function TournamentsTable({
-  //league,
   query, currentPage,
-  tournaments, leagues
+  leaguesWithTournaments
 }: {
-  //league: League;
   query: string;
   currentPage: number;
-  tournaments: TournamentForLeaguesTable[];
-  leagues: League[]
+  leaguesWithTournaments: LeagueWithTournaments[]
 }) {
 
   return (
@@ -21,34 +18,39 @@ export default async function TournamentsTable({
         <div className="mt-6 flow-root">
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
-              <div className="overflow-hidden rounded-md bg-gray-200 p-2 md:pt-0">
+              <div className="rounded-md bg-gray-200 p-1 md:pt-0">
+
+                {/*  mobile */}
                 <div className="md:hidden">
-                  {tournaments.map((tournament, i) => (
+                  {leaguesWithTournaments.map((leagueWithTournaments, i) => (
                     <div
-                      key={tournament.id + i}
-                      className="mb-2 mt-2 w-full rounded-md bg-white p-4"
+                      key={leagueWithTournaments.id + i}
+                      className="mb-px mt-px w-full rounded-md bg-white p-3"
                     >
-                      <div className="flex items-center justify-around rounded-md border-l border-b pl-2">
-                        <div>
-                          <div className="mb-2 flex flex-col items-center">
-                            <div className="flex gap-3">
-                              <p className='text-xl'>{tournament.name} | <span className='text-sm'>{tournament.date.toString()}</span></p>
-                              <DeleteTournament id={tournament.id} />
-                            </div>
-                            {leagues.map((league, i) => (
-                              league.id == tournament.league_id ?
-                                <div>
-                                  <p className='text-xs'>League : {league.name}</p>
+                      {leagueWithTournaments.tournaments.map((tournament, i) => (
+                        <div className="flex items-center p-1 mb-2 mt-2 justify-around rounded-md border-l border-b pl-2">
+                          <div>
+                            <div className="mb-2 flex flex-col items-center">
+                              <div className="flex gap-3 items-center">
+                                <p className='text-xl'>{tournament.name} | <span className='text-sm'>{tournament.date.toLocaleDateString('en-CA')}</span></p>
+                                <div className='flex flex-row items-center'>
+
+                                <UpdateTournament id={tournament.id} />
+                                <DeleteTournament id={tournament.id} />
                                 </div>
-                                :
-                                null
-                            ))}
+                              </div>
+                              <div>
+                                <p className='text-xs'>League : {leagueWithTournaments.name}</p>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      ))}
+
                     </div>
                   ))}
                 </div>
+
                 <table className="hidden border-separate border-spacing-4 min-w-full rounded-md bg-gray-200 text-gray-900 md:table">
                   {/* <thead className="rounded-md bg-gray-50 text-left text-sm font-normal">
                     <tr>
@@ -58,34 +60,32 @@ export default async function TournamentsTable({
                     </tr>
                   </thead> */}
 
-                  <tbody className="divide-y divide-gray-200 text-gray-900">
-                    {tournaments.map((tournament, i) => (
-                      <tr key={tournament.id + i} className="group">
-                        <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-xl text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
-                          <div className="flex items-center justify-between ">
-                            {/*  <Image
+                  <tbody className="flex flex-col divide-y-4 divide-gray-200 text-gray-900">
+                    {leaguesWithTournaments.map((leagueWithTournaments, i) => (
+                      <tr key={leagueWithTournaments.id + i} className='flex flex-col divide-y-4 divide-gray-200 '>
+                        {/*  <Image
                             src={customer.image_url}
                             className="rounded-full"
                             alt={`${customer.name}'s profile picture`}
                             width={28}
                             height={28}
                           /> */}
-                            <p>{tournament.name} | <span className='text-base'>{tournament.date.toString()}</span></p>
-                            <div className='flex flex-row items-center'>
-                              <UpdateTournament id={tournament.id} />
-                              <DeleteTournament id={tournament.id} />
-                            </div>
-
-                          </div>
-                          {leagues.map((league, i) => (
-                            league.id == tournament.league_id ?
-                              <div>
-                                <p className='indent-8 text-xs'>League : {league.name}</p>
+                        {leagueWithTournaments.tournaments.map((tournament, i) => (
+                          <td className="bg-white py-5 pl-4 pr-3 text-xl text-black rounded-md sm:pl-6">
+                            <div className="flex items-center justify-between ">
+                              <p>{tournament.name} | <span className='text-base'>{tournament.date.toLocaleDateString('en-CA')}</span></p>
+                              <div className='flex flex-row items-center'>
+                                <UpdateTournament id={tournament.id} />
+                                <DeleteTournament id={tournament.id} />
                               </div>
-                              :
-                              null
-                          ))}
-                        </td>
+
+                            </div>
+                            <div>
+                              <p className='indent-8 text-xs'>League : {leagueWithTournaments.name}</p>
+                            </div>
+                          </td>
+
+                        ))}
                       </tr>
                     ))}
                   </tbody>

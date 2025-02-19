@@ -1,7 +1,4 @@
-import { tournamentServices } from "@/services/tournament";
 import TournamentsTable from "@/src/ui/tournaments/table";
-
-
 import AlertsPage from "@/src/ui/alerts/alerts";
 import { inter } from "@/src/ui/fonts";
 //import Pagination from "@/src/ui/games/pagination";
@@ -31,11 +28,8 @@ export default async function Page(props: {
   const session = await auth();
   const user_email: string = session?.user?.email!
 
-  const { fetchTournamentsByUserEmail } = tournamentServices
-  const tournaments = await fetchTournamentsByUserEmail(user_email)
-
-  const { fetchLeaguesByUserEmail } = leagueServices
-  const leagues = await fetchLeaguesByUserEmail(user_email)
+  const { fetchLeaguesWithTournamentsByUserEmail } = leagueServices
+  const leaguesWithTournaments = (await fetchLeaguesWithTournamentsByUserEmail(user_email)).arrayOfLeaguesWithTournaments
 
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
@@ -72,8 +66,9 @@ export default async function Page(props: {
         </div> */}
         <div className="flex flex-col gap-4 md:flex-row">
           <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
-            <TournamentsTable tournaments={tournaments.tournaments} leagues={leagues.leagues} query={query} currentPage={currentPage}></TournamentsTable>
-            <CreateForm leagues={leagues.leagues}></CreateForm>
+            <TournamentsTable leaguesWithTournaments={leaguesWithTournaments} query={query} currentPage={currentPage}></TournamentsTable>
+            <CreateForm leaguesWithTournaments={leaguesWithTournaments}></CreateForm>
+
           </Suspense>
         </div>
 
