@@ -1,15 +1,14 @@
 import { auth } from "@/auth";
 import { leagueServices } from "@/services/league";
 import AlertsPage, { WrongPage } from "@/src/ui/alerts/alerts";
-import { inter } from "@/src/ui/fonts";
 import Pagination from "@/src/ui/games/pagination";
 import LeaguesTable from "@/src/ui/leagues/table";
 import CreateForm from "@/src/ui/leagues/create-form";
 import Search from "@/src/ui/search";
-import DashboardSkeleton, { LatestGamesSkeleton } from "@/src/ui/skeletons";
+import { LatestGamesSkeleton } from "@/src/ui/skeletons";
 import { Metadata } from "next";
 import { Suspense } from "react";
-import middleware from "@/middleware";
+import { LeagueWithTournaments } from "@/services/lib/definitions";
 
 export const metadata: Metadata = {
     title: "Leagues | Draftio Dashboard",
@@ -26,12 +25,9 @@ export default async function Page(props: {
 }) {
 
     const session = await auth();
-    const user_id : string = session?.user?.id!
-    const user_email : string = session?.user?.email!
-
-    const { fetchSelectLeagueData } = leagueServices
-    
-    const fetchedLeagues = await fetchSelectLeagueData()
+    const user_email: string = session?.user?.email!
+    const { fetchLeaguesWithTournamentsByUserEmail } = leagueServices
+    const leagues: LeagueWithTournaments[] = ((await fetchLeaguesWithTournamentsByUserEmail(user_email)).arrayOfLeaguesWithTournaments)
 
     const searchParams = await props.searchParams;
     const query = searchParams?.query || "";
@@ -57,18 +53,16 @@ export default async function Page(props: {
             )}
 
             <div className="w-full">
-                <div className="flex w-full items-center justify-between">
-                    <h1 className={`${inter.className} text-4xl`}>Your leagues</h1>
-                </div>
+
 
                 <div className="flex w-full gap-4">
                     <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
-                        <LeaguesTable user_id={user_id} user_email={user_email} query={query} currentPage={currentPage}></LeaguesTable>
+                        <LeaguesTable leagues={leagues} user_email={user_email} query={query} currentPage={currentPage}></LeaguesTable>
                     </Suspense>
                 </div>
                 <div className="flex flex-row gap-4 justify-center">
                     <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
-                        <CreateForm user_id={user_id} user_email={user_email}  /* fetchedPlayers={fetchedPlayers.players} */ ></CreateForm>
+                        <CreateForm user_email={user_email}  /* fetchedPlayers={fetchedPlayers.players} */ ></CreateForm>
                     </Suspense>
                 </div>
 

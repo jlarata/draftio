@@ -1,37 +1,41 @@
 
 
-import { League, Tournament, TournamentForLeaguesTable } from '@/services/lib/definitions';
+import { LeagueWithTournaments, Tournament, TournamentForLeaguesTable } from '@/services/lib/definitions';
 import Search from '../search';
 import { leagueServices } from '@/services/league';
 import { DeleteLeague, UpdateLeague } from './buttons';
 import { tournamentServices } from '@/services/tournament';
-import { tournaments } from '@/services/lib/placeholder-data';
+import { inter } from '../fonts';
 
 export default async function LeaguesTable({
-  user_id,
   user_email,
+  leagues,
   query, currentPage
 }: {
-  user_id: string;
-  user_email: string
+  user_email: string;
+  leagues: LeagueWithTournaments[];
   query: string;
   currentPage: number;
 }) {
 
   /* the leagues component uses query and currentpage for displaying the leagues.
   is this necessary on the leagues component? dont think so
-  
   const games = await fetchFilteredGames(query, currentPage);*/
-
-  const { fetchLeaguesByUserEmail } = leagueServices
-  const { fetchTournamentsByUserEmail } = tournamentServices
-
-  const leagues: League[] = ((await fetchLeaguesByUserEmail(user_email)).leagues)
-  const tournaments: TournamentForLeaguesTable[] = ((await fetchTournamentsByUserEmail(user_email)).tournaments)
+  //console.log(leagues)
 
   return (
     <>
       <div className="w-full">
+        {leagues.length == 0 ?
+          <div className="flex w-full items-center justify-between">
+            <h4 className={`${inter.className} text-4xl`}>There are no leagues yet. Create one!</h4>
+          </div>
+          :
+          <div className="flex w-full items-center justify-between">
+            <h1 className={`${inter.className} text-4xl`}>Your leagues</h1>
+          </div>
+        }
+
         <div className="mt-6 flow-root">
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
@@ -45,25 +49,31 @@ export default async function LeaguesTable({
                       <div className="flex items-center justify-between border-b pb-4">
                         <div>
                           <div className="mb-2 flex items-center">
-                            <div className="text-lg flex items-center gap-3">
+                            <div className="text-2xl flex items-center gap-3">
                               <p>{league.name}</p>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div>
-                        <p className='indent-3'>
-                          Tournaments:
-                        </p>
-                        {tournaments.map((tournament, i) => (
-                          (league.id === tournament.league_id) ?
+                      {league.tournaments.length == 0 ?
+                        <div>
+                          <p className='indent-3'>
+                            No tournaments yet.
+                          </p>
+                        </div>
+                        :
+                        <div>
+                          <p className='indent-3'>
+                            Tournaments:
+                          </p>
+                          {league.tournaments.map((tournament, i) => (
                             <p key={tournament.id + i} className='text-sm indent-8'>
-                              {tournament.name} | {tournament.date.toString()}
-                              {tournament.champion_id && " | Champion: " + tournament.champion_name}
-                            </p> :
-                            null
-                        ))}
-                      </div>
+                              {tournament.name} | {tournament.date.toLocaleDateString('en-CA')}
+                              {tournament.champion_id && (" | Champion: " + tournament.champion_name)}
+                            </p>
+                          ))}
+                        </div>
+                      }
                     </div>
                   ))}
                 </div>
@@ -94,24 +104,25 @@ export default async function LeaguesTable({
                               <DeleteLeague id={league.id} />
                             </div>
                           </div>
-                          <div>
-                            <p className='text-lg indent-3'>
-                              Tournaments:
-                            </p>
-                            {tournaments.map((tournament, i) => (
-                              (league.id === tournament.league_id) ?
-                                <p key={tournament.id + i} className='indent-8'>
-                                  {tournament.name} | {tournament.date.toString()}
-                                  {tournament.champion_id && " | Champion: " + tournament.champion_name}
-                                </p> :
-                                null
-                            ))}
-                          </div>
+
+                          {league.tournaments.length == 0 ?
+                            <p className='text-lg indent-6'>No tournaments yet</p>
+                            :
+                            <div>
+                              <p className='text-lg indent-3'>
+                                {league.tournaments.length} Tournaments:
+                              </p>
+                              {league.tournaments.map((tournament, i) => (
+                                
+                                  <p key={tournament.id + i} className='indent-8'>
+                                    {tournament.name} | {tournament.date.toLocaleDateString('en-CA')}
+                                    {tournament.champion_id && " | Champion: " + tournament.champion_name}
+                                  </p> 
+                                  
+                              ))}
+                            </div>
+                          }
                         </td>
-                        {/* WIP ADD role 
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {player.role}
-                      </td> */}
                       </tr>
                     ))}
                   </tbody>

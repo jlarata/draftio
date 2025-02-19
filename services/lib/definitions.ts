@@ -42,7 +42,6 @@ export type FetchedPlayer =
   {
     id: string,
     username: string,
-
   }
 
 export type League =
@@ -50,12 +49,29 @@ export type League =
     id: string,
     name: string,
   }
+  export type LeagueJoinTournament =
+  {
+    id: string,
+    name: string,
+    tournament_id: string,
+    tournament_name: string,
+    tournament_date: Date,
+    tournament_champion_id: string,
+    tournament_champion_name: string,
+  }
+  export type LeagueWithTournaments =
+  {
+    id: string,
+    name: string,
+    tournaments: Tournament[]
+  }
 
 export type Tournament =
   {
     id: string,
-    leagueid: string,
-    championid: string | null,
+    league_id: string,
+    champion_id: string | null,
+    champion_name: string,
     date: Date,
     name: string
   }
@@ -162,6 +178,17 @@ export type TournamentForCreateQuery = {
   id: string;
   name: string;
   date: string; // already converted to string in the query.
+};
+
+export type TournamentForEdit = {
+  seed: string;
+  id: string;
+  name: string;
+  league_id: string;
+  league_name: string;
+  date: string;
+  champion_id: string;
+  champion_name: string;
 };
 
 export type TournamentField = {

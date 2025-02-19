@@ -7,7 +7,9 @@ import Home from '@/src/swiss/views/Home'
 
 export default async function RoundsPage() {
   const { fetchPlayersByLeague } = playerServices;
-  const fetchedPlayers = await fetchPlayersByLeague("here should go a league id")
+  /*clearly have to change this*/ 
+  const a_league_id = "00000000-0000-0000-0000-000000000000"
+  const fetchedPlayers = await fetchPlayersByLeague(a_league_id)
   return (
     <>
       <Second fetchedPlayers={fetchedPlayers.players} />

@@ -11,7 +11,7 @@ import { PlusCircleIcon } from "@heroicons/react/20/solid";
 
 export default function CreateForm(
 
-  {user_id, user_email} : {user_id : string, user_email: string}
+  {user_email} : {user_email: string}
 
   /* {fetchedPlayers} : {fetchedPlayers : Player[]}
   esto es para validar nombres */

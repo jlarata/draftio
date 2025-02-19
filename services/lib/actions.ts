@@ -258,6 +258,38 @@ export async function deletePlayer(id: string) {
   redirect('/dashboard/players?playerdeleted=ok');
 }
 
+export async function updateTournament(formData: FormData) {
+  let { id, name,rawDate, champion, league } = ({
+    id: formData.get('id') as string,
+    name: formData.get('name') as string,
+    rawDate: formData.get('date') as string,
+    champion: formData.get('champion') as string | null,
+    league: formData.get('league') as string,
+  }) 
+
+  if (champion === "" ) { champion = null}
+  let date = rawDate.toString()
+  
+  try {
+    await sql`
+    UPDATE tournament
+    SET
+     name = ${name},
+     date = ${date},
+     champion_id = ${champion},
+     league_id = ${league}
+
+    WHERE id = ${id};`
+  }
+  catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to edit tournament.')
+  }
+
+  revalidatePath('/dashboard/tournaments');
+  redirect('/dashboard/tournaments?tournamentedited=ok');
+}
+
 export async function deleteTournament(id: string) {
 
   /* first: delete all games that references the tournament */

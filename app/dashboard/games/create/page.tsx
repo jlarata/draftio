@@ -31,7 +31,7 @@ export default async function Page(props: {
     return tournaments;
   }
   
-  const { players } = await fetchPlayersByLeague('here should go the league_id eventually')
+  const { players } = await fetchPlayersByLeague(league_id)
 
   return (
     <main>

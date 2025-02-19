@@ -26,9 +26,12 @@ export default async function Page(props: {
 
 
   const { fetchPlayersPages } = playerServices
-
   const { fetchPlayersByLeague } = playerServices;
-  const fetchedPlayers = await fetchPlayersByLeague("here should go a league id")
+  
+  /*NEED UPDATE, hardcoding for now */
+  const a_league_id = "00000000-0000-0000-0000-000000000000"
+
+  const fetchedPlayers = await fetchPlayersByLeague(a_league_id)
 
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
