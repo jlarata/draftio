@@ -22,18 +22,22 @@ const fetchLeaguesWithTournamentsByUserEmail = async (user_email: string) => {
    that has the tournaments associated.  
   */
 
-
   try {
     const { rows: leaguesPromise } = await sql<LeagueJoinTournament>`
 SELECT
   l.id AS id, l.name AS name, t.id AS tournament_id,
-  t.name AS tournament_name, t.date AS tournament_date, t.champion_id AS tournament_champion_id
+  t.name AS tournament_name, t.date AS tournament_date, t.champion_id AS tournament_champion_id,
+  p.username AS tournament_champion_name
 FROM
   league l
 LEFT JOIN
   tournament t
 ON
  t.league_id = l.id
+LEFT JOIN
+  player p
+ON
+  t.champion_id = p.id
 WHERE
   l.id IN (
 SELECT
@@ -61,22 +65,22 @@ AND
 }
 
 const createLeaguesWithTournamentArray = (leaguesJoinedWithTournaments: LeagueJoinTournament[]) => {
-  const arrayOfLeaguesWithTournaments: LeagueWithTournaments[] = []
-  leaguesJoinedWithTournaments.map((league, i) => {    
+  const arrayOfLeaguesWithTournaments: LeagueWithTournaments[] = [];
+  leaguesJoinedWithTournaments.map((league, i) => {
     if (arrayOfLeaguesWithTournaments.some(e => e.id == league.id)) {
       const index = arrayOfLeaguesWithTournaments.map(f => f.id).indexOf(league.id);
-      
-      if (league.tournament_id != null)
-        {
-          const newTournament: Tournament = {
-            league_id: league.id,
-            id: league.tournament_id,
-            name: league.tournament_name,
-            date: league.tournament_date,
-            champion_id: league.tournament_champion_id
-          }
-          arrayOfLeaguesWithTournaments[index].tournaments.push(newTournament);
-        }      
+
+      if (league.tournament_id != null) {
+        const newTournament: Tournament = {
+          league_id: league.id,
+          id: league.tournament_id,
+          name: league.tournament_name,
+          date: league.tournament_date,
+          champion_id: league.tournament_champion_id,
+          champion_name: league.tournament_champion_name
+        }
+        arrayOfLeaguesWithTournaments[index].tournaments.push(newTournament);
+      }
     }
     else {
       const newLeagueWithTournaments: LeagueWithTournaments = {
@@ -84,20 +88,21 @@ const createLeaguesWithTournamentArray = (leaguesJoinedWithTournaments: LeagueJo
         name: league.name,
         tournaments: []
       }
-      if (league.tournament_id != null)
-        {
-          const newTournament: Tournament = {
-            league_id: league.id,
-            id: league.tournament_id,
-            name: league.tournament_name,
-            date: league.tournament_date,
-            champion_id: league.tournament_champion_id
-          }
-          newLeagueWithTournaments.tournaments.push(newTournament);
-        }     
+      if (league.tournament_id != null) {
+        const newTournament: Tournament = {
+          league_id: league.id,
+          id: league.tournament_id,
+          name: league.tournament_name,
+          date: league.tournament_date,
+          champion_id: league.tournament_champion_id,
+          champion_name: league.tournament_champion_name
+        }
+        newLeagueWithTournaments.tournaments.push(newTournament);
+      }
       arrayOfLeaguesWithTournaments.push(newLeagueWithTournaments);
     }
   })
+  //console.log(arrayOfLeaguesWithTournaments)
   return arrayOfLeaguesWithTournaments
 }
 

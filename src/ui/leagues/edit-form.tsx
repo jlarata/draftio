@@ -9,7 +9,7 @@ import { Button } from '../button';
 import { useState } from 'react';
 import { updateLeague } from '@/services/lib/actions';
 
-export default async function EditLeagueForm({
+export default function EditLeagueForm({
   league_id,
   league_name,
   players,
@@ -43,7 +43,7 @@ export default async function EditLeagueForm({
             <input
               id="name"
               name="name"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue={league_name}
             >    
             </input>

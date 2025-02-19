@@ -57,6 +57,7 @@ export type League =
     tournament_name: string,
     tournament_date: Date,
     tournament_champion_id: string,
+    tournament_champion_name: string,
   }
   export type LeagueWithTournaments =
   {
@@ -70,6 +71,7 @@ export type Tournament =
     id: string,
     league_id: string,
     champion_id: string | null,
+    champion_name: string,
     date: Date,
     name: string
   }

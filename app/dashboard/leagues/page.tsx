@@ -8,8 +8,7 @@ import Search from "@/src/ui/search";
 import { LatestGamesSkeleton } from "@/src/ui/skeletons";
 import { Metadata } from "next";
 import { Suspense } from "react";
-import { League, LeagueWithTournaments, TournamentForLeaguesTable } from "@/services/lib/definitions";
-import { tournamentServices } from "@/services/tournament";
+import { LeagueWithTournaments } from "@/services/lib/definitions";
 
 export const metadata: Metadata = {
     title: "Leagues | Draftio Dashboard",
@@ -27,13 +26,8 @@ export default async function Page(props: {
 
     const session = await auth();
     const user_email: string = session?.user?.email!
-
     const { fetchLeaguesWithTournamentsByUserEmail } = leagueServices
-    const { fetchTournamentsByUserEmail } = tournamentServices
-
     const leagues: LeagueWithTournaments[] = ((await fetchLeaguesWithTournamentsByUserEmail(user_email)).arrayOfLeaguesWithTournaments)
-    const tournaments: TournamentForLeaguesTable[] = ((await fetchTournamentsByUserEmail(user_email)).tournaments)
-
 
     const searchParams = await props.searchParams;
     const query = searchParams?.query || "";
@@ -63,7 +57,7 @@ export default async function Page(props: {
 
                 <div className="flex w-full gap-4">
                     <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
-                        <LeaguesTable leagues={leagues} tournaments={tournaments} user_email={user_email} query={query} currentPage={currentPage}></LeaguesTable>
+                        <LeaguesTable leagues={leagues} user_email={user_email} query={query} currentPage={currentPage}></LeaguesTable>
                     </Suspense>
                 </div>
                 <div className="flex flex-row gap-4 justify-center">

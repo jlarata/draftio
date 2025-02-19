@@ -10,22 +10,18 @@ import { inter } from '../fonts';
 export default async function LeaguesTable({
   user_email,
   leagues,
-  tournaments,
   query, currentPage
 }: {
   user_email: string;
   leagues: LeagueWithTournaments[];
-  tournaments: TournamentForLeaguesTable[];
   query: string;
   currentPage: number;
 }) {
 
   /* the leagues component uses query and currentpage for displaying the leagues.
   is this necessary on the leagues component? dont think so
-  
   const games = await fetchFilteredGames(query, currentPage);*/
-
-  console.log(leagues)
+  //console.log(leagues)
 
   return (
     <>
@@ -59,9 +55,6 @@ export default async function LeaguesTable({
                           </div>
                         </div>
                       </div>
-
-
-
                       {league.tournaments.length == 0 ?
                         <div>
                           <p className='indent-3'>
@@ -75,8 +68,8 @@ export default async function LeaguesTable({
                           </p>
                           {league.tournaments.map((tournament, i) => (
                             <p key={tournament.id + i} className='text-sm indent-8'>
-                              {tournament.name} | {tournament.date.toString()}
-                              {/*  {tournamentChampion_id && " | Champion: " + tournamentChampion_name} */}
+                              {tournament.name} | {tournament.date.toLocaleDateString('en-CA')}
+                              {tournament.champion_id && (" | Champion: " + tournament.champion_name)}
                             </p>
                           ))}
                         </div>
@@ -112,33 +105,24 @@ export default async function LeaguesTable({
                             </div>
                           </div>
 
-                          {/* ASÍ COMO ESTÁN LAS COSAS, "No tournaments yet" solo va a aparecer si no hay ningun torneo
-asociado a ninguna liga. habría que hacer alguna verificación previa si queremos que esto 
-funcione para cada tarjeta de liga */}
-
-                          {tournaments.length == 0 ?
-                            <p>No tournaments yet</p>
+                          {league.tournaments.length == 0 ?
+                            <p className='text-lg indent-6'>No tournaments yet</p>
                             :
                             <div>
                               <p className='text-lg indent-3'>
-                                Tournaments:
+                                {league.tournaments.length} Tournaments:
                               </p>
-                              {tournaments.map((tournament, i) => (
-                                (league.id === tournament.league_id) ?
+                              {league.tournaments.map((tournament, i) => (
+                                
                                   <p key={tournament.id + i} className='indent-8'>
-                                    {tournament.name} | {tournament.date.toString()}
+                                    {tournament.name} | {tournament.date.toLocaleDateString('en-CA')}
                                     {tournament.champion_id && " | Champion: " + tournament.champion_name}
-                                  </p> :
-                                  null
+                                  </p> 
+                                  
                               ))}
                             </div>
                           }
-
                         </td>
-                        {/* WIP ADD role 
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                        {player.role}
-                      </td> */}
                       </tr>
                     ))}
                   </tbody>
