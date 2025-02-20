@@ -3,6 +3,7 @@
 import { League, PlayersTableType, Player } from '@/services/lib/definitions';
 import Search from '../search';
 import { playerServices } from '@/services/player';
+import { DeletePlayer } from './buttons';
 
 export default async function PlayersTable({
   //league,
@@ -22,8 +23,8 @@ export default async function PlayersTable({
   const players : Player[] = (await fetchPlayersByLeague("someLeagueId-> thats where the props leaguefield is going")).players;
   
   return (
-    <div className="w-full">
- 
+    <>
+    <div className="w-full md:w-1/2">
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
@@ -84,7 +85,7 @@ export default async function PlayersTable({
                   {players.map((player, i) => (
                     <tr key={player.id+i} className="group">
                       <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-between gap-3">
                          {/*  <Image
                             src={customer.image_url}
                             className="rounded-full"
@@ -93,6 +94,8 @@ export default async function PlayersTable({
                             height={28}
                           /> */}
                           <p>{player.username}</p>
+                          {/* <UpdatePlayer game_id={game.game_id} /> */}
+                          <DeletePlayer id={player.id} />
                         </div>
                       </td>
                       {/* WIP ADD role 
@@ -108,6 +111,7 @@ export default async function PlayersTable({
         </div>
       </div>
     </div>
+  </>
   );
 }
 

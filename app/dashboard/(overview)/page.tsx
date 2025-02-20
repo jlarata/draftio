@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import CardWrapper from "@/src/ui/dashboard/cards";
 import GamesChart from "@/src/ui/dashboard/games-chart";
 import LatestGames from "@/src/ui/dashboard/latest-games";
@@ -6,6 +7,10 @@ import { CardSkeleton, GamesChartSkeleton, LatestGamesSkeleton } from "@/src/ui/
 import { Suspense } from "react";
 
 export default async function Page() {
+
+  const session = await auth()
+  //console.log("hola, ", session?.user?.id, session?.user?.email, session?.user?.name)
+
   return (
     <main>
       <h1 className={`${inter.className} mb-4 text-xl md:text-2xl`}>

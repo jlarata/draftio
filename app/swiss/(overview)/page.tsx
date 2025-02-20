@@ -5,16 +5,12 @@ import Home from '@/src/swiss/views/Home'
 export default async function Page() {
 
   const { fetchPlayersByLeague } = playerServices;
-  const fetchedPlayers = await fetchPlayersByLeague("here should go a league id")
+  const leagueId = "00000000-0000-0000-0000-000000000000" //This should be feeded from the previous page or use this one as quick tournament
+  const fetchedPlayers = await fetchPlayersByLeague(leagueId)
 
   return (
     <>
-
-
-
-
-      <Home fetchedPlayers={fetchedPlayers.players} />
-
+      <Home fetchedPlayers={fetchedPlayers.players} leagueID={leagueId} />
     </>
   )
 }

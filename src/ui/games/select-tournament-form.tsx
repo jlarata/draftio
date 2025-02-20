@@ -71,8 +71,8 @@ export default function SelectTournamentForm({
               <option value='' disabled>
                 Select tournament
               </option>
-              {tournaments.map((tournament : TournamentForCreateQuery) => (
-                <option key={tournament.id} value={tournament.id}>
+              {tournaments.map((tournament : TournamentForCreateQuery, index) => (
+                <option key={tournament.id+index} value={tournament.id}>
                   {tournament.name + ' | ' + tournament.date}
                 </option>
               ))}

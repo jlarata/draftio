@@ -4,7 +4,29 @@ import { Player } from '../lib/definitions'
 const fetchPlayersByLeague = async (league_id: string) => {
   // noStore();
   try {
-    const { rows: players } = await sql<Player>`SELECT id, username FROM player;`
+    const { rows: players } = await sql<Player>`
+    SELECT p.id, p.username
+    FROM
+      player p
+    WHERE
+      p.league_id = ${league_id}
+    ORDER BY
+      p.username
+    COLLATE case_insensitive
+    
+    
+    ;`
+
+    /* for this to work i had to run
+
+    CREATE COLLATION case_insensitive (
+      provider = icu,
+      locale = 'und-u-ks-level2',
+      deterministic = false
+    );
+
+    in the db.
+ */
 
     return {
       players: players ?? 'No players in database',

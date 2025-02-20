@@ -1,11 +1,10 @@
-//import bcryptjs from 'bcryptjs';
 import bcrypt from 'bcrypt';
 import { db } from '@vercel/postgres';
-import { players, users, leagues, tournaments, games, player_games, league_players } from '../lib/placeholder-data';
+import { users, leagues, tournaments, games, player_games, league_players, players } from '../../services/lib/placeholder-data';
 
 const client = await db.connect();
 
-async function SeedPlayers() {
+/* async function SeedPlayers() {
    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
    await client.sql`
      CREATE TABLE IF NOT EXISTS player (
@@ -17,7 +16,6 @@ async function SeedPlayers() {
 
    const insertedPlayers = await Promise.all(
      players.map(async (player) => {
-      //const hashedPassword = await bcrypt.hash(player.password, 10);
       return client.sql`
          INSERT INTO player (id, username)
          VALUES (${player.id}, ${player.username})
@@ -61,12 +59,12 @@ async function SeedLeagues() {
        name VARCHAR(255) NOT NULL
      );
    `;
-   console.log('leagues table created');
+   console.log('league table created');
 
    const insertedLeagues = await Promise.all(
      leagues.map(async (league) => {
       return client.sql`
-         INSERT INTO leagues (id, name)
+         INSERT INTO league (id, name)
          VALUES (${league.id}, ${league.name})
          ON CONFLICT (id) DO NOTHING;
        `
@@ -80,14 +78,15 @@ async function SeedTournaments() {
    await client.sql`
      CREATE TABLE IF NOT EXISTS tournament (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      seed VARCHAR(255),
       name VARCHAR(255) NOT NULL,
-      league_id UUID NOT NULL,
-      champion_id UUID,
+      league_id UUID NOT NULL REFERENCES league (id) ON DELETE CASCADE,
+      champion_id UUID REFERENCES player (id) ON DELETE CASCADE,
       date DATE NOT NULL
      );
    `;
 
-   console.log('tournaments table created');
+   console.log('tournament table created');
 
    const insertedTournaments = await Promise.all(
      tournaments.map(
@@ -108,17 +107,17 @@ async function SeedGames() {
   await client.sql`
     CREATE TABLE IF NOT EXISTS game (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    tournament_id UUID NOT NULL,
-    round TINYINT NOT NULL
+    tournament_id UUID NOT NULL REFERENCES tournament (id) ON DELETE CASCADE,
+    round SMALLINT NOT NULL
      );
    `; 
 
-   console.log('games  table created');
+   console.log('game table created');
    
   const insertedGames = await Promise.all(
      games.map(
        (game) => client.sql`
-         INSERT INTO game (id, tournamentid,round)
+         INSERT INTO game (id, tournament_id, round)
          VALUES (${game.id}, ${game.tournament_id}, ${game.round})
          ON CONFLICT (id) DO NOTHING;
        `,
@@ -145,9 +144,10 @@ async function SeedGames() {
 
   await client.sql`
     CREATE TABLE IF NOT EXISTS player_game (
-    player_id UUID PRIMARY KEY,
-    game_id UUID PRIMARY KEY,
-    wins TINYINT NOT NULL,
+    player_id UUID REFERENCES player (id) ON DELETE CASCADE,
+    game_id UUID REFERENCES game (id) ON DELETE CASCADE,
+    wins SMALLINT NOT NULL,
+    PRIMARY KEY (player_id, game_id)
      );
    `; 
 
@@ -158,7 +158,6 @@ async function SeedGames() {
        (player_game) => client.sql`
          INSERT INTO player_game (player_id, game_id, wins)
          VALUES (${player_game.player_id}, ${player_game.game_id}, ${player_game.wins})
-         ON CONFLICT (player_id) DO NOTHING;
        `,
      ),
    ); 
@@ -167,85 +166,92 @@ async function SeedGames() {
 
  async function SeedLeague_Players() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-  await client.sql`CREATE TYPE role as ENUM ('player', 'admin', 'other')`;
-
+  console.log('creating ENUM role')
+  await client.sql`DROP TYPE IF EXISTS p_role;`;
+  await client.sql`CREATE TYPE p_role AS ENUM ('player', 'admin', 'other');`;
+  console.log('creating the table with the enum')
   await client.sql`
     CREATE TABLE IF NOT EXISTS league_player (
-    league_id UUID PRIMARY KEY,
-    player_id UUID PRIMARY KEY,
-    player_role role DEFAULT 'player'
+    league_id UUID NOT NULL REFERENCES league (id) ON DELETE CASCADE,
+    player_id UUID NOT NULL REFERENCES player (id) ON DELETE CASCADE,
+    player_role p_role DEFAULT 'player',
+    PRIMARY KEY (league_id, player_id)
      );
    `; 
 
-   console.log('league_playertable created');
+  console.log('league_player table created');
    
   const insertedLeague_Players = await Promise.all(
      league_players.map(
-       (player_game) => client.sql`
-         INSERT INTO player_game (player_id, game_id, wins)
-         VALUES (${player_game.league_id}, ${player_game.player_id}, ${player_game.player_role})
-         ON CONFLICT (league_id) DO NOTHING;
-       `,
+      //DEFAULT constraint of player_role is not working as it should. so i'll just constrain it from the backend
+       (player_game) => {
+        client.sql`
+         INSERT INTO league_player (league_id, player_id, player_role)
+         VALUES (${player_game.league_id}, ${player_game.player_id},
+         ${player_game.player_role === "" ? 'player' : player_game.player_role})
+       `
+       }  
      ),
    );
    return insertedLeague_Players;
  }
  
-
  async function dropTables() { 
-  console.log('dropping table 1')
-    await client.sql`
-      drop TABLE IF EXISTS player;
-      `;
-    console.log('dropping table 2')
-    await client.sql`
-      drop TABLE IF EXISTS p_user;
-      `;
-      console.log('dropping table 3')
-    await client.sql`
-      drop TABLE IF EXISTS tournament;
-      `; 
-      console.log('dropping table 4')
-    await client.sql`
-      drop TABLE IF EXISTS league;
-      `;
-    console.log('dropping table 5')  
-    await client.sql`
-      drop TABLE IF EXISTS game;
-      `;  
-      console.log('dropping table 6')
+    
+  console.log('dropping table player_game')
     await client.sql`
       drop TABLE IF EXISTS player_game;
       `;
-      console.log('dropping table 7')  
+    console.log('dropping table league_player')  
     await client.sql`
       drop TABLE IF EXISTS league_player;
       `;
-      console.log('dropping table 8')  
-      await client.sql`COMMIT`;
-      
-    console.log('8 tables dropped succesfully');
+    console.log('dropping table p_user')
+    await client.sql`
+      drop TABLE IF EXISTS p_user;
+      `;
+    console.log('dropping table game')  
+    await client.sql`
+      drop TABLE IF EXISTS game;
+      `;  
+    console.log('dropping table player')
+    await client.sql`
+      drop TABLE IF EXISTS player;
+      `;
+    console.log('dropping table tournament')
+    await client.sql`
+      drop TABLE IF EXISTS tournament;
+      `; 
+    console.log('dropping table league')
+    await client.sql`
+      drop TABLE IF EXISTS league;
+      `;
+    
+    await client.sql`COMMIT`;
+    console.log('7 tables dropped succesfully');
  }
 
 export async function GET() {
-  /* return Response.json({
-    message:
-      'Uncomment this file and remove this line. You can delete this file when you are finished.',
-  }); */
+
    try {     
     await client.sql`BEGIN`;
      await dropTables()
      await SeedPlayers();   
-     console.log('players table populated');  
+     console.log('player table populated');  
      await SeedUsers();
-     console.log('users table populated');  
-
+     console.log('user table populated');  
      await SeedLeagues();
+     console.log('league table populated');  
      await SeedTournaments();
+     console.log('tournament table populated');  
      await SeedGames();
+     console.log('game table populated');  
      await seedChampions();
+     console.log('champion_id column of tournament resetted');  
      await SeedPlayer_Games();
+     console.log('player_game table populated');  
      await SeedLeague_Players();
+     console.log('league_player table populated');  
      await client.sql`COMMIT`; 
      
      return Response.json({ message: 'Database seeded successfully' });
@@ -253,4 +259,4 @@ export async function GET() {
      await client.sql`ROLLBACK`;
      return Response.json({ error }, { status: 500 });
    }
-}
+}  */

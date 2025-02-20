@@ -1,35 +1,37 @@
-'use client';
+'use client'
 
 import { useEffect, useState } from 'react'
-
 import Button from '@/src/swiss/components/Button'
-import cssInput from './Input/style.module.css'
-import PlayerInputField from './Input'
 import { useRouter } from 'next/navigation'
 import RandomSeatStep from '../RandomSeat'
 import { randomSeatsUtils } from '../RandomSeat/utils'
-import { playerServices } from '@/services/player';
-import { FetchedPlayer, Player } from '@/services/lib/definitions';
+import { FetchedPlayer, Player } from '@/services/lib/definitions'
+import PlayerSelectField from './PlayerSelect'
+import Input from '@/src/swiss/components/Input'
+import CreateForm from '@/src/ui/players/create-form'
 
-type Props = { submitPlayers: (players: string[]) => void, fetchedPlayers : Player[] }
 
-const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
+type Props = { submitPlayers: (players: string[]) => void; fetchedPlayers: Player[] }
 
+const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props) => {
   const router = useRouter()
-  const [players, setPlayers] = useState<string[]>(['J1', 'J2',"J3","J4"])
+  const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {
+    return fetchedPlayer.username
+  })
+
+  const [players, setPlayers] = useState<string[]>(['', ''])
   const [showRandomSeatStep, setShowRandomSeatStep] = useState(false)
   const [disablePlayerForm, setDisablePlayerForm] = useState(false)
+  const [options, setOptions] = useState<string[]>(fetchedPlayersArray)
 
-  const handlePlayerNameChange = ({ name, index }: { name: string; index: number }) => {
-    if (name === '') return
-    setPlayers((prevPlayers) => {
-      return prevPlayers.map((player, playerIndex) => {
-        if (playerIndex === index) {
-          return name
-        }
-        return player
-      })
-    })
+  const handleRefreshOptions = () => {
+    setOptions(fetchedPlayersArray)
+  }
+
+  const handlePlayerNameChange = ({ name, index }: { name: string; index: number }) => {   
+    setPlayers((prevPlayers) => 
+      prevPlayers.map((player, i) => (i === index ? name : player))
+    );  
   }
 
   const removePlayer = (index: number) => {
@@ -46,69 +48,55 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props ) => {
 
   const handleStartTournament = () => {
     if (players.length >= 2 && new Set(players).size === players.length) {
-      console.log('Entro start Tournament Handler')
       setDisablePlayerForm(true)
       setShowRandomSeatStep(true)
     }
   }
 
+  useEffect(() => {
+    handleRefreshOptions();
+  },[fetchedPlayers]);
+
   return (
     <div>
-      <div>
-        <h1>hola lauti esto ya funca:</h1>
-        <select>
-          {fetchedPlayers.map((fetchedPlayer, i) => {
-            return (
-              <option 
-              key={fetchedPlayer.id+i}
-              value={fetchedPlayer.id}>
-                {fetchedPlayer.username}
-              </option>
-            )})
-          }
-        </select>
-      </div>
-      <div>
+      <div>        
+        <CreateForm fetchedPlayers={fetchedPlayers} ></CreateForm>        
 
-        <p className='mb-2 font-bold text-lg'>Players Management</p>
-      </div>
-      <div>
         {players.map((player, i) => {
-          const isDuplicated =
-            players.lastIndexOf(player) !== i || players.indexOf(player) !== players.lastIndexOf(player)
           return (
-            <PlayerInputField
-              key={`${player}${i}`}
+            <PlayerSelectField
+              key={i}
               index={i}
+              fetchedPlayers={options}
               inputValue={player}
-              handlePlayerNameChange={handlePlayerNameChange}
               removePlayer={removePlayer}
-              inputProps={{disabled: disablePlayerForm, className: isDuplicated ? cssInput.inputDuplicate : ''}}
+              handlePlayerNameChange={(name) => handlePlayerNameChange(name)}
+              selectedPlayers={players}
             />
           )
         })}
+
+        <p className='mb-2 font-bold text-lg'>Players Management</p>
       </div>
+
       <div>
         <Button
           disabled={players.length > 7}
           label={'Add Player'}
           onClick={handleAddPlayer}
-          className='ml-1 mt-1 bg-transparent hover:bg-green-300 text-green-600 font-semibold hover:text-white py-2 px-4 border border-green-300 hover:border-transparent rounded'  
-          //className='button-primary'
         />
         <Button
           label={'Get draft positions'}
           disabled={players.length < 2 || new Set(players).size !== players.length}
           onClick={handleStartTournament}
-          className='ml-1 mt-1 bg-transparent hover:bg-green-300 text-green-600 font-semibold hover:text-white py-2 px-4 border border-green-300 hover:border-transparent rounded'  
         />
-        {/* Esto esta mal, pero no se como hacerlo */}
-        {showRandomSeatStep && <RandomSeatStep players={players} randomPlayers={randomSeatsUtils.getRandomPlayers(players)} />}
+        {showRandomSeatStep && (
+          <RandomSeatStep players={players} randomPlayers={randomSeatsUtils.getRandomPlayers(players)} />
+        )}
         <Button
           label={'Get first Round'}
           disabled={players.length < 2 || new Set(players).size !== players.length}
           onClick={() => (submitPlayers(players), router.push('./swiss/rounds'))}
-          className='ml-1 mt-1 mr-1 bg-transparent hover:bg-green-300 text-green-600 font-semibold hover:text-white py-2 px-4 border border-green-300 hover:border-transparent rounded' 
         />
       </div>
     </div>

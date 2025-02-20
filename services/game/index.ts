@@ -1,6 +1,6 @@
 import { sql } from '@vercel/postgres'
 import { GameJoinedWith2Players, GamesTable, LatestGames } from '../lib/definitions'
-import { unstable_noStore } from 'next/cache';
+import { revalidatePath, unstable_noStore } from 'next/cache';
 import { gamesByDate } from '../lib/utils';
 
 
@@ -218,7 +218,7 @@ const fetchLatestGames = async () =>  {
           g.id = pg.game_id AND pg.player_id = p.id AND p.username ILIKE ${`%${query}%`})
 
       ORDER BY
-        g.id
+        t.date desc, g.id
 
       LIMIT ${ITEMS_PER_PAGE * 2} OFFSET ${offset};
     `
@@ -275,7 +275,11 @@ const fetchLatestGames = async () =>  {
               
       //console.log(allGamesJoinedWith2Players)
 
-      allGamesJoinedWith2Players.sort(gamesByDate);
+      /* apparently all this is not needed anymore since reordered by sql */
+      //const sorted = allGamesJoinedWith2Players.sort(gamesByDate);
+      /* sorted.map((gamesorted) => {
+        console.log(gamesorted.date)
+      }) */
       //console.log(filteredGames.length, allGamesJoinedWith2Players.length);
       return allGamesJoinedWith2Players
     } catch (error) {
@@ -313,6 +317,11 @@ const fetchGamesPages = async (query: string) => {
     throw new Error('Failed to fetch total number of pages.')
   }
 }
+
+// const deleteGame = async (id : string) => {
+//   await sql`DELETE FROM game WHERE id = $${id}`;
+//   revalidatePath('dashboard/games');
+// } 
 
 export const gameServices = {
   fetchLatestGames,

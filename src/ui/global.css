@@ -16,3 +16,26 @@ input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+
+
+.transparentInput { 
+/* added this class to enhance ux with the select-date in the tournament-create form.
+i was going for:
+ 1) clicking anywhere in the inputfield would open the calendar gadget
+ 2) user will see that current day is setted for default but intuitively understand they can change it if prefered.
+ */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+    }
+
+}  
