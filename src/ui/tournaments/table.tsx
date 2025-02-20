@@ -18,7 +18,7 @@ export default async function TournamentsTable({
         <div className="mt-6 flow-root">
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
-              <div className="rounded-md bg-gray-200 p-1 md:pt-0">
+              <div className="rounded-md bg-gray-100 p-1 md:pt-0">
 
                 {/*  mobile */}
                 <div className="md:hidden">
@@ -51,7 +51,7 @@ export default async function TournamentsTable({
                   ))}
                 </div>
 
-                <table className="hidden border-separate border-spacing-4 min-w-full rounded-md bg-gray-200 text-gray-900 md:table">
+                <table className="hidden border-separate border-spacing-4 min-w-full rounded-md bg-gray-100 text-gray-900 md:table">
                   {/* <thead className="rounded-md bg-gray-50 text-left text-sm font-normal">
                     <tr>
                       <th scope="col" className="px-4 py-2 font-medium sm:pl-6">

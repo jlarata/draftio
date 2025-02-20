@@ -28,18 +28,18 @@ export default async function LeaguesTable({
       <div className="w-full">
         {leagues.length == 0 ?
           <div className="flex w-full items-center justify-between">
-            <h4 className={`${inter.className} text-4xl`}>There are no leagues yet. Create one!</h4>
+            <h4 className={`${inter.className} text-2xl`}>There are no leagues yet. Create one!</h4>
           </div>
           :
           <div className="flex w-full items-center justify-between">
-            <h1 className={`${inter.className} text-4xl`}>Your leagues</h1>
+            <h1 className={`${inter.className} text-2xl`}>Your leagues</h1>
           </div>
         }
 
         <div className="mt-6 flow-root">
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
-              <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
+              <div className="overflow-hidden rounded-md bg-gray-100 p-2 md:pt-0">
                 <div className="md:hidden">
                   {leagues.map((league, i) => (
                     <div
@@ -67,7 +67,7 @@ export default async function LeaguesTable({
                             Tournaments:
                           </p>
                           {league.tournaments.map((tournament, i) => (
-                            <p key={tournament.id + i} className='text-sm indent-8'>
+                            <p key={tournament.id + i} className='text-sm indent-8 whitespace-nowrap'>
                               {tournament.name} | {tournament.date.toLocaleDateString('en-CA')}
                               {tournament.champion_id && (" | Champion: " + tournament.champion_name)}
                             </p>
@@ -78,7 +78,7 @@ export default async function LeaguesTable({
                   ))}
                 </div>
                 <table className="hidden min-w-full rounded-md text-gray-900 md:table">
-                  <thead className="rounded-md bg-gray-50 text-left text-sm font-normal">
+                  <thead className="rounded-md bg-gray-100 text-left text-sm font-normal">
                     <tr>
                       <th scope="col" className="px-4 py-1 font-medium sm:pl-6">
                         {/* better if no tag? Name */}
@@ -86,7 +86,7 @@ export default async function LeaguesTable({
                     </tr>
                   </thead>
 
-                  <tbody className="divide-y divide-gray-200 text-gray-900">
+                  <tbody className="divide-y-4 divide-gray-100 text-gray-900">
                     {leagues.map((league, i) => (
                       <tr key={league.id + i} className="group">
                         <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
@@ -98,7 +98,7 @@ export default async function LeaguesTable({
                             width={28}
                             height={28}
                           /> */}
-                            <p className="text-3xl">{league.name}</p>
+                            <p className="text-2xl">{league.name}</p>
                             <div className='flex items-center gap-2'>
                               <UpdateLeague league_id={league.id} />
                               <DeleteLeague id={league.id} />

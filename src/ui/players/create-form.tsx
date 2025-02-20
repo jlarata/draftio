@@ -47,14 +47,14 @@ export default function CreateForm({ fetchedPlayers }: { fetchedPlayers: Player[
 
   return (
     <>
-      <div className='w-full h-44 md:w-1/2 bg-gray-200'>
+      <div className='w-full h-44 md:w-1/2 bg-gray-100'>
         <div className='mt-6 flow-root'>
           <div className='overflow-x-auto'>
             <div className='inline-block min-w-full align-middle'>
-              <div className='overflow-hidden rounded-md bg-gray-200 p-2 md:pt-0'>
+              <div className='overflow-hidden rounded-md bg-gray-100 p-2 md:pt-0'>
                 {/* <form action={createPlayer}> */}
                 <form>
-                  <div className='rounded-md bg-gray-200 p-4 md:p-6'>
+                  <div className='rounded-md bg-gray-100 p-4 md:p-6'>
                     <div className='mb-4 visibility: hidden'>
                       {/* hidden input with league. not using it for now */}
                       <label htmlFor='league_id' className='mb-2 block text-sm font-medium'>
@@ -86,7 +86,7 @@ export default function CreateForm({ fetchedPlayers }: { fetchedPlayers: Player[
                       </div>
                     </div>
 
-                    <div className='mb-4 bg-gray-200'>
+                    <div className='mb-4 bg-gray-100'>
                       <label htmlFor='nickname' className='mb-2 block text-sm font-medium'>
                         Create New Player
                       </label>
