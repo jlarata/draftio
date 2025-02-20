@@ -55,14 +55,14 @@ export default function CreateForm(
 
   return (
     <>
-      <div className='w-full mt-6 h-44 md:w-1/2 bg-gray-200 rounded-md'>
+      <div className='w-full mt-6 h-44 md:w-1/2 bg-gray-100 rounded-md'>
         <div className='mt-2 flow-root'>
           <div className='overflow-x-auto'>
             <div className='inline-block min-w-full align-middle'>
-              <div className='overflow-hidden rounded-md bg-gray-200 p-2 md:pt-0'>
+              <div className='overflow-hidden rounded-md bg-gray-100 p-2 md:pt-0'>
                 {/* <form action={createTournament}> */}
                 <form>
-                  <div className='rounded-md bg-gray-200 p-4 md:p-6'>
+                  <div className='rounded-md bg-gray-100 p-4 md:p-6'>
                     <div className='mb-4 visibility: hidden'>
                       {/* hidden input with originUrl. */}
                       <label htmlFor='origin_url' className='mb-2 block text-sm font-medium'>
@@ -78,7 +78,7 @@ export default function CreateForm(
                       </div>
                     </div>
 
-                    <div className='mb-2 bg-gray-200'>
+                    <div className='mb-2 bg-gray-100'>
                       <label htmlFor='nickname' className='mb-2 block text-sm font-medium'>
                         Name, Date & League
                       </label>
@@ -130,7 +130,7 @@ export default function CreateForm(
                           </option>
                           {/* <option hidden value={-1} key={-1} disabled>Choose a League</option> */}
                           {leaguesWithTournaments.map((leagueWithTournaments, i) =>
-                            <option
+                            <option key={i}
                               value={leagueWithTournaments.id}
                             >{leagueWithTournaments.name}</option>
 

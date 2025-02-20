@@ -157,8 +157,8 @@ export default function CreateForm({
                 <option value='' disabled>
                   Select a player
                 </option>
-                {players.map((player) => (
-                  <option disabled={player.id === player2} key={player.id} value={player.id}>
+                {players.map((player, i) => (
+                  <option disabled={player.id === player2} key={player.id+i} value={player.id}>
                     {player.username}
                   </option>
                 ))}
@@ -212,8 +212,8 @@ export default function CreateForm({
                 <option value='' disabled>
                   Select a player
                 </option>
-                {players.map((player) => (
-                  <option disabled={player.id === player1} key={player.id} value={player.id}>
+                {players.map((player, i) => (
+                  <option disabled={player.id === player1} key={player.id+i} value={player.id}>
                     {player.username}
                   </option>
                 ))}
@@ -254,7 +254,7 @@ export default function CreateForm({
         <div className='mt-6 flex justify-end gap-4'>
           <Link
             href='/dashboard/games'
-            className='flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200'
+            className='flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100'
           >
             Cancel
           </Link>

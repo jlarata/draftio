@@ -44,9 +44,9 @@ export default function CreateForm(
       <div className="mt-6 flow-root ">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle content-center ">
-            <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
+            <div className="overflow-hidden rounded-md bg-gray-100 p-2 md:pt-0">
               <form>
-                <div className="rounded-md bg-gray-50 p-4 md:p-6"> 
+                <div className="rounded-md bg-gray-100 p-4 md:p-6"> 
                     <div className="mb-4">
                         <label
                         htmlFor="name"
@@ -70,7 +70,7 @@ export default function CreateForm(
                     <div className="mt-6 flex justify-end gap-4">
                       <Button
                         type="submit"
-                        formAction={createLeagueWithEmail} /* disabled={!isPlayerNameValid(newOption)} */>Create New Player</Button>
+                        formAction={createLeagueWithEmail} /* disabled={!isPlayerNameValid(newOption)} */>Create New League</Button>
                     </div>
                 </div>
         

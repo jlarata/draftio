@@ -11,6 +11,7 @@ import { roboto } from './fonts';
 import { useActionState } from 'react';
 import { authenticate } from '@/services/lib/actions';
 import { useSearchParams } from 'next/navigation';
+import css from '@/app/login/style.module.css'
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
@@ -21,8 +22,8 @@ export default function LoginForm() {
   );
 
   return (
-    <form action={formAction} className="space-y-3">
-      <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
+    <form action={formAction} className={`${css.zorak2} space-y-3`}>
+      <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8 border-x-2 border-green-500" >
         <h1 className={`${roboto.className} mb-3 text-2xl`}>
           Please log in to continue.
         </h1>

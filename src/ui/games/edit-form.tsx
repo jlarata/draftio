@@ -188,8 +188,8 @@ export default function EditGameForm({
               <option value="" disabled>
                 Select Player 2
               </option>
-              {players.map((player) => (
-                <option key={player.id} value={player.id} selected={player.username === player2} disabled={player.id===player1_id}>
+              {players.map((player, i) => (
+                <option key={player.id+i} value={player.id} selected={player.username === player2} disabled={player.id===player1_id}>
                   {player.username}
                 </option>
               ))}
