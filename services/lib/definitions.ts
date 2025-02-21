@@ -49,7 +49,8 @@ export type League =
     id: string,
     name: string,
   }
-  export type LeagueJoinTournament =
+
+export type LeagueJoinTournament =
   {
     id: string,
     name: string,
@@ -59,10 +60,26 @@ export type League =
     tournament_champion_id: string,
     tournament_champion_name: string,
   }
-  export type LeagueWithTournaments =
+
+export type LeagueAdmin =
+  {
+    admin_email: string,
+    league_id: string,
+  }
+
+export type LeagueMod =
+  {
+    admin_email: string,
+    league_id: string,
+    role: string,
+
+  }
+
+export type LeagueWithTournaments =
   {
     id: string,
     name: string,
+    league_admin: string,
     tournaments: Tournament[]
   }
 
@@ -76,7 +93,7 @@ export type Tournament =
     name: string
   }
 
-  export type TournamentForLeaguesTable =
+export type TournamentForLeaguesTable =
   {
     id: string,
     seed: string | null,

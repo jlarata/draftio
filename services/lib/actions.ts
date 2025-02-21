@@ -8,6 +8,7 @@ import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { prefetchDNS } from "react-dom";
 import { read } from "fs";
+import bcrypt from 'bcrypt';
 
 export async function authenticate(
   prevState: string | undefined,
@@ -361,3 +362,26 @@ export const redirectWithParams = async (params: string) => {
 
   redirect(`/dashboard/games/create/${param}`);
 }
+
+export async function registerUser(formData : FormData) {
+  
+    let rawFormData: {
+      email : string,
+      nickname: string,
+      password : string,
+    } = {
+      email: formData.get('email') as string,
+      nickname: formData.get('nickname') as string,
+      password: formData.get('password') as string,
+    };
+
+    const hashedPassword = await bcrypt.hash(rawFormData.password, 10)
+  
+    await sql`
+        INSERT INTO p_user (email, name, password)
+          VALUES (${rawFormData.email}, ${rawFormData.nickname}, ${hashedPassword});`;
+
+  revalidatePath(`/`);
+  redirect(`/`);
+}
+

@@ -104,6 +104,12 @@ export default async function LeaguesTable({
                               <DeleteLeague id={league.id} />
                             </div>
                           </div>
+                          {league.league_admin == user_email ?
+                          <p className="text-xs italic font-thin">admin: you</p>
+                          :
+                          <p className="text-xs italic font-thin">admin: {league.league_admin}</p>
+                          }
+                          
 
                           {league.tournaments.length == 0 ?
                             <p className='text-lg indent-6'>No tournaments yet</p>
