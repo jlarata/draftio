@@ -10,6 +10,7 @@ import { prefetchDNS } from "react-dom";
 import { read } from "fs";
 import bcrypt from 'bcrypt';
 
+
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData,
@@ -184,7 +185,6 @@ export async function deleteGame(id: string) {
 
 
 
-
 export async function createLeague(user_email: string, formData: FormData) {
   let rawFormData: {
     name: string,
@@ -287,6 +287,7 @@ export async function updateTournament(formData: FormData) {
     throw new Error('Failed to edit tournament.')
   }
 
+
   revalidatePath('/dashboard/tournaments');
   redirect('/dashboard/tournaments?tournamentedited=ok');
 }
@@ -362,6 +363,7 @@ export const redirectWithParams = async (params: string) => {
 
   redirect(`/dashboard/games/create/${param}`);
 }
+
 
 export async function registerUser(formData : FormData) {
   

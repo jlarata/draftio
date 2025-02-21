@@ -12,10 +12,12 @@ export default async function Page(props: { params : Promise<{ id:string}>}) {
     const league_id = params.id;
   
     const { fetchLeagueById } = leagueServices;
+
     const league = await fetchLeagueById(league_id);
 
     const { fetchLeagueMods } = leagueServices;
     const mods = await fetchLeagueMods(league_id);
+
 
     const { fetchTournamentDataByLeagueId } = tournamentServices
     const { tournaments } = await fetchTournamentDataByLeagueId(league_id); 
