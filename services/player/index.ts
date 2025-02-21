@@ -37,6 +37,49 @@ const fetchPlayersByLeague = async (league_id: string) => {
   }
 }
 
+const fetchPlayersByUserEmail = async (user_email: string) => {
+  // noStore();
+  try {
+    const { rows: players } = await sql<Player>`
+    SELECT p.id, p.username
+    FROM
+      player p
+    WHERE
+      p.league_id
+    IN
+    (
+      SELECT
+        lu.league_id
+      FROM
+        league_user lu
+      WHERE
+        lu.p_user_email = ${user_email}
+    )
+    ORDER BY
+      p.username
+    COLLATE case_insensitive
+    ;`
+
+    /* for this to work i had to run
+
+    CREATE COLLATION case_insensitive (
+      provider = icu,
+      locale = 'und-u-ks-level2',
+      deterministic = false
+    );
+
+    in the db.
+ */
+
+    return {
+      players: players ?? 'No players in database',
+    }
+  } catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch players data.')
+  }
+}
+
 const ITEMS_PER_PAGE = 6
 
 const fetchPlayersPages = async (query: string) => {
@@ -61,4 +104,5 @@ const fetchPlayersPages = async (query: string) => {
 export const playerServices = {
   fetchPlayersByLeague,
   fetchPlayersPages,
+  fetchPlayersByUserEmail
 }
