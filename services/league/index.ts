@@ -1,5 +1,7 @@
 import { sql } from "@vercel/postgres"
-import { League, LeagueJoinTournament, LeagueWithTournaments, Tournament } from "../lib/definitions"
+
+import { League, LeagueAdmin, LeagueJoinTournament, LeagueMod, LeagueWithTournaments, Tournament } from "../lib/definitions"
+
 
 const fetchSelectLeagueData = async () => {
   try {
@@ -14,6 +16,78 @@ const fetchSelectLeagueData = async () => {
     throw new Error('Failed to fetch selectLeague data.')
   }
 }
+
+const fetchLeagueMods = async (league_id : string) => {
+  try {
+    //console.log('fetching data for league id: '+league_id)
+    const { rows: leagueModsPromise } = await sql<LeagueMod>`
+    SELECT
+      lu.p_user_email AS admin_email,
+      lu.user_role AS role,
+      lu.league_id AS league_id
+    FROM
+      league_user lu
+    WHERE
+      lu.league_id = ${league_id}
+    AND
+      (
+        lu.user_role = 'admin'
+      OR
+        lu.user_role = 'mod'
+      )
+      
+    ;`
+
+    const leagueMods = leagueModsPromise ?? 'No leagues in database'
+    return {
+      leagueMods: leagueMods,
+    }
+  } catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch selectLeague data.')
+  }
+}
+
+
+const fetchLeaguesAdmins = async (user_email : string) => {
+  try {
+    //console.log('fetching data for league id: '+league_id)
+    const { rows: leagueAdminPromise } = await sql<LeagueAdmin>`
+    SELECT
+      lu.p_user_email AS admin_email,
+      lu.league_id AS league_id
+    FROM
+      league_user lu
+    WHERE
+      lu.league_id
+    IN
+    (
+      SELECT
+        lu.league_id
+      FROM
+        league_user lu
+      WHERE
+        lu.p_user_email = ${user_email}
+      AND
+        lu.user_role = 'admin'
+      OR
+        lu.user_role = 'mod'
+    )
+    AND
+      lu.user_role = 'admin'
+    ;`
+
+    const leagueAdmin = leagueAdminPromise ?? 'No leagues in database'
+    //console.log(leagueAdmin)
+    return {
+      leagueAdmin: leagueAdmin,
+    }
+  } catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to fetch selectLeague data.')
+  }
+}
+
 
 const fetchLeaguesWithTournamentsByUserEmail = async (user_email: string) => {
 
@@ -52,13 +126,23 @@ FROM
 WHERE
   lu.p_user_email = ${user_email}
 AND
-  lu.user_role = 'admin'
+
+  (
+    lu.user_role = 'admin'
+  OR
+    lu.user_role = 'mod'
+  )
+
 )
 `
     const leaguesJoinedWithTournaments = leaguesPromise ?? 'No leagues in database'
     //console.log(leaguesJoinedWithTournaments)
 
-    const arrayOfLeaguesWithTournaments = createLeaguesWithTournamentArray(leaguesJoinedWithTournaments)
+
+    const league_admins = await fetchLeaguesAdmins(user_email);
+    //console.log(league_admins)
+    const arrayOfLeaguesWithTournaments = createLeaguesWithTournamentArray(leaguesJoinedWithTournaments, league_admins.leagueAdmin)
+
 
     return {
       arrayOfLeaguesWithTournaments: arrayOfLeaguesWithTournaments,
@@ -69,7 +153,7 @@ AND
   }
 }
 
-const createLeaguesWithTournamentArray = (leaguesJoinedWithTournaments: LeagueJoinTournament[]) => {
+const createLeaguesWithTournamentArray = (leaguesJoinedWithTournaments: LeagueJoinTournament[], league_admin : LeagueAdmin[]) => {
   const arrayOfLeaguesWithTournaments: LeagueWithTournaments[] = [];
   leaguesJoinedWithTournaments.map((league, i) => {
     if (arrayOfLeaguesWithTournaments.some(e => e.id == league.id)) {
@@ -88,9 +172,11 @@ const createLeaguesWithTournamentArray = (leaguesJoinedWithTournaments: LeagueJo
       }
     }
     else {
+      const adminIndex = league_admin.map(g => g.league_id).indexOf(league.id);
       const newLeagueWithTournaments: LeagueWithTournaments = {
         id: league.id,
         name: league.name,
+        league_admin: league_admin[adminIndex].admin_email,
         tournaments: []
       }
       if (league.tournament_id != null) {
@@ -104,6 +190,7 @@ const createLeaguesWithTournamentArray = (leaguesJoinedWithTournaments: LeagueJo
         }
         newLeagueWithTournaments.tournaments.push(newTournament);
       }
+
       arrayOfLeaguesWithTournaments.push(newLeagueWithTournaments);
     }
   })
@@ -135,6 +222,8 @@ const fetchLeagueById = async (league_id: string) => {
 
 export const leagueServices = {
   fetchSelectLeagueData,
+
+  fetchLeagueMods,
   fetchLeagueById,
   fetchLeaguesWithTournamentsByUserEmail,
 }

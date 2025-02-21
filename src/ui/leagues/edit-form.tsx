@@ -1,6 +1,6 @@
 'use client';
 
-import { Player,Tournament } from '@/services/lib/definitions';
+import { LeagueMod, Player,Tournament } from '@/services/lib/definitions';
 import {
   ClipboardIcon,
 } from '@heroicons/react/24/outline';
@@ -13,12 +13,14 @@ export default function EditLeagueForm({
   league_id,
   league_name,
   players,
-  tournaments
+  tournaments,
+  mods,
 }: {
   league_id: string,
   league_name: string,
   players: Player[],
-  tournaments: Tournament[]
+  tournaments: Tournament[],
+  mods : LeagueMod[]
 }) {
 
   /* not using this. but will be needed to prevent duplicate league name */
@@ -52,6 +54,25 @@ export default function EditLeagueForm({
           </div>
         </div>
 
+        {mods.map((mod, i) => (
+          mod.role == 'admin' && mod.league_id == league_id ?
+          <div key={i} className="text-xs italic font-thin">Admin:  
+          <span>{" "+mod.admin_email}</span>
+          </div> :
+          
+          null
+        ))}
+      
+        {mods.some(e => e.role == "mod" && e.league_id == league_id) ?
+        <div className="text-xs italic font-thin">mods: 
+        {mods.map((mod, i) => (
+          mod.role == 'mod' ? 
+          <span>{" "+mod.admin_email+""}</span> :
+          null
+        ))}
+        </div> : null
+        }
+          
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
