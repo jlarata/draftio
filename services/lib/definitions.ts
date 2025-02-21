@@ -67,6 +67,14 @@ export type LeagueAdmin =
     league_id: string,
   }
 
+export type LeagueMod =
+  {
+    admin_email: string,
+    league_id: string,
+    role: string,
+
+  }
+
 export type LeagueWithTournaments =
   {
     id: string,
