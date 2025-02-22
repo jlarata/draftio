@@ -10,6 +10,24 @@ import { prefetchDNS } from "react-dom";
 import { read } from "fs";
 import bcrypt from 'bcrypt';
 
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials';
+        default:
+          return 'Oh no i dont believe it, something went wrong';
+      }
+    }
+    throw error;
+  }
+}
 
 export async function authenticate(
   prevState: string | undefined,
@@ -287,7 +305,6 @@ export async function updateTournament(formData: FormData) {
     throw new Error('Failed to edit tournament.')
   }
 
-
   revalidatePath('/dashboard/tournaments');
   redirect('/dashboard/tournaments?tournamentedited=ok');
 }
@@ -363,8 +380,6 @@ export const redirectWithParams = async (params: string) => {
 
   redirect(`/dashboard/games/create/${param}`);
 }
-
-
 export async function registerUser(formData : FormData) {
   
     let rawFormData: {
