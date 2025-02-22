@@ -7,6 +7,7 @@ import Home from '@/src/swiss/views/Home'
 
 export default async function Page() {
 
+
   const session = await auth();
   const user_email: string = session?.user?.email!
   
@@ -25,6 +26,7 @@ export default async function Page() {
   
   const leagueId = "00000000-0000-0000-0000-000000000000" //This should be feeded from the previous page or use this one as quick tournament
   const fetchedPlayers = await fetchPlayersByUserEmail(user_email)
+
 
   return (
     <>

@@ -29,6 +29,25 @@ export async function authenticate(
   }
 }
 
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials';
+        default:
+          return 'Oh no i dont believe it, something went wrong';
+      }
+    }
+    throw error;
+  }
+}
+
 /* export async function getId(
   prevState: string | undefined,
   formData: FormData,
@@ -181,7 +200,6 @@ export async function deleteGame(id: string) {
   revalidatePath('/dashboard/games');
   redirect('/dashboard/games?gamedeleted=ok');
 }
-
 
 
 
@@ -362,7 +380,6 @@ export const redirectWithParams = async (params: string) => {
 
   redirect(`/dashboard/games/create/${param}`);
 }
-
 export async function registerUser(formData : FormData) {
   
     let rawFormData: {

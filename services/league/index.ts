@@ -1,5 +1,7 @@
 import { sql } from "@vercel/postgres"
+
 import { League, LeagueAdmin, LeagueJoinTournament, LeagueMod, LeagueWithTournaments, Tournament } from "../lib/definitions"
+
 
 const fetchSelectLeagueData = async () => {
   try {
@@ -183,6 +185,7 @@ const createLeaguesWithTournamentArray = (leaguesJoinedWithTournaments: LeagueJo
         }
         newLeagueWithTournaments.tournaments.push(newTournament);
       }
+
       arrayOfLeaguesWithTournaments.push(newLeagueWithTournaments);
     }
   })
@@ -214,6 +217,7 @@ const fetchLeagueById = async (league_id: string) => {
 
 export const leagueServices = {
   fetchSelectLeagueData,
+
   fetchLeagueMods,
   fetchLeagueById,
   fetchLeaguesWithTournamentsByUserEmail,
