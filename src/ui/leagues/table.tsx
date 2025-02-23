@@ -1,10 +1,8 @@
 
 
-import { LeagueWithTournaments, Tournament, TournamentForLeaguesTable } from '@/services/lib/definitions';
+import { LeagueWithTournaments } from '@/services/lib/definitions';
 import Search from '../search';
-import { leagueServices } from '@/services/league';
 import { DeleteLeague, UpdateLeague } from './buttons';
-import { tournamentServices } from '@/services/tournament';
 import { inter } from '../fonts';
 
 export default async function LeaguesTable({
@@ -47,13 +45,14 @@ export default async function LeaguesTable({
                       className="mb-2 w-full rounded-md bg-white p-4"
                     >
                       <div className="flex items-center justify-between border-b pb-4">
-                        <div>
-                          <div className="mb-2 flex items-center">
-                            <div className="text-2xl flex items-center gap-3">
-                              <p>{league.name}</p>
-                            </div>
+                        <div className="text-2xl flex items-center gap-3">
+                          <p>{league.name}</p>
                           </div>
-                        </div>
+                          <div className='flex gap-2'>
+                            <UpdateLeague league_id={league.id} />
+                            <DeleteLeague id={league.id} />
+                          </div>
+                        
                       </div>
                       {league.tournaments.length == 0 ?
                         <div>
@@ -105,11 +104,12 @@ export default async function LeaguesTable({
                             </div>
                           </div>
                           {league.league_admin == user_email ?
-                          <p className="text-xs italic font-thin">admin: you</p>
-                          :
-                          <p className="text-xs italic font-thin">admin: {league.league_admin}</p>
+                            <p className="text-xs italic font-thin">admin: you</p>
+                            :
+                            <p className="text-xs italic font-thin">admin: {league.league_admin}</p>
                           }
-                          
+
+
 
                           {league.tournaments.length == 0 ?
                             <p className='text-lg indent-6'>No tournaments yet</p>
@@ -119,12 +119,12 @@ export default async function LeaguesTable({
                                 {league.tournaments.length} Tournaments:
                               </p>
                               {league.tournaments.map((tournament, i) => (
-                                
-                                  <p key={tournament.id + i} className='indent-8'>
-                                    {tournament.name} | {tournament.date.toLocaleDateString('en-CA')}
-                                    {tournament.champion_id && " | Champion: " + tournament.champion_name}
-                                  </p> 
-                                  
+
+                                <p key={tournament.id + i} className='indent-8'>
+                                  {tournament.name} | {tournament.date.toLocaleDateString('en-CA')}
+                                  {tournament.champion_id && " | Champion: " + tournament.champion_name}
+                                </p>
+
                               ))}
                             </div>
                           }

@@ -1,21 +1,27 @@
+import { auth } from "@/auth";
 import { leagueServices } from "@/services/league";
 import { playerServices } from "@/services/player";
 import { tournamentServices } from "@/services/tournament";
 import Breadcrumbs from "@/src/ui/games/breadcrumbs";
 import Form from '@/src/ui/leagues/edit-form';
-import { League } from "@/services/lib/definitions";
 
 
  
 export default async function Page(props: { params : Promise<{ id:string}>}) {
+
+    const session = await auth();
+    const user_email = session?.user?.email
+
     const params = await props.params;
     const league_id = params.id;
   
     const { fetchLeagueById } = leagueServices;
+
     const league = await fetchLeagueById(league_id);
 
     const { fetchLeagueMods } = leagueServices;
     const mods = await fetchLeagueMods(league_id);
+
 
     const { fetchTournamentDataByLeagueId } = tournamentServices
     const { tournaments } = await fetchTournamentDataByLeagueId(league_id); 
@@ -39,7 +45,7 @@ export default async function Page(props: { params : Promise<{ id:string}>}) {
           },
         ]}
       />
-      <Form league_id={league_id} league_name={league.leagueName} players={players} tournaments={tournaments} mods={mods.leagueMods}/* players={players} */ />
+      <Form league_id={league_id} league_name={league.leagueName} players={players} tournaments={tournaments} mods={mods.leagueMods} user_email={user_email!}/* players={players} */ />
     </main>
   );
 }

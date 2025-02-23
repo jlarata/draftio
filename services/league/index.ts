@@ -88,6 +88,7 @@ const fetchLeaguesAdmins = async (user_email : string) => {
   }
 }
 
+
 const fetchLeaguesWithTournamentsByUserEmail = async (user_email: string) => {
 
   /* so, we probably should have a simpler method of fetching leagues
@@ -125,19 +126,23 @@ FROM
 WHERE
   lu.p_user_email = ${user_email}
 AND
+
   (
     lu.user_role = 'admin'
   OR
     lu.user_role = 'mod'
   )
+
 )
 `
     const leaguesJoinedWithTournaments = leaguesPromise ?? 'No leagues in database'
     //console.log(leaguesJoinedWithTournaments)
 
+
     const league_admins = await fetchLeaguesAdmins(user_email);
     //console.log(league_admins)
     const arrayOfLeaguesWithTournaments = createLeaguesWithTournamentArray(leaguesJoinedWithTournaments, league_admins.leagueAdmin)
+
 
     return {
       arrayOfLeaguesWithTournaments: arrayOfLeaguesWithTournaments,
