@@ -27,7 +27,6 @@ const fetchPlayersByLeague = async (league_id: string) => {
 
     in the db.
  */
-
     return {
       players: players ?? 'No players in database',
     }
