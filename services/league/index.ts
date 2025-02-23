@@ -222,7 +222,6 @@ const fetchLeagueById = async (league_id: string) => {
 
 export const leagueServices = {
   fetchSelectLeagueData,
-
   fetchLeagueMods,
   fetchLeagueById,
   fetchLeaguesWithTournamentsByUserEmail,

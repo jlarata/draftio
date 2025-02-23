@@ -1,3 +1,7 @@
+export type UserField = {
+  email : string;
+}
+
 export type User = {
   player_id: string;
   name: string;
