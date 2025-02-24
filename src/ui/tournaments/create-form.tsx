@@ -55,7 +55,7 @@ export default function CreateForm(
 
   return (
     <>
-      <div className='w-full mt-6 h-44 md:w-1/2 bg-gray-100 rounded-md'>
+      <div className='w-full md:mt-6 h-44 md:w-1/2 bg-gray-100 rounded-md'>
         <div className='mt-2 flow-root'>
           <div className='overflow-x-auto'>
             <div className='inline-block min-w-full align-middle'>

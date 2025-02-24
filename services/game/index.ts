@@ -169,7 +169,7 @@ const fetchLatestGames = async () =>  {
 
   const ITEMS_PER_PAGE = 6
 
-  const fetchFilteredGames = async (query:string, currentPage:number) => {
+  const fetchFilteredGamesByUserEmail = async (query:string, currentPage:number, user_email:string) => {
     //unstable_noStore()
     const offset = (currentPage - 1) * (ITEMS_PER_PAGE * 2)
     //console.log("current page: "+currentPage+" items per page: "+ITEMS_PER_PAGE+" offset: "+ offset);
@@ -199,24 +199,41 @@ const fetchLatestGames = async () =>  {
       INNER JOIN
         league l
       on t.league_id = l.id
+       
       WHERE
-        pg.game_id
-      IN
-      (SELECT pg.game_id
-        FROM
-          game g
-        INNER JOIN
-          player_game pg
-        ON
-          pg.game_id = g.id
-        INNER JOIN
-          player p
-        ON
-          pg.player_id = p.id
-
-      WHERE
-          g.id = pg.game_id AND pg.player_id = p.id AND p.username ILIKE ${`%${query}%`})
-
+          pg.game_id
+          IN
+          (
+          SELECT
+            pg.game_id
+          FROM
+            game g
+          INNER JOIN
+            player_game pg
+          ON
+            pg.game_id = g.id
+          INNER JOIN
+            player p
+          ON
+            pg.player_id = p.id
+          WHERE
+            (g.id = pg.game_id)
+            AND
+            (pg.player_id = p.id)
+            AND
+            (p.username ILIKE ${`%${query}%`})
+          )
+        AND
+          l.id
+          IN
+          (
+            SELECT
+              lu.league_id
+            FROM
+              league_user lu
+            WHERE
+              lu.p_user_email = ${user_email}
+          )
       ORDER BY
         t.date desc, g.id
 
@@ -288,7 +305,7 @@ const fetchLatestGames = async () =>  {
     }
 }
 
-const fetchGamesPages = async (query: string) => {
+const fetchGamesPagesByUserEmail = async (query: string, user_email:string) => {
   //unstable_noStore()
   try {
     const count = await sql`
@@ -306,8 +323,23 @@ const fetchGamesPages = async (query: string) => {
         INNER JOIN
         league l
         ON (t.league_id = l.id)
+        
       WHERE
-        (SELECT p.username FROM player p WHERE p.id = pg.player_id) ILIKE ${`%${query}%`};
+        (
+        l.id
+        IN
+          (
+          SELECT
+            lu.league_id
+          FROM
+           league_user lu
+          WHERE
+           lu.p_user_email = ${user_email}
+          )
+        )  
+      AND
+        (SELECT p.username FROM player p WHERE p.id = pg.player_id) ILIKE ${`%${query}%`}
+      
   `
     const totalPages = Math.ceil(Number(count.rows[0].count) / (ITEMS_PER_PAGE * 2))
     //console.log("páginas: " +totalPages)
@@ -326,6 +358,6 @@ const fetchGamesPages = async (query: string) => {
 export const gameServices = {
   fetchLatestGames,
   fetchGameById,
-  fetchFilteredGames,
-  fetchGamesPages
+  fetchFilteredGamesByUserEmail,
+  fetchGamesPagesByUserEmail
 }

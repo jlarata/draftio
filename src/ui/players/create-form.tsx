@@ -6,6 +6,7 @@ import { Button } from '../button'
 import TableCellsIcon from '@heroicons/react/20/solid/TableCellsIcon'
 import { Player } from '@/services/lib/definitions'
 import { usePathname } from 'next/navigation'
+import { inter } from '../fonts'
 
 export default function CreateForm({ fetchedPlayers, user_email }: { fetchedPlayers: Player[], user_email:string }) {
   const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {
@@ -49,7 +50,7 @@ export default function CreateForm({ fetchedPlayers, user_email }: { fetchedPlay
 
   return (
     <>
-      <div className='w-full h-44 md:w-1/2 bg-gray-100'>
+      <div className='w-full mt-6 h-44 md:w-1/2 bg-gray-100 rounded-md'>
         <div className='mt-6 flow-root'>
           <div className='overflow-x-auto'>
             <div className='inline-block min-w-full align-middle'>

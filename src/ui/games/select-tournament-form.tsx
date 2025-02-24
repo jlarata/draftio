@@ -1,6 +1,6 @@
 'use client';
 
-import { TournamentField, TournamentForCreateQuery } from '@/services/lib/definitions';
+import { Tournament, TournamentField, TournamentForCreateQuery } from '@/services/lib/definitions';
 import Link from 'next/link';
 import { TableCellsIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import { Button } from '../button';
@@ -17,7 +17,7 @@ type Props = {
 export default function SelectTournamentForm({
   league_id, tournaments
 }: {
-  league_id: string, tournaments: TournamentForCreateQuery[]
+  league_id: string, tournaments: Tournament[]
 })
 
 {
@@ -71,7 +71,7 @@ export default function SelectTournamentForm({
               <option value='' disabled>
                 Select tournament
               </option>
-              {tournaments.map((tournament : TournamentForCreateQuery, index) => (
+              {tournaments.map((tournament, index) => (
                 <option key={tournament.id+index} value={tournament.id}>
                   {tournament.name + ' | ' + tournament.date}
                 </option>

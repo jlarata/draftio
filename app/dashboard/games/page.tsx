@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { gameServices } from "@/services/game";
 import AlertsPage from "@/src/ui/alerts/alerts";
 import { inter } from "@/src/ui/fonts";
@@ -23,12 +24,17 @@ export default async function Page(props: {
   }>;
 }) {
 
-  const { fetchGamesPages } = gameServices;
-
+  
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await fetchGamesPages(query);
+
+  const session = await auth();
+  const user_email: string = session?.user?.email!
+  const { fetchFilteredGamesByUserEmail, fetchGamesPagesByUserEmail } = gameServices;
+  const games = await fetchFilteredGamesByUserEmail(query, currentPage, user_email);
+  const totalPages = await fetchGamesPagesByUserEmail(query, user_email);
+
 
   let gameCreatedMessage = searchParams?.gamecreated || "";
   let gameEditedMessage = searchParams?.gameedited || "";
@@ -58,7 +64,7 @@ export default async function Page(props: {
           <CreateGame />
         </div>
         <Suspense key={query + currentPage} fallback={<GamesTableSkeleton />}>
-          <GamesTable query={query} currentPage={currentPage} />
+          <GamesTable query={query} currentPage={currentPage} games={games} />
         </Suspense>
         <div className="mt-5 flex w-full justify-center">
           <Pagination totalPages={totalPages} />

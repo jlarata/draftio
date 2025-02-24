@@ -141,8 +141,8 @@ export async function createGame(
   if ((rawFormData.pre_player2_wins !== null)) {
     rawFormData.player2_wins = parseInt(formData.get('player2_wins') as string);
   }
-  console.log("creating game");
-  console.log(rawFormData);
+  //console.log("creating game");
+  //console.log(rawFormData);
 
   const { uuid } = await createGameAndReturnID(rawFormData.tournament_id, rawFormData.round);
 
@@ -162,9 +162,9 @@ export async function createGame(
 }
 
 const createGameAndReturnID = async (tournament_id: string, round: number | null) => {
-  console.log("Entro a creategameReturnID")
+  //console.log("Entro a creategameReturnID")
   try {
-    console.log("torneo: " + tournament_id + ", ronda: " + round)
+    //console.log("torneo: " + tournament_id + ", ronda: " + round)
     const { rows: uuid } = await sql<uuid>`INSERT INTO game (tournament_id, round)
       VALUES(${tournament_id}, ${round})
       RETURNING id;`;

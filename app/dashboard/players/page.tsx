@@ -59,7 +59,8 @@ export default async function Page(props: {
 
       <div className="w-full">
         <div className="flex w-full items-center justify-between">
-          <h1 className={`${inter.className} text-2xl`}>All players</h1>
+          <h1 className={`${inter.className} text-2xl`}>Your players</h1>
+          <h1 className={`${inter.className} text-2xl md:mr-6`}>New player</h1>
         </div>
        {/*
          WIP add search bar functionality for players component
