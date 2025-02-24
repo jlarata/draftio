@@ -1,16 +1,17 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { UserIcon } from '@heroicons/react/24/outline'
-import { createPlayer } from '@/services/lib/actions'
+import { createPlayerAndAssociateWithUser } from '@/services/lib/actions'
 import { Button } from '../button'
 import TableCellsIcon from '@heroicons/react/20/solid/TableCellsIcon'
 import { Player } from '@/services/lib/definitions'
 import { usePathname } from 'next/navigation'
 
-export default function CreateForm({ fetchedPlayers }: { fetchedPlayers: Player[] }) {
+export default function CreateForm({ fetchedPlayers, user_email }: { fetchedPlayers: Player[], user_email:string }) {
   const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {
     return fetchedPlayer.username
   })
+  //console.log(fetchedPlayers)
   const [options, setOptions] = useState<string[]>(fetchedPlayersArray)
   const [newOption, setNewOption] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
@@ -36,7 +37,8 @@ export default function CreateForm({ fetchedPlayers }: { fetchedPlayers: Player[
     const formData = new FormData()
     formData.append('nickname', newOption)
     formData.append('origin_url', pathname)
-    await createPlayer(formData)
+    formData.append('user_email', user_email)
+    await createPlayerAndAssociateWithUser(formData)
     handleAddOption()
     setIsLoading(false)
   }

@@ -47,12 +47,16 @@ export default async function LeaguesTable({
                       <div className="flex items-center justify-between border-b pb-4">
                         <div className="text-2xl flex items-center gap-3">
                           <p>{league.name}</p>
-                          </div>
+                        </div>
+
+                        {league.league_admin == user_email ?
                           <div className='flex gap-2'>
                             <UpdateLeague league_id={league.id} />
                             <DeleteLeague id={league.id} />
                           </div>
-                        
+                          :
+                          null
+                        }
                       </div>
                       {league.tournaments.length == 0 ?
                         <div>
@@ -98,10 +102,14 @@ export default async function LeaguesTable({
                             height={28}
                           /> */}
                             <p className="text-2xl">{league.name}</p>
-                            <div className='flex items-center gap-2'>
-                              <UpdateLeague league_id={league.id} />
-                              <DeleteLeague id={league.id} />
-                            </div>
+                            {league.league_admin == user_email ?
+                              <div className='flex items-center gap-2'>
+                                <UpdateLeague league_id={league.id} />
+                                <DeleteLeague id={league.id} />
+                              </div>
+                              :
+                              null
+                            }
                           </div>
                           {league.league_admin == user_email ?
                             <p className="text-xs italic font-thin">admin: you</p>

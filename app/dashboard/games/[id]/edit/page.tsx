@@ -21,8 +21,8 @@ export default async function Page(props: { params : Promise<{ id:string}>}) {
     const { fetchSelectTournamentDataByLeagueName } = tournamentServices;
     const {tournaments} = await fetchSelectTournamentDataByLeagueName(game.league_name);
 
-    const { fetchPlayersByLeague } = playerServices;
-    const {players} = await fetchPlayersByLeague("eventually, a league id string");
+    //const { fetchPlayersByLeague } = playerServices;
+    //const {players} = await fetchPlayersByLeague("eventually, a league id string");
 
 /* 
     const [invoice, customers] = await Promise.all([
@@ -42,7 +42,7 @@ export default async function Page(props: { params : Promise<{ id:string}>}) {
           },
         ]}
       />
-      <Form game={game} leagues={leagues} tournaments={tournaments} players={players} />
+      <Form game={game} leagues={leagues} tournaments={tournaments} /*players={players}*/ />
     </main>
   );
 }

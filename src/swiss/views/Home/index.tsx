@@ -10,7 +10,7 @@ import { Config } from '../../classes/Config'
 import { Player } from '@/services/lib/definitions';
 
 const Home = (
-  {fetchedPlayers, leagueID} : {fetchedPlayers : Player[], leagueID: string}
+  {fetchedPlayers, leagueID, user_email} : {fetchedPlayers : Player[], leagueID: string, user_email:string}
 ) => {
   const { tournament } = useTournament()  
   tournament.databaseInfo.leagueID = leagueID
@@ -68,7 +68,7 @@ const Home = (
         <TournamentName />
         </div>
                  
-          <PlayerForm submitPlayers={submitPlayers} fetchedPlayers={fetchedPlayers} />
+          <PlayerForm user_email={user_email} submitPlayers={submitPlayers} fetchedPlayers={fetchedPlayers} />
         </div>
         <div>
           <TournamentConfig config={config} onConfigChange={handleConfigChange}/>

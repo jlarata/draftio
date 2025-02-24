@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { playerServices } from "@/services/player";
 import AlertsPage from "@/src/ui/alerts/alerts";
 import { inter } from "@/src/ui/fonts";
@@ -23,21 +24,19 @@ export default async function Page(props: {
   }>;
 }) {
 
-
+  const session = await auth();
+  const user_email: string = session?.user?.email!
 
   const { fetchPlayersPages } = playerServices
-  const { fetchPlayersByLeague } = playerServices;
-  
-  /*NEED UPDATE, hardcoding for now */
-  const a_league_id = "00000000-0000-0000-0000-000000000000"
+  const { fetchPlayersByUserEmail } = playerServices;
 
-  const fetchedPlayers = await fetchPlayersByLeague(a_league_id)
+  const fetchedPlayers = await fetchPlayersByUserEmail(user_email)
 
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
 
-  const totalPages = await fetchPlayersPages(query);
+  const totalPages = await fetchPlayersPages(query, user_email);
 
   let playerCreatedMessage = searchParams?.playercreated || "";
   let playerEditedMessage = searchParams?.playeredited || "";
@@ -72,8 +71,8 @@ export default async function Page(props: {
         </div> */}
         <div className="flex flex-row gap-4">
         <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
-           <PlayersTable query={query} currentPage={currentPage}></PlayersTable>
-           <CreateForm fetchedPlayers={fetchedPlayers.players} ></CreateForm>
+           <PlayersTable query={query} currentPage={currentPage} user_email={user_email}></PlayersTable>
+           <CreateForm fetchedPlayers={fetchedPlayers.players} user_email={user_email}></CreateForm>
         </Suspense>
         </div>
         
