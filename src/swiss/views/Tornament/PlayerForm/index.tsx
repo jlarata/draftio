@@ -11,9 +11,9 @@ import Input from '@/src/swiss/components/Input'
 import CreateForm from '@/src/ui/players/create-form'
 
 
-type Props = { submitPlayers: (players: string[]) => void; fetchedPlayers: Player[] }
+type Props = { submitPlayers: (players: string[]) => void; fetchedPlayers: Player[], user_email: string }
 
-const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props) => {
+const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email }: Props) => {
   const router = useRouter()
   const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {
     return fetchedPlayer.username
@@ -60,7 +60,7 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers }: Props) => {
   return (
     <div>
       <div>        
-        <CreateForm fetchedPlayers={fetchedPlayers} ></CreateForm>        
+        <CreateForm fetchedPlayers={fetchedPlayers} user_email={user_email} ></CreateForm>        
 
         {players.map((player, i) => {
           return (
