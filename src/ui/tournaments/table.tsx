@@ -28,7 +28,7 @@ export default async function TournamentsTable({
                       className="mb-px mt-px w-full rounded-md bg-white p-3"
                     >
                       {leagueWithTournaments.tournaments.map((tournament, i) => (
-                        <div className="flex items-center p-1 mb-2 mt-2 justify-around rounded-md border-l border-b pl-2">
+                        <div key={tournament.id+i} className="flex items-center p-1 mb-2 mt-2 justify-around rounded-md border-l border-b pl-2">
                           <div>
                             <div className="mb-2 flex flex-col items-center">
                               <div className="flex gap-3 items-center">
@@ -71,7 +71,7 @@ export default async function TournamentsTable({
                             height={28}
                           /> */}
                         {leagueWithTournaments.tournaments.map((tournament, i) => (
-                          <td className="bg-white py-5 pl-4 pr-3 text-xl text-black rounded-md sm:pl-6">
+                          <td key={tournament.id+i} className="bg-white py-5 pl-4 pr-3 text-xl text-black rounded-md sm:pl-6">
                             <div className="flex items-center justify-between ">
                               <p>{tournament.name} | <span className='text-base'>{tournament.date.toLocaleDateString('en-CA')}</span></p>
                               <div className='flex flex-row items-center'>

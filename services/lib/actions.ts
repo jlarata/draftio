@@ -213,7 +213,7 @@ export async function createLeague(user_email: string, formData: FormData) {
 export async function updateLeague(id: string, formData: FormData) {
   let { name } = ({
     name: formData.get('name') as string,
-  }) 
+  })
   try {
     await sql`
     UPDATE league
@@ -260,17 +260,17 @@ export async function deletePlayer(id: string) {
 }
 
 export async function updateTournament(formData: FormData) {
-  let { id, name,rawDate, champion, league } = ({
+  let { id, name, rawDate, champion, league } = ({
     id: formData.get('id') as string,
     name: formData.get('name') as string,
     rawDate: formData.get('date') as string,
     champion: formData.get('champion') as string | null,
     league: formData.get('league') as string,
-  }) 
+  })
 
-  if (champion === "" ) { champion = null}
+  if (champion === "") { champion = null }
   let date = rawDate.toString()
-  
+
   try {
     await sql`
     UPDATE tournament
@@ -307,25 +307,47 @@ export async function deleteTournament(id: string) {
   redirect('/dashboard/tournaments?tournamentdeleted=ok');
 }
 
-export async function createPlayer(
+export async function createPlayerAndAssociateWithUser(
   formData: FormData) {
   let rawFormData: {
     nickname: string,
     origin_url: string,
+    user_email: string
   } = {
     nickname: formData.get('nickname') as string,
     origin_url: formData.get('origin_url') as string,
+    user_email: formData.get('user_email') as string,
   };
   //console.log(rawFormData); 
-  console.log("creating player");
-  console.log(rawFormData);
+  //console.log("creating player");
+  //console.log(rawFormData);
+
+  const player_id = await createPlayer(rawFormData.nickname)
+
+  //console.log("associating player id= " + player_id.player_id[0].id + "with user_email= " + rawFormData.user_email);
 
   await sql`
-        INSERT INTO player (username)
-           VALUES (${rawFormData.nickname});`;
+  INSERT INTO user_player (user_email, player_id)
+              VALUES (${rawFormData.user_email}, ${player_id.player_id[0].id});`;
 
   revalidatePath(`${rawFormData.origin_url}`);
   redirect(`${rawFormData.origin_url}?playercreated=ok`);
+}
+
+async function createPlayer(username: string) {
+
+  try {
+    const { rows: player_id } = await sql<uuid>`
+        INSERT INTO player (username)
+        VALUES (${username})
+        RETURNING Id;`
+    return {
+      player_id: player_id
+    }
+  } catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to create player and return the uuid.')
+  }
 }
 
 export async function createTournament(
@@ -365,21 +387,21 @@ export const redirectWithParams = async (params: string) => {
 }
 
 
-export async function registerUser(formData : FormData) {
-  
-    let rawFormData: {
-      email : string,
-      nickname: string,
-      password : string,
-    } = {
-      email: formData.get('email') as string,
-      nickname: formData.get('nickname') as string,
-      password: formData.get('password') as string,
-    };
+export async function registerUser(formData: FormData) {
 
-    const hashedPassword = await bcrypt.hash(rawFormData.password, 10)
-  
-    await sql`
+  let rawFormData: {
+    email: string,
+    nickname: string,
+    password: string,
+  } = {
+    email: formData.get('email') as string,
+    nickname: formData.get('nickname') as string,
+    password: formData.get('password') as string,
+  };
+
+  const hashedPassword = await bcrypt.hash(rawFormData.password, 10)
+
+  await sql`
         INSERT INTO p_user (email, name, password)
           VALUES (${rawFormData.email}, ${rawFormData.nickname}, ${hashedPassword});`;
 

@@ -11,6 +11,7 @@ export default async function Page(props: {
   searchParams?: Promise<{
     modNotFound?: string;
     existentLeagueUser?:string;
+    modAdded?:string;
   }>;
 }) {
 
@@ -18,6 +19,7 @@ export default async function Page(props: {
 
   let modNotFoundMessage = searchParams?.modNotFound || "";
   let existentLeagueUserMessage = searchParams?.existentLeagueUser || "";
+  let modAddedMessage = searchParams?.modAdded || "";
 
   const session = await auth();
   const user_email = session?.user?.email
@@ -53,6 +55,12 @@ export default async function Page(props: {
       {existentLeagueUserMessage && (
         <WrongPage someText={'Selected user is already admin of this League'} originalPath={`/dashboard/leagues/${league_id}/edit`}></WrongPage>
       )}
+      {modAddedMessage && (
+        <AlertsPage someText={'User was successfully added as mod to this League'} originalPath={`/dashboard/leagues/${league_id}/edit`}></AlertsPage>
+      )}
+
+
+
       <Breadcrumbs
         breadcrumbs={[
           { label: 'Leagues', href: '/dashboard/leagues' },
