@@ -115,6 +115,7 @@ export default function EditLeagueForm({
               >
                 {players.map((player, i) => (
                   <option
+                  key={player.id+i}
                     value={player.id}>{player.username}</option>
                 ))}
 
@@ -140,6 +141,7 @@ export default function EditLeagueForm({
               >
                 {leagues.map((league, i) => (
                   <option
+                  key={league.id+i}
                     value={league.id}>{league.name}</option>
                 ))}
 

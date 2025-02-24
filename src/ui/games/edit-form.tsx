@@ -15,13 +15,16 @@ export default function EditGameForm({
   game,
   leagues,
   tournaments,
-  players
+  //players
 }: {
   game: GameForm
   leagues: LeagueField[];
   tournaments : TournamentField[];
-  players : PlayerField[];
+  //players : PlayerField[];
 }) {
+
+  //ESTO ES APRA QUE NO SE ROMPA TODO AHORA LUEGO ARREGLAR!!!
+  const players : PlayerField[] = []
 
   const [player1, setPlayer1] = useState(game.player1);
   const [previousPlayer1, setPreviousPlayer1] = useState("");  

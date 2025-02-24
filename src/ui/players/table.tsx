@@ -1,5 +1,4 @@
 
-
 import { League, PlayersTableType, Player } from '@/services/lib/definitions';
 import Search from '../search';
 import { playerServices } from '@/services/player';
@@ -7,11 +6,13 @@ import { DeletePlayer } from './buttons';
 
 export default async function PlayersTable({
   //league,
-  query, currentPage
+  query, currentPage,
+  user_email
 }: {
   //league: League;
   query: string;
   currentPage: number;
+  user_email: string;
 }) {
 
   /* the games component uses query and currentpage for displaying the games.
@@ -19,8 +20,8 @@ export default async function PlayersTable({
 
   const games = await fetchFilteredGames(query, currentPage);*/
 
-  const { fetchPlayersByLeague } = playerServices;
-  const players : Player[] = (await fetchPlayersByLeague("someLeagueId-> thats where the props leaguefield is going")).players;
+  const { fetchPlayersByUserEmail } = playerServices;
+  const players : Player[] = (await fetchPlayersByUserEmail(user_email)).players;
   
   return (
     <>

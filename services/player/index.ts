@@ -46,15 +46,15 @@ const fetchPlayersByUserEmail = async (user_email: string) => {
     FROM
       player p
     WHERE
-      p.league_id
+      p.id
     IN
     (
       SELECT
-        lu.league_id
+        up.player_id
       FROM
-        league_user lu
+        user_player up
       WHERE
-        lu.p_user_email = ${user_email}
+        up.user_email = ${user_email}
     )
     ORDER BY
       p.username
@@ -84,14 +84,25 @@ const fetchPlayersByUserEmail = async (user_email: string) => {
 
 const ITEMS_PER_PAGE = 6
 
-const fetchPlayersPages = async (query: string) => {
+const fetchPlayersPages = async (query: string, user_email:string) => {
   //unstable_noStore()
   try {
     const count = await sql`
       SELECT COUNT(*)
-      FROM player p
-      
+      FROM
+        player p
       WHERE
+      p.league_id
+      IN
+      (
+        SELECT
+          lu.league_id
+      FROM
+        league_user lu
+      WHERE
+        lu.p_user_email = ${user_email}
+      )
+      AND
         p.username ILIKE ${`%${query}%`};
   `
     const totalPages = Math.ceil(Number(count.rows[0].count) / (ITEMS_PER_PAGE * 2))
