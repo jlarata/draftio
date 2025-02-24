@@ -30,7 +30,7 @@ export default async function Page() {
 
   return (
     <>
-      <Home fetchedPlayers={fetchedPlayers.players} leagueID={leagueId} />
+      <Home user_email={user_email} fetchedPlayers={fetchedPlayers.players} leagueID={leagueId} />
     </>
   )
 }
