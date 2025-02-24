@@ -43,8 +43,8 @@ export default async function Page(props: {
     const players = await fetchPlayersByLeagueOwner(league_id);
     return players;
   }
-  
 
+  
   return (
     <main>
       <Breadcrumbs

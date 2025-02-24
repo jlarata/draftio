@@ -8,6 +8,7 @@ import { Player } from '@/services/lib/definitions'
 import { usePathname } from 'next/navigation'
 import { inter } from '../fonts'
 
+
 export default function CreateForm({ fetchedPlayers, user_email }: { fetchedPlayers: Player[], user_email:string }) {
   const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {
     return fetchedPlayer.username
