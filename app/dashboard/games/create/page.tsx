@@ -1,3 +1,4 @@
+import { auth } from '@/auth'
 import { leagueServices } from '@/services/league'
 import { playerServices } from '@/services/player'
 import { tournamentServices } from '@/services/tournament'
@@ -14,12 +15,19 @@ export default async function Page(props: {
   }>
 }) {
 
-  const { fetchSelectLeagueData } = leagueServices;
-  const { fetchPlayersByLeague } = playerServices;
-  const { fetchSelectTournamentData } = tournamentServices;
+  const session = await auth();
+  const user_email: string = session?.user?.email!
 
-  const { leagues } = await fetchSelectLeagueData();
+  const { fetchLeaguesWithTournamentsByUserEmail } = leagueServices;
+  const leaguesWithTournaments = await fetchLeaguesWithTournamentsByUserEmail(user_email);
+  
+  const { fetchPlayersByLeagueOwner } = playerServices;
+  //const { players } = await fetchPlayersByUserEmail(user_email)
 
+
+  const { fetchTournamentDataByLeagueId } = tournamentServices;
+
+  
   const leagueSearchParams = await props.searchParams
   const tournamentSearchParams = await props.searchParams
   const league_id = leagueSearchParams?.league_id || ''
@@ -27,12 +35,16 @@ export default async function Page(props: {
   
   
   const setTournaments = async (league_id : string) => {
-    const { tournaments } = await fetchSelectTournamentData({ league_id });
+    const tournaments = await fetchTournamentDataByLeagueId(league_id);
     return tournaments;
   }
-  
-  const { players } = await fetchPlayersByLeague(league_id)
 
+  const setPlayers = async (league_id : string) => {
+    const players = await fetchPlayersByLeagueOwner(league_id);
+    return players;
+  }
+
+  
   return (
     <main>
       <Breadcrumbs
@@ -46,16 +58,16 @@ export default async function Page(props: {
         ]}
       />
 
-      {!league_id && <SelectLeagueForm leagues={leagues} />}
+      {!league_id && <SelectLeagueForm leagues={leaguesWithTournaments.arrayOfLeaguesWithTournaments} />}
 
       {league_id && <>
-        {!tournament_id && <SelectTournamentForm league_id={league_id} tournaments={await setTournaments(league_id)} />}
+        {!tournament_id && <SelectTournamentForm league_id={league_id} tournaments={(await setTournaments(league_id)).tournaments} />}
         </>
       }
 
       {tournament_id && (
         <>
-          <CreateForm league_id={league_id} tournament_id={tournament_id} players={players} />
+          <CreateForm league_id={league_id} tournament_id={tournament_id} players={(await setPlayers(league_id)).players} />
         </>
       )}
     </main>

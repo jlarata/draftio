@@ -57,6 +57,7 @@ export default async function Page(props: {
       <div className="w-full">
         <div className="flex w-full items-center justify-between">
           <h1 className={`${inter.className} text-2xl`}>Your Tournaments</h1>
+          <h1 className={`${inter.className} collapse text-2xl md:visible mr-6`}>New Tournament</h1>
         </div>
         {/*
          WIP add search bar functionality for tournaments component??
@@ -67,6 +68,7 @@ export default async function Page(props: {
         <div className="flex flex-col gap-4 md:flex-row">
           <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
             <TournamentsTable leaguesWithTournaments={leaguesWithTournaments} query={query} currentPage={currentPage}></TournamentsTable>
+            <h1 className={`${inter.className} mt-6 visible text-2xl md:hidden`}>New Tournament</h1>
             <CreateForm leaguesWithTournaments={leaguesWithTournaments}></CreateForm>
 
           </Suspense>
