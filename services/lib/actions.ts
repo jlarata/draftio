@@ -384,6 +384,24 @@ export const redirectWithParams = async (params: string) => {
   redirect(`/dashboard/games/create/${param}`);
 }
 
+async function validateEmail(user_email: string) {
+  
+  const userWithMailPromise = await sql`
+  SELECT COUNT(*)
+  FROM p_user p
+  WHERE p.email = ${user_email}
+  `
+
+
+  const userWithMail = userWithMailPromise.rows[0].count
+
+  if (userWithMail == 1) {
+    return false
+  }
+  return true
+
+}
+
 
 export async function registerUser(formData: FormData) {
 
@@ -399,11 +417,21 @@ export async function registerUser(formData: FormData) {
 
   const hashedPassword = await bcrypt.hash(rawFormData.password, 10)
 
-  await sql`
+  const mailIsValid = await validateEmail(rawFormData.email)
+
+  if (mailIsValid) {
+    await sql`
         INSERT INTO p_user (email, name, password)
           VALUES (${rawFormData.email}, ${rawFormData.nickname}, ${hashedPassword});`;
 
-  revalidatePath(`/`);
-  redirect(`/`);
+    revalidatePath(`/dashboard?userCreated=ok`);
+    redirect(`/dashboard?userCreated=ok`);
+  }
+  
+  console.log("user exists")
+  revalidatePath(`/register?alreadyUsedEmail=ok`);
+  redirect(`/register?alreadyUsedEmail=ok`);
+  
+  
 }
 
