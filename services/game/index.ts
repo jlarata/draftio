@@ -4,7 +4,7 @@ import { revalidatePath, unstable_noStore } from 'next/cache';
 import { gamesByDate } from '../lib/utils';
 
 
-const fetchLatestGames = async () =>  {
+const fetchLatestGames = async (user_email : string) =>  {
   //unstable_noStore()
     try {
       const { rows: latestGames } = await sql<LatestGames>`
@@ -31,6 +31,17 @@ const fetchLatestGames = async () =>  {
       league l
       on t.league_id = l.id
   
+      WHERE
+        l.id
+      IN
+      (
+      SELECT
+        lu.league_id
+      FROM league_user lu
+      WHERE
+        lu.p_user_email = ${user_email}
+      )
+
       ORDER BY
       g.id
   

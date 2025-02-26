@@ -18,15 +18,15 @@ export default function NavLinks(user : User) {
 
   const links = [
     { name: 'Home', href: '/dashboard', icon: HomeIcon },
+    { name: 'Leagues', href: '/dashboard/leagues', icon: TableCellsIcon },
+    { name: 'Tournaments', href: '/dashboard/tournaments', icon: TrophyIcon },
     {
       name: 'Players',
       href: '/dashboard/players',
       icon: UserGroupIcon,
     },
     { name: 'Games', href: '/dashboard/games', icon: PuzzlePieceIcon },
-    { name: 'Tournaments', href: '/dashboard/tournaments', icon: TrophyIcon },
-    { name: 'Leagues', href: '/dashboard/leagues', icon: TableCellsIcon },
-
+    
     user.name ?
     { name: `${user.name} | Control Panel`, href: '/dashboard/cp', icon: UserIcon} :
     { name: `${user.email} | Control Panel`, href: '/dashboard/cp', icon: UserIcon},
