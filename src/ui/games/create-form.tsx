@@ -259,7 +259,7 @@ export default function CreateForm({
             Cancel
           </Link>
           <Button type='submit' disabled={isLoading} onClick={handleCreateRound}>
-            {isLoading ? 'Loading...' : 'Create New Round'}
+            {isLoading ? 'Loading...' : 'Create New Game'}
           </Button>
         </div>
       </form>

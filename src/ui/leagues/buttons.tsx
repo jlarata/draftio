@@ -16,7 +16,7 @@ export function UpdateLeague({ league_id }: { league_id : string }) {
 
  export function DeleteLeague({ id, hasTournaments }: { id: string, hasTournaments : boolean }) {
   const deleteLeagueWithId = deleteLeague.bind(null, id)
-  console.log("has touraments? "+hasTournaments)
+  //console.log("has touraments? "+hasTournaments)
   return (
     <><form action={deleteLeagueWithId}>
         <button
