@@ -50,9 +50,22 @@ export default async function LeaguesTable({
                         </div>
 
                         {league.league_admin == user_email ?
-                          <div className='flex gap-2'>
-                            <UpdateLeague league_id={league.id} />
-                            <DeleteLeague id={league.id} />
+                          <div className='flex flex-col items-end gap-2'>
+                            <div className='flex gap-2'>
+                              <UpdateLeague league_id={league.id} />
+                              { (league.tournaments.length != 0) ?
+                                <DeleteLeague hasTournaments={true} id={league.id} /> :
+                                <DeleteLeague hasTournaments={false} id={league.id} />
+                              }
+                            </div>
+
+                            {(league.tournaments.length != 0) ?
+                              <div className='text-xs font-light italic'>
+                              Can't delete a league with Tournaments
+                            </div>
+                              :
+                              null
+                            }
                           </div>
                           :
                           null
@@ -105,7 +118,16 @@ export default async function LeaguesTable({
                             {league.league_admin == user_email ?
                               <div className='flex items-center gap-2'>
                                 <UpdateLeague league_id={league.id} />
-                                <DeleteLeague id={league.id} />
+                                {!league.tournaments ?
+                                  <DeleteLeague hasTournaments={false} id={league.id} /> :
+                                  <DeleteLeague hasTournaments={true} id={league.id} />
+                                }
+                                {league.tournaments ?
+                                  <div className='text-xs font-light italic'>
+                                    Can't delete a league with Tournaments
+                                  </div>
+                                  : null
+                                }
                               </div>
                               :
                               null

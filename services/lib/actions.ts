@@ -230,9 +230,7 @@ export async function updateLeague(id: string, formData: FormData) {
 }
 
 export async function deleteLeague(id: string) {
-  /* do we even want this function? VERY dangerous */
-  /* await sql`DELETE FROM league WHERE id = ${id}`; */
-  console.log(`league ${id} would have been eliminated if this was enabled`)
+  await sql`DELETE FROM league WHERE id = ${id}`;
   revalidatePath('/dashboard/leagues');
   redirect('/dashboard/leagues?leaguedeleted=ok');
 }
