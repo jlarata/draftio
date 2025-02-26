@@ -2,13 +2,64 @@ import { sql } from '@vercel/postgres'
 import { unstable_noStore } from 'next/cache';
 
 
-const fetchCardData = async () =>  {
+const fetchCardData = async (user_email : string) =>  {
   //unstable_noStore()
   try {
-    const gamesCountPromise = sql`SELECT COUNT(*) FROM game`
-    const playersCountPromise = sql`SELECT COUNT(*) FROM player`
-    const leaguesCountPromise = sql`SELECT COUNT(*) FROM league`
-    const tournamentsCountPromise = sql`SELECT COUNT(*) FROM tournament`
+    const gamesCountPromise = sql`
+    SELECT COUNT(*)
+    FROM
+      game g
+    WHERE
+      g.tournament_id
+    IN
+    (
+      SELECT t.id
+      FROM
+        tournament t
+      WHERE t.league_id
+      IN
+      (
+        SELECT lu.league_id
+        FROM
+          league_user lu
+        WHERE
+          lu.p_user_email = ${user_email}
+      )
+    )
+    `
+    const playersCountPromise = sql`SELECT COUNT(*) FROM player p
+    WHERE p.league_id
+      IN
+      (
+        SELECT lu.league_id
+        FROM
+          league_user lu
+        WHERE
+          lu.p_user_email = ${user_email}
+      )
+    `
+    const leaguesCountPromise = sql`SELECT COUNT(*) FROM league l
+    WHERE
+      l.id
+    IN
+      (
+        SELECT lu.league_id
+        FROM
+          league_user lu
+        WHERE
+          lu.p_user_email = ${user_email}
+      )`
+    const tournamentsCountPromise = sql`SELECT COUNT(*) FROM tournament t
+    WHERE
+      t.league_id
+    IN
+      (
+        SELECT lu.league_id
+        FROM
+          league_user lu
+        WHERE
+          lu.p_user_email = ${user_email}
+      )`
 
     const data = await Promise.all([
       gamesCountPromise,
