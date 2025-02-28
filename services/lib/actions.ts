@@ -392,7 +392,6 @@ async function validateEmail(user_email: string) {
   WHERE p.email = ${user_email}
   `
 
-
   const userWithMail = userWithMailPromise.rows[0].count
 
   if (userWithMail == 1) {
