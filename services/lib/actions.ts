@@ -399,7 +399,6 @@ async function validateEmail(user_email: string) {
     return false
   }
   return true
-
 }
 
 
