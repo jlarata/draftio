@@ -383,6 +383,7 @@ export const redirectWithParams = async (params: string) => {
 
   redirect(`/dashboard/games/create/${param}`);
 }
+
 async function validateEmail(user_email: string) {
   
   const userWithMailPromise = await sql`
