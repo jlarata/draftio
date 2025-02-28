@@ -41,12 +41,6 @@ export default async function Page(props: {
     return tournaments;
   }
 
-  const setPlayers = async (league_id : string) => {
-    const players = await fetchPlayersByLeagueOwner(league_id);
-    return players;
-  }
-
-
 
   const setPlayers = async (league_id : string) => {
     const players = await fetchPlayersByLeagueOwner(league_id);
