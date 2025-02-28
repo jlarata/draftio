@@ -383,7 +383,6 @@ export const redirectWithParams = async (params: string) => {
 
   redirect(`/dashboard/games/create/${param}`);
 }
-
 async function validateEmail(user_email: string) {
   
   const userWithMailPromise = await sql`
@@ -391,6 +390,7 @@ async function validateEmail(user_email: string) {
   FROM p_user p
   WHERE p.email = ${user_email}
   `
+
 
   const userWithMail = userWithMailPromise.rows[0].count
 
