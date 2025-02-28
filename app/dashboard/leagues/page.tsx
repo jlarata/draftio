@@ -49,7 +49,7 @@ export default async function Page(props: {
             )}
 
             {leagueDeletedMessage && (
-                <WrongPage someText={'You have great power but not great responsability!'} originalPath="/dashboard/leagues"></WrongPage>
+                <WrongPage someText={'League succesfully deleted!'} originalPath="/dashboard/leagues"></WrongPage>
             )}
 
             <div className="w-full">

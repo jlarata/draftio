@@ -1,11 +1,13 @@
 import { auth } from '@/auth'
 import { leagueServices } from '@/services/league'
+import { players } from '@/services/lib/placeholder-data'
 import { playerServices } from '@/services/player'
 import { tournamentServices } from '@/services/tournament'
 import Breadcrumbs from '@/src/ui/games/breadcrumbs'
 import CreateForm from '@/src/ui/games/create-form'
 import SelectLeagueForm from '@/src/ui/games/select-league-form'
 import SelectTournamentForm from '@/src/ui/games/select-tournament-form'
+import Link from 'next/link'
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -21,9 +23,9 @@ export default async function Page(props: {
   const { fetchLeaguesWithTournamentsByUserEmail } = leagueServices;
   const leaguesWithTournaments = await fetchLeaguesWithTournamentsByUserEmail(user_email);
   
-  const { fetchPlayersByLeagueOwner } = playerServices;
+  const { fetchPlayersByLeagueOwner, fetchPlayersByUserEmail } = playerServices;
   //const { players } = await fetchPlayersByUserEmail(user_email)
-
+  const playersOfUser = (await fetchPlayersByUserEmail(user_email)).players
 
   const { fetchTournamentDataByLeagueId } = tournamentServices;
 
@@ -44,6 +46,13 @@ export default async function Page(props: {
     return players;
   }
 
+
+
+  const setPlayers = async (league_id : string) => {
+    const players = await fetchPlayersByLeagueOwner(league_id);
+    return players;
+  }
+
   
   return (
     <main>
@@ -57,6 +66,29 @@ export default async function Page(props: {
           },
         ]}
       />
+
+      {leaguesWithTournaments.arrayOfLeaguesWithTournaments.length == 0 && (
+          <div className='my-2 p-2 flex flex-row items-center gap-2 rounded-md border-2 border-red-400  text-red-400'>
+             <div className='text-black font-bold'>x</div>
+             <div>You have no leagues & tournaments associated with your account. Please
+             <Link
+                href={"/dashboard/leagues"} className='text-blue-600'> create leagues </Link>
+                and tounaments to insert games</div>
+             </div>
+      )}
+
+      {playersOfUser.length == 0 && (
+        <div className='my-2 p-2 flex flex-row items-center gap-2 rounded-md border-2 border-red-400  text-red-400'>
+          <div className='text-black font-bold'>x</div>
+          <div>
+          Warning: there are no players associated with your user. You wont be able to create games for the leagues you own. Please 
+          <Link
+          href={"/dashboard/players"} className='text-blue-600'> create players </Link>
+            </div>
+            <div>first.</div>
+          </div>
+      )}
+
 
       {!league_id && <SelectLeagueForm leagues={leaguesWithTournaments.arrayOfLeaguesWithTournaments} />}
 

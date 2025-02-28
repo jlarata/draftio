@@ -8,7 +8,11 @@ export const authConfig = {
         authorized({ auth, request: { nextUrl } }) {
             const isLoggedIn = !!auth?.user?.name
             const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
+            const isOnRegister = nextUrl.pathname.startsWith('/register');
             const isOnSwiss = nextUrl.pathname.startsWith('/swiss');
+            if (isOnRegister) {
+                return true;
+            }
             if (isOnDashboard) {
                 if (isLoggedIn) {
                     //console.log("User: " + auth?.user?.id);

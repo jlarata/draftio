@@ -5,11 +5,13 @@ import { gamesChartConfig } from './config'
 import { ChartServices } from '@/services/games-chart'
 
 
-export default async function GamesChart() {
+export default async function GamesChart(
+  {user_email} : {user_email : string}
+) {
   /* const { fetchSelectTournamentData } = tournamentServices
   const { tournaments } = await fetchSelectTournamentData({ leagueId }) */
   const { fetchGamesAndTournamentsForChart } = ChartServices;
-  const { games, tournaments } = await fetchGamesAndTournamentsForChart();
+  const { games, tournaments } = await fetchGamesAndTournamentsForChart(user_email);
 
   const { generateLast12Months, generateYAxis } = gamesChartUtils
 
@@ -24,7 +26,7 @@ export default async function GamesChart() {
     <div className='w-full md:col-span-4'>
       <h2 className={`${inter.className} mb-4 text-xl md:text-2xl`}>Last 12 months</h2>
 
-      <div className='rounded-xl bg-gray-50 p-4'>
+      <div className='rounded-xl bg-gray-100 p-4'>
         <div className='flex flex-row gap-2'>
           <div
             className='mb-6 flex-col justify-between text-sm text-gray-400 flex'

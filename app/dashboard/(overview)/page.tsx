@@ -9,6 +9,7 @@ import { Suspense } from "react";
 export default async function Page() {
 
   const session = await auth()
+  const user_email = session?.user?.email!
   //console.log("hola, ", session?.user?.id, session?.user?.email, session?.user?.name)
 
   return (
@@ -18,15 +19,15 @@ export default async function Page() {
       </h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Suspense fallback={<CardSkeleton />}>
-          <CardWrapper />
+          <CardWrapper user_email={user_email}/>
         </Suspense>
       </div>
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
         <Suspense fallback={<GamesChartSkeleton />}>
-          <GamesChart />
+          <GamesChart user_email={user_email}/>
         </Suspense>
         <Suspense fallback={<LatestGamesSkeleton />}>
-          <LatestGames />
+          <LatestGames user_email={user_email}/>
         </Suspense>
       </div>
     </main>
