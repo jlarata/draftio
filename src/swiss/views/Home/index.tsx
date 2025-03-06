@@ -12,19 +12,17 @@ import SelectLeagueSwiss from '../Tornament/PlayerForm/LeagueSelect';
 import CreateTournamentSwiss from '../Tornament/PlayerForm/CreateTournamentSwiss/create-form';
 
 const Home = (
-  { fetchedPlayers, user_email, leagueArrayId }: { fetchedPlayers: Player[], user_email: string, leagueArrayId: LeagueWithTournaments[] }
+  { selectedPlayers, user_email, leagueArrayId }: { selectedPlayers: Player[], user_email: string, leagueArrayId: LeagueWithTournaments[] }
 ) => {
   const { tournament } = useTournament()
-  console.log(tournament.databaseInfo.leagueID)
   tournament.databaseInfo.userEmail = user_email //Esto hay que pasarlo a setUserEmail ? 
   const handleLeagueChange = (leagueID: string) => { //este bloque se puede sacar, esta para test
-    console.log(tournament)
   };
 
-  const submitPlayers = (players: string[]) => {
+  const submitPlayers = (players: Player[]) => {
     const date = new Date().toISOString()
-    tournament.startTournament({ playersNames: players, date: date, config: config })
-    console.log('Start Tournament: ', tournament)
+    tournament.startTournament({ players: players, date: date, config: config })
+    //console.log('Start Tournament: ', tournament)
   }
 
   const [config, setConfig] = useState<Config>(
@@ -73,7 +71,7 @@ const Home = (
         <div>
           <CreateTournamentSwiss leaguesWithTournaments={leagueArrayId} onLeagueChange={handleLeagueChange} />
        
-          <PlayerForm user_email={user_email} submitPlayers={submitPlayers} fetchedPlayers={fetchedPlayers} />
+          <PlayerForm user_email={user_email} submitPlayers={submitPlayers} fetchedPlayers={selectedPlayers} />
         </div>
         <div>
           <TournamentConfig config={config} onConfigChange={handleConfigChange} />
