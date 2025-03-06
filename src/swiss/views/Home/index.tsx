@@ -7,13 +7,18 @@ import TournamentName from '../Tornament/TournamentName'
 import { useState } from 'react'
 import { useTournament } from '../../context/tournament'
 import { Config } from '../../classes/Config'
-import { Player } from '@/services/lib/definitions';
+import { LeagueWithTournaments, Player } from '@/services/lib/definitions';
+import SelectLeagueSwiss from '../Tornament/PlayerForm/LeagueSelect';
+import CreateTournamentSwiss from '../Tornament/PlayerForm/CreateTournamentSwiss/create-form';
 
 const Home = (
-  {fetchedPlayers, leagueID, user_email} : {fetchedPlayers : Player[], leagueID: string, user_email:string}
+  {fetchedPlayers, user_email, leagueArrayId} : {fetchedPlayers : Player[], user_email:string, leagueArrayId:LeagueWithTournaments[]}
 ) => {
-  const { tournament } = useTournament()  
-  tournament.databaseInfo.leagueID = leagueID
+  const { tournament } = useTournament()
+  console.log(tournament.databaseInfo.leagueID)
+  const handleLeagueChange = (leagueID: string) => { //este bloque se puede sacar, esta para test
+    console.log(tournament)
+  };
 
   const submitPlayers = (players: string[]) => {
     const date = new Date().toISOString()
@@ -59,11 +64,17 @@ const Home = (
     });
   };
 
+
   return (
     <>
       <div className={css.container}>
         
         <div>
+          <CreateTournamentSwiss  leaguesWithTournaments={leagueArrayId} onLeagueChange={handleLeagueChange}/>
+
+          {/* <div>          
+          <SelectLeagueSwiss leagues={leagueArrayId} onLeagueChange={handleLeagueChange} /> 
+          </div> */}
         <div>
         <TournamentName />
         </div>
@@ -73,8 +84,7 @@ const Home = (
         <div>
           <TournamentConfig config={config} onConfigChange={handleConfigChange}/>
         </div>
-        
-
+          
       </div>
     </>
   )
