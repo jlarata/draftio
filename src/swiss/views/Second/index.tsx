@@ -22,7 +22,7 @@ const Second = ({ fetchedPlayers }: Props) => {
   const [roundConfirmed, setRoundConfirmed] = useState<Record<number, boolean>>({})
   const [refreshScore, setRefreshScore] = useState(false)
   const urlPathname = usePathname()
-  tournament.databaseInfo.touranmentID = "00000000-0000-0000-0000-000000000301" //Este es el qeu hay que fetchear
+  //tournament.databaseInfo.touranmentID = "00000000-0000-0000-0000-000000000301" //Este es el qeu hay que fetchear
  
 
   useEffect(() => {
