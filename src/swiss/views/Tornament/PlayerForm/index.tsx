@@ -12,6 +12,9 @@ import CreateForm from '@/src/ui/players/create-form'
 import { createTournament } from '@/services/lib/actions'
 import { useTournament } from '@/src/swiss/context/tournament'
 
+import { useTournament } from '@/src/swiss/context/tournament'
+import { createTournamentSwiss } from '@/services/lib/actions'
+
 
 type Props = { submitPlayers: (players: string[]) => void; fetchedPlayers: Player[], user_email: string }
 
@@ -28,15 +31,15 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email }: Props) => {
   const [options, setOptions] = useState<string[]>(fetchedPlayersArray)
   const pathname = usePathname()
   const [isLoading, setIsLoading] = useState(false)
-  
+
   const handleRefreshOptions = () => {
     setOptions(fetchedPlayersArray)
   }
 
-  const handlePlayerNameChange = ({ name, index }: { name: string; index: number }) => {   
-    setPlayers((prevPlayers) => 
+  const handlePlayerNameChange = ({ name, index }: { name: string; index: number }) => {
+    setPlayers((prevPlayers) =>
       prevPlayers.map((player, i) => (i === index ? name : player))
-    );  
+    );
   }
 
   const removePlayer = (index: number) => {
@@ -79,14 +82,31 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email }: Props) => {
     setIsLoading(false)
   }
 
+  const handleCreateTournament = async () => {
+
+
+    setIsLoading(true)
+    const formData = new FormData()
+    formData.append('seed', tournament.seed) //Revisar que pasa con el seed
+    formData.append('name', tournament.databaseInfo.name)
+    formData.append('league_id', tournament.databaseInfo.leagueID)
+    formData.append('champion_id', tournament.databaseInfo.ChampionUuid)
+    formData.append('date', tournament.databaseInfo.date)
+    console.log(formData)
+    const tournamentID = await createTournamentSwiss(formData)
+    console.log(tournamentID.rows[0].id) //esta mal definida 
+    tournament.databaseInfo.touranmentID = tournamentID.rows[0].id
+    setIsLoading(false)
+  }
+
   useEffect(() => {
     handleRefreshOptions();
-  },[fetchedPlayers]);
+  }, [fetchedPlayers]);
 
   return (
     <div>
-      <div>        
-        <CreateForm fetchedPlayers={fetchedPlayers} user_email={user_email} ></CreateForm>        
+      <div>
+        <CreateForm fetchedPlayers={fetchedPlayers} user_email={user_email} ></CreateForm>
 
         {players.map((player, i) => {
           return (

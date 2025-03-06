@@ -12,10 +12,11 @@ import SelectLeagueSwiss from '../Tornament/PlayerForm/LeagueSelect';
 import CreateTournamentSwiss from '../Tornament/PlayerForm/CreateTournamentSwiss/create-form';
 
 const Home = (
-  {fetchedPlayers, user_email, leagueArrayId} : {fetchedPlayers : Player[], user_email:string, leagueArrayId:LeagueWithTournaments[]}
+  { fetchedPlayers, user_email, leagueArrayId }: { fetchedPlayers: Player[], user_email: string, leagueArrayId: LeagueWithTournaments[] }
 ) => {
   const { tournament } = useTournament()
   console.log(tournament.databaseInfo.leagueID)
+  tournament.databaseInfo.userEmail = user_email //Esto hay que pasarlo a setUserEmail ? 
   const handleLeagueChange = (leagueID: string) => { //este bloque se puede sacar, esta para test
     console.log(tournament)
   };
@@ -34,12 +35,12 @@ const Home = (
       pointsPerGameWin: 0,
       pointsPerBye: 0,
     })
- );
+  );
 
   const handleConfigChange = (key: string, value: string) => { //pasar a utils o algo asi el switch ? 
     setConfig((prevConfig) => {
       const updatedConfig = new Config({
-        ...prevConfig, 
+        ...prevConfig,
       });
       switch (key) {
         case 'Bo':
@@ -70,21 +71,15 @@ const Home = (
       <div className={css.container}>
         
         <div>
-          <CreateTournamentSwiss  leaguesWithTournaments={leagueArrayId} onLeagueChange={handleLeagueChange}/>
-
-          {/* <div>          
-          <SelectLeagueSwiss leagues={leagueArrayId} onLeagueChange={handleLeagueChange} /> 
-          </div> */}
-        <div>
-        <TournamentName />
-        </div>
-                 
+          <CreateTournamentSwiss leaguesWithTournaments={leagueArrayId} onLeagueChange={handleLeagueChange} />
+       
           <PlayerForm user_email={user_email} submitPlayers={submitPlayers} fetchedPlayers={fetchedPlayers} />
         </div>
         <div>
-          <TournamentConfig config={config} onConfigChange={handleConfigChange}/>
+          <TournamentConfig config={config} onConfigChange={handleConfigChange} />
         </div>
-          
+
+
       </div>
     </>
   )

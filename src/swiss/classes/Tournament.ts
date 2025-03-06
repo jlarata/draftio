@@ -159,11 +159,11 @@ export class Tournament {
       formData.append('league_id', this.databaseInfo.leagueID)
       formData.append('tournament_id', this.databaseInfo.touranmentID)
       formData.append('round', round.toString())
-      formData.append('origin_url', origin_url)
       formData.append('player1_id', singlematch.player1_id)
       formData.append('player1_wins', singlematch.player1_wins.toString())
       formData.append('player2_id', singlematch.player2_id)
       formData.append('player2_wins', singlematch.player2_wins.toString())
+      formData.append('origin_url', origin_url)
       createGame(formData)
     })
   }
