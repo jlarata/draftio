@@ -15,7 +15,7 @@ export default async function Page() {
   const leagues: LeagueWithTournaments[] = ((await fetchLeaguesWithTournamentsByUserEmail(user_email)).arrayOfLeaguesWithTournaments)
 
   const { fetchPlayersByUserEmail } = playerServices;
-
+  
   //vos tenías estos dos de abajo lauti, uno hardcodeado, otro con todos los players del mundo
   //en su luar ahora fetched players te está pasando solo los players disponibles para el usuario logueado
   //(mismos players se usan en todas sus ligas, en todos sus torneos)
@@ -24,13 +24,12 @@ export default async function Page() {
   // fijate en las líneas 13 y 14 que te estoy fetcheando todas las ligas del usuario logueado
   //cada cual con sus torneos y campeones
   
-  const leagueId = "00000000-0000-0000-0000-000000000000" //This should be feeded from the previous page or use this one as quick tournament
-  const fetchedPlayers = await fetchPlayersByUserEmail(user_email)
+   const fetchedPlayers = await fetchPlayersByUserEmail(user_email)
 
 
   return (
     <>
-      <Home user_email={user_email} fetchedPlayers={fetchedPlayers.players} leagueID={leagueId} />
+      <Home user_email={user_email} fetchedPlayers={fetchedPlayers.players} leagueArrayId={leagues}/>
     </>
   )
 }

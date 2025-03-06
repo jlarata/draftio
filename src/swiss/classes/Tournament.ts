@@ -11,7 +11,7 @@ export class Tournament {
   public players: Player[] = []
   public unplayedMatches: Match[] = []
   private returnRound: Match[] = []
-  private seed: number | undefined
+  public seed: number | undefined
   public rounds: Round[] = []
   public config: Config[] = [] //Este array esta mal, pero me tira error si saco esto y cambio setConfig
   public databaseInfo: DatabaseInfo = new DatabaseInfo({})
