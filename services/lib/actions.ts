@@ -9,6 +9,7 @@ import { AuthError } from "next-auth";
 import { prefetchDNS } from "react-dom";
 import { read } from "fs";
 import bcrypt from 'bcrypt';
+import { DatabaseCommand } from "@/src/swiss/classes/SqlId";
 
 
 export async function authenticate(
@@ -407,7 +408,7 @@ export async function createTournamentSwiss(
   //       INSERT INTO tournament (seed, name, league_id, champion_id, date)
   //         VALUES (${rawFormData.seed}, ${rawFormData.name}, ${rawFormData.league_id}, ${rawFormData.champion_id}, ${rawFormData.date});`;
 
-  const createdTournament = await sql<{ object: Object }[]>`
+  const createdTournament = await sql<{ object: DatabaseCommand }[]>`
   INSERT INTO tournament (seed, name, league_id, champion_id, date)
   VALUES (${rawFormData.seed}, ${rawFormData.name}, ${rawFormData.league_id}, ${rawFormData.champion_id}, ${rawFormData.date})
   RETURNING id;`;
@@ -416,7 +417,7 @@ export async function createTournamentSwiss(
   if (!tournamentId) {
     throw new Error("No se pudo obtener el ID del torneo.");
   }
-  
+  console.log(tournamentId)
   return tournamentId
   // revalidatePath(`${rawFormData.origin_url}`);
   // redirect(`${rawFormData.origin_url}?tournamentcreated=ok`);

@@ -16,7 +16,7 @@ const Home = (
 ) => {
   const { tournament } = useTournament()
   console.log(tournament.databaseInfo.leagueID)
-  tournament.databaseInfo.userEmail = user_email
+  tournament.databaseInfo.userEmail = user_email //Esto hay que pasarlo a setUserEmail ? 
   const handleLeagueChange = (leagueID: string) => { //este bloque se puede sacar, esta para test
     console.log(tournament)
   };
