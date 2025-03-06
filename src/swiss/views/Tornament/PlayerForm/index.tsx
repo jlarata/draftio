@@ -9,6 +9,8 @@ import { Player } from '@/services/lib/definitions'
 import PlayerSelectField from './PlayerSelect'
 import Input from '@/src/swiss/components/Input'
 import CreateForm from '@/src/ui/players/create-form'
+import { createTournament } from '@/services/lib/actions'
+import { useTournament } from '@/src/swiss/context/tournament'
 
 import { useTournament } from '@/src/swiss/context/tournament'
 import { createTournamentSwiss } from '@/services/lib/actions'
@@ -58,8 +60,26 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email }: Props) => {
     console.log("handleStartTournament se ejecutó")
     if (players.length >= 2 && new Set(players).size === players.length) {
       setDisablePlayerForm(true)
-      setShowRandomSeatStep(true)
+      setShowRandomSeatStep(true)      
     }
+
+
+  }
+  
+  const handleCreateTournament = async () => {
+    console.log("entro en handleCreateTournament")
+    
+    setTournamentSeed((tournament?.seed?? "no seed").toString())
+    setIsLoading(true)
+    const formData = new FormData()
+    formData.append('seed', tournamentSeed)
+    formData.append('name', tournament.databaseInfo.name)
+    formData.append('league_id', tournament.databaseInfo.leagueID)
+    formData.append('champion_id', tournament.databaseInfo.ChampionUuid)
+    formData.append('date', tournament.databaseInfo.date)
+    formData.append('origin_url', pathname)
+    await createTournament(formData)
+    setIsLoading(false)
   }
 
   const handleCreateTournament = async () => {

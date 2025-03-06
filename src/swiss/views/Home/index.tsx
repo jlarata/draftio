@@ -69,7 +69,7 @@ const Home = (
   return (
     <>
       <div className={css.container}>
-
+        
         <div>
           <CreateTournamentSwiss leaguesWithTournaments={leagueArrayId} onLeagueChange={handleLeagueChange} />
        
@@ -78,6 +78,7 @@ const Home = (
         <div>
           <TournamentConfig config={config} onConfigChange={handleConfigChange} />
         </div>
+
 
       </div>
     </>
