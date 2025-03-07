@@ -8,64 +8,44 @@ import { usePathname } from 'next/navigation'
 import { LeagueWithTournaments } from '@/services/lib/definitions'
 import { useTournament } from '@/src/swiss/context/tournament'
 
-export default function CreateTournamentSwiss(
-  { leaguesWithTournaments, onLeagueChange }:
-    { leaguesWithTournaments : LeagueWithTournaments[],
-      onLeagueChange : (leagueID: string) => void
-     }
-
-) {
+export default function CreateTournamentSwiss({
+  leaguesWithTournaments,
+  onLeagueChange,
+}: {
+  leaguesWithTournaments: LeagueWithTournaments[]
+  onLeagueChange: (leagueID: string, isValid: boolean) => void
+}) {
   const { tournament } = useTournament()
-
   const [leagueID, setLeagueID] = useState<string>('')
-  
-  const [isLoading, setIsLoading] = useState(false)
-  /* nullable. should we give the user the chance to set this here? i dont think so. */
-  const [seed, setSeed] = useState("") // Creo que esto puedo sacarlo 
-  const [name, setName] = useState("")
-
-  const [champion_id, setChampion_ud] = useState("")
   let aTime = new Date()
-  let aTimeString = aTime.toDateString() //this particular string format is what database will accept 
+  let aTimeString = aTime.toDateString() //this particular string format is what database will accept
   let aTimeToLocale = aTime.toLocaleDateString('en-CA') //DOM form only reads and shows this particular format
   const [date, setDate] = useState(aTimeString)
   const pathname = usePathname()
-  
-  const [tournamentName, setTournamentName] = useState<string>("")
+
+  const [isTournamentValid, setIsTournamentValid] = useState(true)
+  const [isLeagueValid, setIsLeagueValid] = useState(true)
+  const [isValid, setIsValid] = useState(true)
+
+  const [tournamentName, setTournamentName] = useState<string>('')
   const handleAddTournamentName = () => {
-      tournament.databaseInfo.name = tournamentName.trim()
+    tournament.databaseInfo.name = tournamentName.trim()
+    setIsTournamentValid(false)
   }
 
   const handleSelectLeagueChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedLeagueID = e.target.value;
-    setLeagueID(selectedLeagueID);
-    onLeagueChange(selectedLeagueID);
-    tournament.databaseInfo.leagueID = selectedLeagueID;
- 
-  };
-  /* 
-  DO WE WANT TO VALIDATE TOURNAMENT NAME? DONT THINK SO
-  const isPlayerNameValid = (name: string): boolean => {
-    const normalizedOptions = options.map((player) => player.toLowerCase())
-    return name.trim() !== '' && !normalizedOptions.includes(name.toLowerCase())
-  } */
+    const selectedLeagueID = e.target.value
+    setLeagueID(selectedLeagueID)
+    console.log(isTournamentValid, isLeagueValid, isValid)
+    setIsLeagueValid(false)
 
-  const handleCreateTournament = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-
-    setIsLoading(true)
-    const formData = new FormData()
-    formData.append('seed', seed)
-    formData.append('name', name)
-    formData.append('league_id', leagueID)
-    formData.append('champion_id', champion_id)
-    formData.append('date', date)
-    formData.append('origin_url', pathname)
-    await createTournament(formData)
-    setIsLoading(false)
+    onLeagueChange(selectedLeagueID, isValid)
+    tournament.databaseInfo.leagueID = selectedLeagueID
   }
 
-
+  useEffect(() => {
+    setIsValid(isTournamentValid && isLeagueValid)
+  }, [isTournamentValid, isLeagueValid])
 
   return (
     <>
@@ -74,11 +54,9 @@ export default function CreateTournamentSwiss(
           <div className='overflow-x-auto'>
             <div className='inline-block min-w-full align-middle'>
               <div className='overflow-hidden rounded-md bg-gray-100 p-2 md:pt-0'>
-                {/* <form action={createTournament}> */}
                 <form>
                   <div className='rounded-md bg-gray-100 p-4 md:p-6'>
                     <div className='mb-4 visibility: hidden'>
-                      {/* hidden input with originUrl. */}
                       <label htmlFor='origin_url' className='mb-2 block text-sm font-medium'>
                         origin_url
                       </label>
@@ -109,9 +87,7 @@ export default function CreateTournamentSwiss(
                         <TrophyIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500' />
                       </div>
 
-
-                      <label htmlFor='date' className='mb-2 block text-sm font-medium'>
-                      </label>
+                      <label htmlFor='date' className='mb-2 block text-sm font-medium'></label>
                       <div className='transparentInput relative '>
                         <input
                           type='date'
@@ -123,40 +99,32 @@ export default function CreateTournamentSwiss(
                         ></input>
                         <CalendarDaysIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500' />
                       </div>
-
                     </div>
 
                     <div className='mb-4'>
-                      {/* <label htmlFor='league_id' className='mb-2 block text-sm font-medium'>
-                        Choose a league
-                      </label> */}
                       <div className='relative'>
                         <select
                           id='league_id'
                           name='league_id'
                           defaultValue=''
                           className='peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500'
-                          /* peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500' */
                           onChange={handleSelectLeagueChange}
                           required
                         >
                           <option value='' disabled>
                             Choose a league
                           </option>
-                          {/* <option hidden value={-1} key={-1} disabled>Choose a League</option> */}
-                          {leaguesWithTournaments.map((leagueWithTournaments, i) =>
-                            <option key={i}
-                              value={leagueWithTournaments.id}
-                            >{leagueWithTournaments.name}</option>
 
-                          )}
+                          {leaguesWithTournaments.map((leagueWithTournaments, i) => (
+                            <option key={i} value={leagueWithTournaments.id}>
+                              {leagueWithTournaments.name}
+                            </option>
+                          ))}
                         </select>
                         <TableCellsIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500' />
                       </div>
                     </div>
-                    <div className='mt-6 flex justify-end gap-4 '>
-
-                    </div>
+                    <div className='mt-6 flex justify-end gap-4 '></div>
                   </div>
                 </form>
               </div>

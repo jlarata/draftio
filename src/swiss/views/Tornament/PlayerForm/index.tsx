@@ -7,19 +7,17 @@ import RandomSeatStep from '../RandomSeat'
 import { randomSeatsUtils } from '../RandomSeat/utils'
 import { Player } from '@/services/lib/definitions'
 import PlayerSelectField from './PlayerSelect'
-import Input from '@/src/swiss/components/Input'
 import CreateForm from '@/src/ui/players/create-form'
-import { createTournament } from '@/services/lib/actions'
 import { useTournament } from '@/src/swiss/context/tournament'
 import { createTournamentAndReturnId } from '@/services/lib/actions'
 import { boolean } from 'zod'
 
-type Props = { submitPlayers: (players: Player[]) => void; fetchedPlayers: Player[]; user_email: string }
+type Props = { submitPlayers: (players: Player[]) => void; fetchedPlayers: Player[]; user_email: string; validLeagueTouarnament : boolean }
 
-const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email }: Props) => {
+const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTouarnament }: Props) => {
   const router = useRouter()
   const { tournament } = useTournament()
-  const [tournamentSeed, setTournamentSeed] = useState<string>('')
+  // const [tournamentSeed, setTournamentSeed] = useState<string>('')
   const [selectedPlayers, setSelectedPlayers] = useState<(Player | undefined)[]>([undefined, undefined])
   const [showRandomSeatStep, setShowRandomSeatStep] = useState(false)
   const [disablePlayerForm, setDisablePlayerForm] = useState(false)
@@ -87,7 +85,7 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email }: Props) => {
         {selectedPlayers.map((player, i) => {
           return (
             <PlayerSelectField
-              key={'playerSelectedField'+i}
+              key={'playerSelectedField' + i}
               index={i}
               fetchedPlayers={options}
               inputValue={selectedPlayers[i] ? selectedPlayers[i].id : undefined}
@@ -111,11 +109,14 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email }: Props) => {
           onClick={handleStartTournament}
         />
         {showRandomSeatStep && (
-          <RandomSeatStep players={selectedPlayers} randomPlayers={randomSeatsUtils.getRandomPlayers(selectedPlayers)} />
+          <RandomSeatStep
+            players={selectedPlayers}
+            randomPlayers={randomSeatsUtils.getRandomPlayers(selectedPlayers)}
+          />
         )}
         <Button
           label={'Get first Round'}
-          disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length}
+          disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length || validLeagueTouarnament}
           onClick={() => {
             submitPlayers(selectedPlayers.filter(Boolean) as Player[])
             handleCreateTournament()
