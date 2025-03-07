@@ -11,113 +11,91 @@ import Input from '@/src/swiss/components/Input'
 import CreateForm from '@/src/ui/players/create-form'
 import { createTournament } from '@/services/lib/actions'
 import { useTournament } from '@/src/swiss/context/tournament'
+import { createTournamentAndReturnId } from '@/services/lib/actions'
+import { boolean } from 'zod'
 
-import { useTournament } from '@/src/swiss/context/tournament'
-import { createTournamentSwiss } from '@/services/lib/actions'
-
-
-type Props = { submitPlayers: (players: string[]) => void; fetchedPlayers: Player[], user_email: string }
+type Props = { submitPlayers: (players: Player[]) => void; fetchedPlayers: Player[]; user_email: string }
 
 const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email }: Props) => {
   const router = useRouter()
-  const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {
-    return fetchedPlayer.username
-  })
   const { tournament } = useTournament()
   const [tournamentSeed, setTournamentSeed] = useState<string>('')
-  const [players, setPlayers] = useState<string[]>(['', ''])
+  const [selectedPlayers, setSelectedPlayers] = useState<(Player | undefined)[]>([undefined, undefined])
   const [showRandomSeatStep, setShowRandomSeatStep] = useState(false)
   const [disablePlayerForm, setDisablePlayerForm] = useState(false)
-  const [options, setOptions] = useState<string[]>(fetchedPlayersArray)
+  const [options, setOptions] = useState<Player[]>(fetchedPlayers)
   const pathname = usePathname()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleRefreshOptions = () => {
-    setOptions(fetchedPlayersArray)
+    setOptions(fetchedPlayers)
   }
 
-  const handlePlayerNameChange = ({ name, index }: { name: string; index: number }) => {
-    setPlayers((prevPlayers) =>
-      prevPlayers.map((player, i) => (i === index ? name : player))
-    );
+  const handlePlayerNameChange = ({ player, index }: { player: Player; index: number }) => {
+    setSelectedPlayers((prevPlayers) => {
+      const newPlayers = [...prevPlayers]
+      newPlayers[index] = player
+
+      return newPlayers
+    })
   }
 
   const removePlayer = (index: number) => {
-    setPlayers((prevPlayers) => {
+    setSelectedPlayers((prevPlayers) => {
       return prevPlayers.filter((_, playerIndex) => playerIndex !== index)
     })
   }
 
   const handleAddPlayer = () => {
-    setPlayers((prevPlayers) => {
-      return [...prevPlayers, '']
+    setSelectedPlayers((prevPlayers) => {
+      return [...prevPlayers, undefined]
     })
   }
 
-
-
   const handleStartTournament = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("handleStartTournament se ejecutó")
-    if (players.length >= 2 && new Set(players).size === players.length) {
+    if (selectedPlayers.length >= 2 && new Set(selectedPlayers).size === selectedPlayers.length) {
       setDisablePlayerForm(true)
-      setShowRandomSeatStep(true)      
+      setShowRandomSeatStep(true)
     }
-
-
   }
-  
+
   const handleCreateTournament = async () => {
-    console.log("entro en handleCreateTournament")
-    
-    setTournamentSeed((tournament?.seed?? "no seed").toString())
     setIsLoading(true)
     const formData = new FormData()
-    formData.append('seed', tournamentSeed)
+    tournament.seed ? formData.append('seed', tournament.seed.toString()) : formData.append('seed', 'undefined')
+
     formData.append('name', tournament.databaseInfo.name)
     formData.append('league_id', tournament.databaseInfo.leagueID)
     formData.append('champion_id', tournament.databaseInfo.ChampionUuid)
     formData.append('date', tournament.databaseInfo.date)
-    formData.append('origin_url', pathname)
-    await createTournament(formData)
-    setIsLoading(false)
-  }
 
-  const handleCreateTournament = async () => {
+    const tournamentID = await createTournamentAndReturnId(formData)
 
-
-    setIsLoading(true)
-    const formData = new FormData()
-    formData.append('seed', tournament.seed) //Revisar que pasa con el seed
-    formData.append('name', tournament.databaseInfo.name)
-    formData.append('league_id', tournament.databaseInfo.leagueID)
-    formData.append('champion_id', tournament.databaseInfo.ChampionUuid)
-    formData.append('date', tournament.databaseInfo.date)
-    console.log(formData)
-    const tournamentID = await createTournamentSwiss(formData)
-    console.log(tournamentID.rows[0].id) //esta mal definida 
-    tournament.databaseInfo.touranmentID = tournamentID.rows[0].id
+    tournament.databaseInfo.touranmentID = tournamentID
     setIsLoading(false)
   }
 
   useEffect(() => {
-    handleRefreshOptions();
-  }, [fetchedPlayers]);
+    handleRefreshOptions()
+  }, [fetchedPlayers])
 
   return (
     <div>
       <div>
-        <CreateForm fetchedPlayers={fetchedPlayers} user_email={user_email} ></CreateForm>
+        <CreateForm fetchedPlayers={fetchedPlayers} user_email={user_email}></CreateForm>
 
-        {players.map((player, i) => {
+        {selectedPlayers.map((player, i) => {
           return (
             <PlayerSelectField
-              key={i}
+              key={'playerSelectedField'+i}
               index={i}
               fetchedPlayers={options}
-              inputValue={player}
+              inputValue={selectedPlayers[i] ? selectedPlayers[i].id : undefined}
               removePlayer={removePlayer}
-              handlePlayerNameChange={(name) => handlePlayerNameChange(name)}
-              selectedPlayers={players}
+              handlePlayerNameChange={({ player: playerId, index }) =>
+                handlePlayerNameChange({ player: playerId, index })
+              }
+              selectedPlayers={selectedPlayers}
             />
           )
         })}
@@ -126,26 +104,22 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email }: Props) => {
       </div>
 
       <div>
-        <Button
-          disabled={players.length > 7}
-          label={'Add Player'}
-          onClick={handleAddPlayer}
-        />
+        <Button disabled={selectedPlayers.length > 7} label={'Add Player'} onClick={handleAddPlayer} />
         <Button
           label={'Get draft positions'}
-          disabled={players.length < 2 || new Set(players).size !== players.length}
+          disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length}
           onClick={handleStartTournament}
         />
         {showRandomSeatStep && (
-          <RandomSeatStep players={players} randomPlayers={randomSeatsUtils.getRandomPlayers(players)} />
+          <RandomSeatStep players={selectedPlayers} randomPlayers={randomSeatsUtils.getRandomPlayers(selectedPlayers)} />
         )}
         <Button
           label={'Get first Round'}
-          disabled={players.length < 2 || new Set(players).size !== players.length}
+          disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length}
           onClick={() => {
-            submitPlayers(players);
-            handleCreateTournament();
-            router.push('./swiss/rounds');
+            submitPlayers(selectedPlayers.filter(Boolean) as Player[])
+            handleCreateTournament()
+            router.push('./swiss/rounds')
           }}
         />
       </div>

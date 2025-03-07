@@ -29,7 +29,7 @@ export default async function Page() {
 
   return (
     <>
-      <Home user_email={user_email} fetchedPlayers={fetchedPlayers.players} leagueArrayId={leagues}/>
+      <Home user_email={user_email} selectedPlayers={fetchedPlayers.players} leagueArrayId={leagues}/>
     </>
   )
 }

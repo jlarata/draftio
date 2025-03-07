@@ -102,7 +102,7 @@ export default async function GamesTable({
                   key={`${game.game_id}_${index}`}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                  <td className="py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
                       {/* <Image
                         src={invoice.image_url}
@@ -111,11 +111,11 @@ export default async function GamesTable({
                         height={28}
                         alt={`${invoice.name}'s profile picture`}
                       /> */}
-                      <p className="max-w-48 overflow-scroll">{game.league_name}</p>
+                      <p className="truncate max-w-48">{game.league_name}</p>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                  <p className="max-w-48 overflow-scroll">{game.tournament_name}</p>
+                  <td className="px-3 py-3">
+                  <p className="truncate max-w-48">{game.tournament_name}</p>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {/* {formatCurrency(invoice.amount)} */}

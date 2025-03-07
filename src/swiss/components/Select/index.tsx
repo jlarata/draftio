@@ -24,7 +24,7 @@ const Select = ({ index, selectOption, onChange, className, ...props }: Props) =
             value={playerOption}
             defaultValue={playerOption === selectOption[0] ? playerOption : undefined}
           >
-            <p>{playerOption}</p>
+            {playerOption}
           </option>
         )
       })}

@@ -382,7 +382,7 @@ export async function createTournament(
 
 
 
-export async function createTournamentSwiss(
+export async function createTournamentAndReturnId(
   formData: FormData) {
   let rawFormData: {
     seed: string | null,
@@ -404,18 +404,15 @@ export async function createTournamentSwiss(
   if (rawFormData.seed === "") { rawFormData.seed = null }
   if (rawFormData.champion_id === "") { rawFormData.champion_id = null }
 
-  // await sql`
-  //       INSERT INTO tournament (seed, name, league_id, champion_id, date)
-  //         VALUES (${rawFormData.seed}, ${rawFormData.name}, ${rawFormData.league_id}, ${rawFormData.champion_id}, ${rawFormData.date});`;
-
-  const createdTournament = await sql<{ object: DatabaseCommand }[]>`
+  
+  const tournamentIdPromise = await sql`
   INSERT INTO tournament (seed, name, league_id, champion_id, date)
   VALUES (${rawFormData.seed}, ${rawFormData.name}, ${rawFormData.league_id}, ${rawFormData.champion_id}, ${rawFormData.date})
   RETURNING id;`;
 
-  const tournamentId = createdTournament
+  const tournamentId : string = tournamentIdPromise.rows[0].id
   if (!tournamentId) {
-    throw new Error("No se pudo obtener el ID del torneo.");
+    throw new Error("Could not obtain tournament Id");
   }
   console.log(tournamentId)
   return tournamentId
