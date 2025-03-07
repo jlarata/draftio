@@ -22,8 +22,6 @@ const Second = ({ fetchedPlayers }: Props) => {
   const [roundConfirmed, setRoundConfirmed] = useState<Record<number, boolean>>({})
   const [refreshScore, setRefreshScore] = useState(false)
   const urlPathname = usePathname()
-  tournament.databaseInfo.touranmentID = "00000000-0000-0000-0000-000000000301"
- 
 
   useEffect(() => {
     // Esto no es escalable
@@ -70,14 +68,14 @@ const Second = ({ fetchedPlayers }: Props) => {
   const logValue = () => {
     const roundNumber = tournament.rounds.length
     tournament.databaseRoundInfo.push(new DatabaseRoundInfo())
-    Object.entries(currentRoundMatches).forEach(([tournamentPlayerKey, match]) => {
-      var player1name = match.player1.player.name
-      var player1uuid = match.player1.player.uuid
-      var player2name = match.player2.player.name
-      var player2uuid = match.player2.player.uuid
+    Object.values(currentRoundMatches).forEach((match) => {
+      const { player1, player2 } = match;
+      const { name: player1name, uuid: player1uuid } = player1.player
+      const { name: player2name, uuid: player2uuid } = player2.player
 
-      var player1GameWins = Number(selectedValues[match.player1.player.name]) || 0
-      var player2GameWins = Number(selectedValues[match.player2.player.name]) || 0
+      const player1GameWins = Number(selectedValues[player1name]) || 0
+      const player2GameWins = Number(selectedValues[player2name]) || 0
+
       match.setMatchResult({
         player1GameWins: player1GameWins,
         player2GameWins: player2GameWins,
@@ -93,8 +91,8 @@ const Second = ({ fetchedPlayers }: Props) => {
         player2_wins: player2GameWins,
       })
     })
-    
-    tournament.createRoundsInDB(roundNumber,urlPathname)
+
+    tournament.createRoundsInDB(roundNumber, urlPathname)
 
     tournament.createRound()
     console.log('Crea ronda en Log value')
@@ -117,14 +115,15 @@ const Second = ({ fetchedPlayers }: Props) => {
     } else {
       const roundNumber = tournament.rounds.length
       tournament.databaseRoundInfo.push(new DatabaseRoundInfo())
-      Object.entries(currentRoundMatches).forEach(([tournamentPlayerKey, match]) => {
-        var player1name = match.player1.player.name
-        var player1uuid = match.player1.player.uuid
-        var player2name = match.player2.player.name
-        var player2uuid = match.player2.player.uuid
-  
-        var player1GameWins = Number(selectedValues[match.player1.player.name]) || 0
-        var player2GameWins = Number(selectedValues[match.player2.player.name]) || 0
+
+      Object.values(currentRoundMatches).forEach((match) => {
+        const { player1, player2 } = match;
+        const { name: player1name, uuid: player1uuid } = player1.player
+        const { name: player2name, uuid: player2uuid } = player2.player
+
+        const player1GameWins = Number(selectedValues[player1name]) || 0
+        const player2GameWins = Number(selectedValues[player2name]) || 0
+
         match.setMatchResult({
           player1GameWins: player1GameWins,
           player2GameWins: player2GameWins,
@@ -140,8 +139,8 @@ const Second = ({ fetchedPlayers }: Props) => {
           player2_wins: player2GameWins,
         })
       })
-      
-      tournament.createRoundsInDB(roundNumber,urlPathname)
+
+      tournament.createRoundsInDB(roundNumber, urlPathname)
 
       setRefreshScore((prev) => !prev)
       router.push('./results')

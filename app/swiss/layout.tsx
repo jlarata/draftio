@@ -9,14 +9,7 @@ import { Html, Head, Main, NextScript } from 'next/document'
 
 export default function SwissLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html>
-      {/* <Head>
-        <title>Swiss</title>
-        <meta name='description' content='' />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head> */}
-      <body>
+    <>
       {/* <Main className={`${inter.className}`}> */}
             <TournamentProvider>
               <MainLayout>
@@ -25,7 +18,6 @@ export default function SwissLayout({ children }: { children: React.ReactNode })
             </TournamentProvider>
       
       {/* </Main>   */}
-      </body>
-    </html>
+    </>
   );
 }

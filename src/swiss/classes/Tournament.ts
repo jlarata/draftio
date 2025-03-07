@@ -1,25 +1,27 @@
 import { Config } from './Config'
 import { DatabaseInfo } from './classesDb/DatabaseInfo'
 import { Match } from './Match'
-import { Player } from './Player'
+import { Player } from '@/services/lib/definitions'
+import { Player as PlayerInTournament } from './Player'
 import { Round } from './Round'
 import { gameUtils } from './utils/utils'
 import { DatabaseRoundInfo } from './classesDb/DatabaseRoundInfo'
 import { createGame } from '@/services/lib/actions'
 
 export class Tournament {
-  public players: Player[] = []
+  public players: PlayerInTournament[] = []
   public unplayedMatches: Match[] = []
   private returnRound: Match[] = []
-  private seed: number | undefined
+  public seed: number | undefined
   public rounds: Round[] = []
   public config: Config[] = [] //Este array esta mal, pero me tira error si saco esto y cambio setConfig
   public databaseInfo: DatabaseInfo = new DatabaseInfo({})
   public databaseRoundInfo: DatabaseRoundInfo[] = []
 
-  public startTournament({ playersNames, date, config }: { playersNames: string[]; date: string; config: Config }) {
+
+  public startTournament({ players, date, config }: { players: Player[]; date: string; config: Config }) {
     this.databaseInfo.date = date
-    this.createPlayers({ playersNames })
+    this.createPlayers({ players: players })
     this.setAllMatchMatrix()
     this.setConfig({ config })
     this.seed = this.setSeed({ date })
@@ -29,10 +31,10 @@ export class Tournament {
     this.config = [config]
   }
 
-  private createPlayers({ playersNames }: { playersNames: string[] }) {
-    this.players = playersNames.map(
-      (name) =>
-        new Player({ name, uuid: '-1', wins: 0, loss: 0, draws: 0, gameWins: 0, gameLoss: 0, rivals: [], buchholz: 0 })
+  private createPlayers({ players}: { players: Player[] }) {
+    this.players = players.map(
+      (player) =>
+        new PlayerInTournament({ name: player.username, uuid: player.id, wins: 0, loss: 0, draws: 0, gameWins: 0, gameLoss: 0, rivals: [], buchholz: 0 })
     )
   }
 
@@ -159,11 +161,11 @@ export class Tournament {
       formData.append('league_id', this.databaseInfo.leagueID)
       formData.append('tournament_id', this.databaseInfo.touranmentID)
       formData.append('round', round.toString())
-      formData.append('origin_url', origin_url)
       formData.append('player1_id', singlematch.player1_id)
       formData.append('player1_wins', singlematch.player1_wins.toString())
       formData.append('player2_id', singlematch.player2_id)
       formData.append('player2_wins', singlematch.player2_wins.toString())
+      formData.append('origin_url', origin_url)
       createGame(formData)
     })
   }

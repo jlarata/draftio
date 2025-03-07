@@ -1,18 +1,19 @@
 import Icon from '@/src/swiss/components/Icon'
 import css from './style.module.css'
 import { useState } from 'react'
+import { Player } from '@/services/lib/definitions'
 
 type Props = {
   index: number
-  inputValue: string
+  inputValue?: string
   removePlayer: (index: number) => void
-  fetchedPlayers: string[]
-  handlePlayerNameChange: ({ name, index }: { name: string; index: number }) => void
-  selectedPlayers: string[]
+  fetchedPlayers: Player[]
+  handlePlayerNameChange: ({ player, index }: { player: Player; index: number }) => void
+  selectedPlayers: (Player | undefined)[]
 }
 
 const PlayerSelectField = ({
-  inputValue,
+  inputValue = '',
   index,
   removePlayer,
   fetchedPlayers,
@@ -25,15 +26,19 @@ const PlayerSelectField = ({
     <div key={`${inputValue}${index}`}>
       <select
         id='custom-select'
-        value={inputValue || ''}
-        onChange={(e) => (setSelectedOption(e.target.value), handlePlayerNameChange({ name: e.target.value, index }))}
+        value={inputValue}
+        onChange={(e) => (setSelectedOption(e.target.value), handlePlayerNameChange({ player: fetchedPlayers.find((currPlayer) => currPlayer.id === e.target.value)!, index }))}
       >
         <option value='' disabled>
           Choose a player
         </option>
         {fetchedPlayers.map((player, idx) => (
-          <option key={idx} value={player} disabled={selectedPlayers.includes(player)}>
-            {player}
+          <option key={idx} value={player.id} disabled={selectedPlayers.some((currSelectedPlayer) => {
+            if (currSelectedPlayer) {
+              return currSelectedPlayer.id === player.id
+            }
+          })}>
+            {player.username}
           </option>
         ))}
       </select>

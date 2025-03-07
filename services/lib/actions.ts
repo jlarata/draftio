@@ -3,12 +3,13 @@
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
-import { User, uuid } from "./definitions";
+import { TournamentForCreateQuery, User, uuid } from "./definitions";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { prefetchDNS } from "react-dom";
 import { read } from "fs";
 import bcrypt from 'bcrypt';
+import { DatabaseCommand } from "@/src/swiss/classes/SqlId";
 
 
 export async function authenticate(
@@ -377,6 +378,50 @@ export async function createTournament(
   redirect(`${rawFormData.origin_url}?tournamentcreated=ok`);
 }
 
+//Teste create tournament
+
+
+
+export async function createTournamentAndReturnId(
+  formData: FormData) {
+  let rawFormData: {
+    seed: string | null,
+    name: string,
+    league_id: string,
+    champion_id: string | null,
+    date: string | null,
+    // origin_url: string,
+  } = {
+    seed: formData.get('seed') as string,
+    name: formData.get('name') as string,
+    league_id: formData.get('league_id') as string,
+    champion_id: formData.get('champion_id') as string,
+    date: formData.get('date') as string,
+    // origin_url: formData.get('origin_url') as string,
+  };
+  console.log("entro a metodo nuevo")
+  console.log(rawFormData.seed)
+  if (rawFormData.seed === "") { rawFormData.seed = null }
+  if (rawFormData.champion_id === "") { rawFormData.champion_id = null }
+
+  
+  const tournamentIdPromise = await sql`
+  INSERT INTO tournament (seed, name, league_id, champion_id, date)
+  VALUES (${rawFormData.seed}, ${rawFormData.name}, ${rawFormData.league_id}, ${rawFormData.champion_id}, ${rawFormData.date})
+  RETURNING id;`;
+
+  const tournamentId : string = tournamentIdPromise.rows[0].id
+  if (!tournamentId) {
+    throw new Error("Could not obtain tournament Id");
+  }
+  console.log(tournamentId)
+  return tournamentId
+  // revalidatePath(`${rawFormData.origin_url}`);
+  // redirect(`${rawFormData.origin_url}?tournamentcreated=ok`);
+
+}
+
+
 export const redirectWithParams = async (params: string) => {
   console.log("redirecting?")
   const param = params;
@@ -385,7 +430,7 @@ export const redirectWithParams = async (params: string) => {
 }
 
 async function validateEmail(user_email: string) {
-  
+
   const userWithMailPromise = await sql`
   SELECT COUNT(*)
   FROM p_user p
@@ -426,11 +471,11 @@ export async function registerUser(formData: FormData) {
     revalidatePath(`/dashboard?userCreated=ok`);
     redirect(`/dashboard?userCreated=ok`);
   }
-  
+
   console.log("user exists")
   revalidatePath(`/register?alreadyUsedEmail=ok`);
   redirect(`/register?alreadyUsedEmail=ok`);
-  
-  
+
+
 }
 

@@ -1,8 +1,9 @@
-'use client';
+'use client'
 
+import { Player } from '@/services/lib/definitions'
 import React, { useState } from 'react'
 
-type Props = { players: string[]; randomPlayers: string[] }
+type Props = { players: (Player | undefined)[]; randomPlayers: Player[] }
 
 const RandomSeatStep = ({ players, randomPlayers }: Props) => {
   const [isChecked, setIsChecked] = useState(false)
@@ -20,13 +21,15 @@ const RandomSeatStep = ({ players, randomPlayers }: Props) => {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
         {randomPlayers.map((player, index) => {
           return (
-            <select key={index} disabled={!isChecked} defaultValue={player}>
+            <select key={index} disabled={!isChecked} defaultValue={player.id}>
               {players.map((playerOption, optionIndex) => {
-                return (
-                  <option key={optionIndex} value={playerOption}>
-                    {playerOption}
-                  </option>
-                )
+                if (playerOption) {
+                  return (
+                    <option key={optionIndex} value={playerOption.id}>
+                      {playerOption.username}
+                    </option>
+                  )
+                }
               })}
             </select>
           )
