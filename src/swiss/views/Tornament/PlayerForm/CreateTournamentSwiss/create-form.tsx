@@ -1,12 +1,11 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { CalendarDaysIcon, TrophyIcon } from '@heroicons/react/24/outline'
-import { createTournament } from '@/services/lib/actions'
-//import { Button } from '../button'
 import TableCellsIcon from '@heroicons/react/20/solid/TableCellsIcon'
 import { usePathname } from 'next/navigation'
 import { LeagueWithTournaments } from '@/services/lib/definitions'
 import { useTournament } from '@/src/swiss/context/tournament'
+import css from './style.module.css'
 
 export default function CreateTournamentSwiss({
   leaguesWithTournaments,
@@ -79,7 +78,9 @@ export default function CreateTournamentSwiss({
                           placeholder='Enter new tournament Name (i.e. Ursa Saga in my house)'
                           id='name'
                           name='name'
-                          className='peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500'
+                          className={`peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 ${
+                            isTournamentValid ? css.errorBorder : ''
+                          }`}
                           onChange={(e) => setTournamentName(e.target.value)}
                           onBlur={handleAddTournamentName}
                           required
@@ -107,7 +108,9 @@ export default function CreateTournamentSwiss({
                           id='league_id'
                           name='league_id'
                           defaultValue=''
-                          className='peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500'
+                          className={`peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 ${
+                            isLeagueValid ? css.errorBorder : ''
+                          }`}
                           onChange={handleSelectLeagueChange}
                           required
                         >
