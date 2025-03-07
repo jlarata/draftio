@@ -22,7 +22,7 @@ const Home = (
   const submitPlayers = (players: Player[]) => {
     const date = new Date().toISOString()
     tournament.startTournament({ players: players, date: date, config: config })
-    //console.log('Start Tournament: ', tournament)
+  
   }
 
   const [config, setConfig] = useState<Config>(

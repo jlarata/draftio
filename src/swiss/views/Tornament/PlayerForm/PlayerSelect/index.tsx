@@ -9,7 +9,7 @@ type Props = {
   removePlayer: (index: number) => void
   fetchedPlayers: Player[]
   handlePlayerNameChange: ({ player, index }: { player: Player; index: number }) => void
-  selectedPlayers: Player[]
+  selectedPlayers: (Player | undefined)[]
 }
 
 const PlayerSelectField = ({
@@ -33,7 +33,11 @@ const PlayerSelectField = ({
           Choose a player
         </option>
         {fetchedPlayers.map((player, idx) => (
-          <option key={idx} value={player.id} disabled={selectedPlayers.some((currSelectedPlayer) => currSelectedPlayer.id === player.id) }>
+          <option key={idx} value={player.id} disabled={selectedPlayers.some((currSelectedPlayer) => {
+            if (currSelectedPlayer) {
+              return currSelectedPlayer.id === player.id
+            }
+          })}>
             {player.username}
           </option>
         ))}
