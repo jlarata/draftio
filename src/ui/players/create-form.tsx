@@ -6,7 +6,6 @@ import { Button } from '../button'
 import TableCellsIcon from '@heroicons/react/20/solid/TableCellsIcon'
 import { Player } from '@/services/lib/definitions'
 import { usePathname } from 'next/navigation'
-import { inter } from '../fonts'
 
 export default function CreateForm({ fetchedPlayers, user_email }: { fetchedPlayers: Player[], user_email:string }) {
   const fetchedPlayersArray = fetchedPlayers.map((fetchedPlayer) => {

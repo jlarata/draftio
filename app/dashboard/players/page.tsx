@@ -24,13 +24,15 @@ export default async function Page(props: {
   }>;
 }) {
 
+  
+
   const session = await auth();
   const user_email: string = session?.user?.email!
 
   const { fetchPlayersPages } = playerServices
   const { fetchPlayersByUserEmail } = playerServices;
 
-  const fetchedPlayers = await fetchPlayersByUserEmail(user_email)
+  const fetchedPlayers = (await fetchPlayersByUserEmail(user_email)).players
 
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
@@ -45,13 +47,14 @@ export default async function Page(props: {
   return (
     <>
     
-      {playerCreatedMessage && (
+      {/* I'm stopping this messages for the player creation/edition/deletion. too much interaction goes beyond the point and feels bothering */}
+      {/* {playerCreatedMessage && (
         <AlertsPage someText={'Player succesfully created'} originalPath="/dashboard/players"></AlertsPage> 
       )} 
 
       {playerEditedMessage && (
         <AlertsPage someText={'Player succesfully edited!'} originalPath="/dashboard/players"></AlertsPage> 
-      )} 
+      )} */} 
 
       {playerDeletedMessage && (
         <AlertsPage someText={'Player succesfully deleted!'} originalPath="/dashboard/players"></AlertsPage> 
@@ -72,8 +75,8 @@ export default async function Page(props: {
         </div> */}
         <div className="flex flex-row gap-4">
         <Suspense key={query + currentPage} fallback={<LatestGamesSkeleton />}>
-           <PlayersTable query={query} currentPage={currentPage} user_email={user_email}></PlayersTable>
-           <CreateForm fetchedPlayers={fetchedPlayers.players} user_email={user_email}></CreateForm>
+           <PlayersTable query={query} currentPage={currentPage} players={fetchedPlayers}></PlayersTable>
+           <CreateForm fetchedPlayers={fetchedPlayers} user_email={user_email}></CreateForm>
         </Suspense>
         </div>
         
