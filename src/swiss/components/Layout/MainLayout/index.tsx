@@ -8,16 +8,16 @@ type Props = {
     children: React.ReactNode
 }
 
-const session = await auth()
-  
-const user : User = {
-    name: session?.user?.name!,
-    player_id: session?.user?.id!,
-    email: session?.user?.email!,
-    password: "what?"
-  }
+const MainLayout = async ({children}: Props) => {
 
-const MainLayout= ({children}: Props) => {
+  const session = await auth()
+  
+    const user: User = {
+      name: session?.user?.name!,
+      player_id: session?.user?.id!,
+      email: session?.user?.email!,
+      password: "what?"
+    }
   return (
     <div className={css.container}>
         <Header />

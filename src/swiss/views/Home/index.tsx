@@ -9,8 +9,6 @@ import { Config } from '../../classes/Config'
 import { LeagueWithTournaments, Player } from '@/services/lib/definitions'
 import CreateTournamentSwiss from '../Tornament/PlayerForm/CreateTournamentSwiss/create-form'
 import { PowerIcon } from '@heroicons/react/24/outline';
-import { signOut } from '@/auth';
-import UserNav from '../UserNav/usernav'
 
 const Home = ({
   selectedPlayers,
