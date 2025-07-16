@@ -12,7 +12,7 @@ import { useTournament } from '@/src/swiss/context/tournament'
 import { createTournamentAndReturnId } from '@/services/lib/actions'
 import { boolean } from 'zod'
 
-type Props = { submitPlayers: (players: Player[]) => void; fetchedPlayers: Player[]; user_email: string; validLeagueTouarnament : boolean }
+type Props = { submitPlayers: (players: Player[]) => void; fetchedPlayers: Player[]; user_email: string; validLeagueTouarnament: boolean }
 
 const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTouarnament }: Props) => {
   const router = useRouter()
@@ -63,13 +63,22 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueToua
     tournament.seed ? formData.append('seed', tournament.seed.toString()) : formData.append('seed', 'undefined')
 
     formData.append('name', tournament.databaseInfo.name)
-    formData.append('league_id', tournament.databaseInfo.leagueID)
+    
+    /** in anonymous mode, create form doesn handle select league ID so we can just hardcode it here */
+    if (user_email === "d3c.draftio@gmail.com") {
+      formData.append('league_id', "085ac8cf-8c12-4d74-909b-c55ca03b4cc2")
+    } else
+    {
+      formData.append('league_id', tournament.databaseInfo.leagueID)
+    }
     formData.append('champion_id', tournament.databaseInfo.ChampionUuid)
     formData.append('date', tournament.databaseInfo.date)
 
     const tournamentID = await createTournamentAndReturnId(formData)
 
     tournament.databaseInfo.touranmentID = tournamentID
+
+    debug: console.log("creando tournament con esta data "+tournament.databaseInfo.leagueID)
     setIsLoading(false)
   }
 
@@ -114,15 +123,27 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueToua
             randomPlayers={randomSeatsUtils.getRandomPlayers(selectedPlayers)}
           />
         )}
-        <Button
-          label={'Get first Round'}
-          disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length || validLeagueTouarnament}
-          onClick={() => {
-            submitPlayers(selectedPlayers.filter(Boolean) as Player[])
-            handleCreateTournament()
-            router.push('./swiss/rounds')
-          }}
-        />
+
+        {user_email === "d3c.draftio@gmail.com" ?
+          <Button
+            label={'Get first Round'}
+            disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length}
+            onClick={() => {
+              submitPlayers(selectedPlayers.filter(Boolean) as Player[])
+              handleCreateTournament()
+              router.push('./swiss/rounds')
+            }}
+          /> :
+          <Button
+            label={'Get first Round'}
+            disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length || validLeagueTouarnament}
+            onClick={() => {
+              submitPlayers(selectedPlayers.filter(Boolean) as Player[])
+              handleCreateTournament()
+              router.push('./swiss/rounds')
+            }}
+          />
+        }
       </div>
     </div>
   )

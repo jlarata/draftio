@@ -9,29 +9,37 @@ import { User } from '@/services/lib/definitions';
 
 export default function UserNav({ user_email }: { user_email: string }) {
 
-    return (
-        <>
-            {user_email ?
-                <div className='flex flex-row h-[48px] w-full md:w-fit items-center justify-start gap-2 rounded-md bg-gray-100 p-3 text-sm font-medium md:px-3'>
-                    <div className='flex flex-row h-[48px] items-center pr-4 border-gray-500 border-r-2'>
-                        Welcome, {user_email}</div>
-                    <div><form
-                        action={async () => {
-                            'use server';
-                            await signOut({ redirectTo: '/' });
-                        }}
-                    ><button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-100 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
-                            <PowerIcon className="w-6" />
-                            <div className="hidden md:block">Sign Out</div>
-                        </button>
-                    </form>
-                    </div>
-                </div> :
-                <div className='flex flex-row p-2'>no user</div>}
+  return (
+    <>
+      {user_email ?
+        <div className='flex flex-row h-[48px] w-full md:w-fit items-center justify-start gap-2 rounded-md bg-gray-100 p-3 text-sm font-medium md:px-3'>
+          <div className='flex flex-row h-[48px] items-center pr-4 border-gray-500 border-r-2'>
+            Welcome, {user_email}</div>
+          <div><form
+            action={async () => {
+              'use server';
+              await signOut({ redirectTo: '/' });
+            }}
+          ><button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-100 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
+              <PowerIcon className="w-6" />
+              <div className="hidden md:block">Sign Out</div>
+            </button>
+          </form>
+          </div>
+        </div> :
+        <div className='flex flex-row p-2'>Drafting anonymously: if you want to save, edit, and navigate your leagues, tournaments and matches,&nbsp;
+          <Link
+            className="text-blue-600 hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent"
+            href={"/login"}>login</Link>
+            &nbsp;or&nbsp;
+          <Link
+            className="text-blue-600 hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent"
+            href={"/register"}>register</Link>
+          &nbsp;(it's free!) </div>}
 
-        </>
+    </>
 
-    );
+  );
 }
 
 

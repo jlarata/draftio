@@ -9,6 +9,7 @@ import { Config } from '../../classes/Config'
 import { LeagueWithTournaments, Player } from '@/services/lib/definitions'
 import CreateTournamentSwiss from '../Tornament/PlayerForm/CreateTournamentSwiss/create-form'
 import { PowerIcon } from '@heroicons/react/24/outline';
+import CreateTournamentSwissAnonymous from '../Tornament/PlayerForm/CreateTournamentSwiss/create-form-anon'
 
 const Home = ({
   selectedPlayers,
@@ -25,7 +26,7 @@ const Home = ({
   tournament.databaseInfo.userEmail = user_email //Esto hay que pasarlo a setUserEmail ?
 
   const handleLeagueChange = (leagueID: string, isValid: boolean) => {
-    console.log(validLeagueTouarnament)
+    //console.log(validLeagueTouarnament)
     setvalidLeagueTouarnament(isValid)
     //este bloque se puede sacar, esta para test
   }
@@ -78,10 +79,15 @@ const Home = ({
     <>
       <div className={css.container}>
         <div>
-          
-          <div>
-            <CreateTournamentSwiss leaguesWithTournaments={leagueArrayId} onLeagueChange={handleLeagueChange} />
-          </div>
+
+          {/* if navigating anomymously wont display league selector */}
+          {user_email === "d3c.draftio@gmail.com" ?
+            <CreateTournamentSwissAnonymous leaguesWithTournaments={leagueArrayId} ></CreateTournamentSwissAnonymous> :
+            <div>
+              <CreateTournamentSwiss leaguesWithTournaments={leagueArrayId} onLeagueChange={handleLeagueChange} />
+            </div>
+          }
+
           <div>
             <PlayerForm
               user_email={user_email}

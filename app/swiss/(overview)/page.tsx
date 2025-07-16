@@ -9,8 +9,16 @@ export default async function Page() {
 
 
   const session = await auth();
-  const user_email: string = session?.user?.email!
-  
+  let user_email: string;
+  /**
+   * Case not logged, will use d3c.draftio email user.
+   */
+  if (session?.user?.email! === undefined) {
+    user_email = "d3c.draftio@gmail.com"
+  } else {
+    user_email = session?.user?.email!
+  }
+    
   const { fetchLeaguesWithTournamentsByUserEmail } = leagueServices
   const leagues: LeagueWithTournaments[] = ((await fetchLeaguesWithTournamentsByUserEmail(user_email)).arrayOfLeaguesWithTournaments)
 
@@ -24,8 +32,7 @@ export default async function Page() {
   // fijate en las líneas 13 y 14 que te estoy fetcheando todas las ligas del usuario logueado
   //cada cual con sus torneos y campeones
   
-   const fetchedPlayers = await fetchPlayersByUserEmail(user_email)
-
+   const fetchedPlayers = await fetchPlayersByUserEmail(user_email)  
 
   return (
     <>
