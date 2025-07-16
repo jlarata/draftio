@@ -12,9 +12,9 @@ import { useTournament } from '@/src/swiss/context/tournament'
 import { createTournamentAndReturnId } from '@/services/lib/actions'
 import { boolean } from 'zod'
 
-type Props = { submitPlayers: (players: Player[]) => void; fetchedPlayers: Player[]; user_email: string; validLeagueTouarnament: boolean }
+type Props = { submitPlayers: (players: Player[]) => void; fetchedPlayers: Player[]; user_email: string; validLeagueTournament: boolean, validLeague:boolean; validTournament: boolean }
 
-const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTouarnament }: Props) => {
+const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTournament, validLeague, validTournament }: Props) => {
   const router = useRouter()
   const { tournament } = useTournament()
   // const [tournamentSeed, setTournamentSeed] = useState<string>('')
@@ -24,9 +24,12 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueToua
   const [options, setOptions] = useState<Player[]>(fetchedPlayers)
   const pathname = usePathname()
   const [isLoading, setIsLoading] = useState(false)
+  
+  const [selectedLeagueID, setSelectedLeagueID] = useState('')
 
   const handleRefreshOptions = () => {
     setOptions(fetchedPlayers)
+    setSelectedLeagueID(tournament.databaseInfo.leagueID)
   }
 
   const handlePlayerNameChange = ({ player, index }: { player: Player; index: number }) => {
@@ -78,13 +81,16 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueToua
 
     tournament.databaseInfo.touranmentID = tournamentID
 
-    debug: console.log("creando tournament con esta data "+tournament.databaseInfo.leagueID)
+    //debug: console.log("creando tournament con esta data "+tournament.databaseInfo.leagueID)
     setIsLoading(false)
   }
+  /** for validation purpouse */ 
+  const esUndefined = (player: any) => player === undefined;
+
 
   useEffect(() => {
     handleRefreshOptions()
-  }, [fetchedPlayers])
+  }, [fetchedPlayers, tournament.databaseInfo.leagueID])
 
   return (
     <div>
@@ -124,6 +130,8 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueToua
           />
         )}
 
+
+        {/* case user is anonymous wont use leaguevalidation: */}
         {user_email === "d3c.draftio@gmail.com" ?
           <Button
             label={'Get first Round'}
@@ -134,9 +142,14 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueToua
               router.push('./swiss/rounds')
             }}
           /> :
+          /* else */
           <Button
             label={'Get first Round'}
-            disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length || validLeagueTouarnament}
+            disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length 
+              || selectedPlayers.some(esUndefined)
+              || !validLeague
+              || !validTournament
+            }
             onClick={() => {
               submitPlayers(selectedPlayers.filter(Boolean) as Player[])
               handleCreateTournament()

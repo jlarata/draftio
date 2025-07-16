@@ -10,9 +10,14 @@ import css from './style.module.css'
 export default function CreateTournamentSwiss({
   leaguesWithTournaments,
   onLeagueChange,
+  onTournamentChange
 }: {
   leaguesWithTournaments: LeagueWithTournaments[]
-  onLeagueChange: (leagueID: string, isValid: boolean) => void
+  onLeagueChange: (
+    //leagueID: string,
+    isValid: boolean) => void
+  onTournamentChange: (
+    isValid: boolean) => void
 }) {
   const { tournament } = useTournament()
   const [leagueID, setLeagueID] = useState<string>('')
@@ -27,18 +32,31 @@ export default function CreateTournamentSwiss({
   const [isValid, setIsValid] = useState(true)
 
   const [tournamentName, setTournamentName] = useState<string>('')
-  const handleAddTournamentName = () => {
+  
+  const handleAddTournamentName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const typedTournamentName = e.target.value
+    setTournamentName(typedTournamentName)
     tournament.databaseInfo.name = tournamentName.trim()
+
+    //nuevo método de validación:
+    if (typedTournamentName != '') {
+      onTournamentChange(true)
+    } else {
+      onTournamentChange(false)
+    }
+    
+    //este método ya no se usa, creo:
     setIsTournamentValid(false)
   }
 
   const handleSelectLeagueChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedLeagueID = e.target.value
     setLeagueID(selectedLeagueID)
-    console.log(isTournamentValid, isLeagueValid, isValid)
+    //debug console.log(isTournamentValid, isLeagueValid, isValid)
     setIsLeagueValid(false)
 
-    onLeagueChange(selectedLeagueID, isValid)
+    //onLeagueChange(selectedLeagueID, isValid)
+    onLeagueChange(true)
     tournament.databaseInfo.leagueID = selectedLeagueID
   }
 
@@ -78,11 +96,10 @@ export default function CreateTournamentSwiss({
                           placeholder='Enter new tournament Name (i.e. Ursa Saga in my house)'
                           id='name'
                           name='name'
-                          className={`peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 ${
-                            isTournamentValid ? css.errorBorder : ''
-                          }`}
-                          onChange={(e) => setTournamentName(e.target.value)}
-                          onBlur={handleAddTournamentName}
+                          className={`peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 ${isTournamentValid ? css.errorBorder : ''
+                            }`}
+                          onChange={handleAddTournamentName}
+                          //onBlur={handleAddTournamentName}
                           required
                         ></input>
                         <TrophyIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500' />
@@ -108,9 +125,8 @@ export default function CreateTournamentSwiss({
                           id='league_id'
                           name='league_id'
                           defaultValue=''
-                          className={`peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 ${
-                            isLeagueValid ? css.errorBorder : ''
-                          }`}
+                          className={`peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 ${isLeagueValid ? css.errorBorder : ''
+                            }`}
                           onChange={handleSelectLeagueChange}
                           required
                         >
