@@ -9,6 +9,7 @@ import { Config } from '../../classes/Config'
 import { LeagueWithTournaments, Player } from '@/services/lib/definitions'
 import CreateTournamentSwiss from '../Tornament/PlayerForm/CreateTournamentSwiss/create-form'
 import { PowerIcon } from '@heroicons/react/24/outline';
+import CreateTournamentSwissAnonymous from '../Tornament/PlayerForm/CreateTournamentSwiss/create-form-anon'
 
 const Home = ({
   selectedPlayers,
@@ -20,15 +21,26 @@ const Home = ({
   leagueArrayId: LeagueWithTournaments[]
 }) => {
   const { tournament } = useTournament()
-  const [validLeagueTouarnament, setvalidLeagueTouarnament] = useState(true)
+  //en la validación original validleaguetornament arrancaba en true. lo di vuelta.
+
+  const [validLeague, setvalidLeague] = useState(false)
+  const [validTournament, setValidTournament] = useState(false)
+  const [validLeagueTournament, setvalidLeagueTournament] = useState(false)
 
   tournament.databaseInfo.userEmail = user_email //Esto hay que pasarlo a setUserEmail ?
 
-  const handleLeagueChange = (leagueID: string, isValid: boolean) => {
-    console.log(validLeagueTouarnament)
-    setvalidLeagueTouarnament(isValid)
-    //este bloque se puede sacar, esta para test
-  }
+  /*const handleLeagueChange = (leagueID: string, isValid: boolean) => {
+    setvalidLeagueTournament(isValid)
+    // validación original, que cambié por la de abajo. borrar
+  }*/
+
+    const handleLeagueChange = (isValid: boolean) => {
+      setvalidLeague(isValid)
+    }
+
+    const handleTournamentChange = (isValid: boolean) => {
+      setValidTournament(isValid)
+    }
 
   const submitPlayers = (players: Player[]) => {
     const date = new Date().toISOString()
@@ -78,16 +90,29 @@ const Home = ({
     <>
       <div className={css.container}>
         <div>
-          
-          <div>
-            <CreateTournamentSwiss leaguesWithTournaments={leagueArrayId} onLeagueChange={handleLeagueChange} />
-          </div>
+
+          {/* if navigating anomymously wont display league selector */}
+          {user_email === "d3c.draftio@gmail.com" ?
+            <CreateTournamentSwissAnonymous leaguesWithTournaments={leagueArrayId}
+            //onLeagueChange={handleLeagueChange}
+            onTournamentChange={handleTournamentChange}
+             ></CreateTournamentSwissAnonymous> :
+            <div>
+              <CreateTournamentSwiss leaguesWithTournaments={leagueArrayId}
+               onLeagueChange={handleLeagueChange} 
+               onTournamentChange={handleTournamentChange}
+                />
+            </div>
+          }
+
           <div>
             <PlayerForm
               user_email={user_email}
               submitPlayers={submitPlayers}
               fetchedPlayers={selectedPlayers}
-              validLeagueTouarnament={validLeagueTouarnament}
+              validLeagueTournament={validLeagueTournament}
+              validLeague={validLeague}
+              validTournament={validTournament}
             />
           </div>
         </div>

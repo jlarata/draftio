@@ -27,7 +27,7 @@ const RoundInput = ({ round, onSelectChange, onConfirmChange }: Props) => {
   return (
     <>
       <div>
-        <p>Ronda {`${round+1}`}</p>
+        <p>Round {`${round+1}`}</p>
       </div>
       <div>
         <MatchInput key={`round-${round}`} matches={matches} onSelectChange={onSelectChange} onConfirmChange={onConfirmChange} />

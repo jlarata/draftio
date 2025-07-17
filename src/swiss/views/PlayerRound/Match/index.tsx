@@ -57,7 +57,7 @@ const handleCheckboxChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         )
       })}
       </div>
-      <div><p>Confirmar ronda</p> <input onChange={handleCheckboxChange} type="checkbox"  defaultChecked={false} /> </div>
+      <div><p>Confirm round</p> <input onChange={handleCheckboxChange} type="checkbox"  defaultChecked={false} /> </div>
     </>
   )
 }
