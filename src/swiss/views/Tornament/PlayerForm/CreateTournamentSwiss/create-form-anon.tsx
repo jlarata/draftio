@@ -7,9 +7,16 @@ import { useTournament } from '@/src/swiss/context/tournament'
 import css from './style.module.css'
 
 export default function CreateTournamentSwissAnonymous({
-  leaguesWithTournaments
+  leaguesWithTournaments,
+  onLeagueChange,
+  onTournamentChange
 }: {
   leaguesWithTournaments: LeagueWithTournaments[]
+  onLeagueChange: (
+    //leagueID: string,
+    isValid: boolean) => void
+  onTournamentChange: (
+    isValid: boolean) => void
 }) {
   const { tournament } = useTournament()
   let aTime = new Date()
@@ -79,6 +86,8 @@ export default function CreateTournamentSwissAnonymous({
                           }`}
                           onChange={(e) => setTournamentName(e.target.value)}
                           onBlur={handleAddTournamentName}
+                          /* onChange={(e) => setTournamentName(e.target.value)}
+                          onBlur={handleAddTournamentName} */
                           required
                         ></input>
                         <TrophyIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500' />

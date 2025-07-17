@@ -10,7 +10,6 @@ import PlayerSelectField from './PlayerSelect'
 import CreateForm from '@/src/ui/players/create-form'
 import { useTournament } from '@/src/swiss/context/tournament'
 import { createTournamentAndReturnId } from '@/services/lib/actions'
-import { boolean } from 'zod'
 
 type Props = { submitPlayers: (players: Player[]) => void; fetchedPlayers: Player[]; user_email: string; validLeagueTournament: boolean, validLeague:boolean; validTournament: boolean }
 
@@ -135,7 +134,10 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTour
         {user_email === "d3c.draftio@gmail.com" ?
           <Button
             label={'Get first Round'}
-            disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length}
+            disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length
+              || selectedPlayers.some(esUndefined)
+              || !validTournament
+            }
             onClick={() => {
               submitPlayers(selectedPlayers.filter(Boolean) as Player[])
               handleCreateTournament()

@@ -93,7 +93,10 @@ const Home = ({
 
           {/* if navigating anomymously wont display league selector */}
           {user_email === "d3c.draftio@gmail.com" ?
-            <CreateTournamentSwissAnonymous leaguesWithTournaments={leagueArrayId} ></CreateTournamentSwissAnonymous> :
+            <CreateTournamentSwissAnonymous leaguesWithTournaments={leagueArrayId}
+            onLeagueChange={handleLeagueChange}
+            onTournamentChange={handleTournamentChange}
+             ></CreateTournamentSwissAnonymous> :
             <div>
               <CreateTournamentSwiss leaguesWithTournaments={leagueArrayId}
                onLeagueChange={handleLeagueChange} 
