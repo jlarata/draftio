@@ -8,13 +8,13 @@ import css from './style.module.css'
 
 export default function CreateTournamentSwissAnonymous({
   leaguesWithTournaments,
-  onLeagueChange,
+  /* onLeagueChange, */
   onTournamentChange
 }: {
   leaguesWithTournaments: LeagueWithTournaments[]
-  onLeagueChange: (
+  /* onLeagueChange: (
     //leagueID: string,
-    isValid: boolean) => void
+    isValid: boolean) => void */
   onTournamentChange: (
     isValid: boolean) => void
 }) {
@@ -30,8 +30,20 @@ export default function CreateTournamentSwissAnonymous({
   /*const [isValid, setIsValid] = useState(true)*/
 
   const [tournamentName, setTournamentName] = useState<string>('')
-  const handleAddTournamentName = () => {
+  
+  const handleAddTournamentName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const typedTournamentName = e.target.value
+    setTournamentName(typedTournamentName)
     tournament.databaseInfo.name = tournamentName.trim()
+
+    //nuevo método de validación:
+    if (typedTournamentName != '') {
+      onTournamentChange(true)
+    } else {
+      onTournamentChange(false)
+    }
+    
+    //este método ya no se usa, creo:
     setIsTournamentValid(false)
   }
 
@@ -84,8 +96,7 @@ export default function CreateTournamentSwissAnonymous({
                           className={`peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 ${
                             isTournamentValid ? css.errorBorder : ''
                           }`}
-                          onChange={(e) => setTournamentName(e.target.value)}
-                          onBlur={handleAddTournamentName}
+                          onChange={handleAddTournamentName}
                           /* onChange={(e) => setTournamentName(e.target.value)}
                           onBlur={handleAddTournamentName} */
                           required

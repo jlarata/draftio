@@ -16,7 +16,7 @@ const RandomSeatStep = ({ players, randomPlayers }: Props) => {
     <div>
       <div style={{ display: 'flex', gap: '12px' }}>
         <input type='checkbox' checked={isChecked} onChange={handleCheckboxChange} />
-        <div>Modificar Posiciones</div>
+        <div>Modify Positions</div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
         {randomPlayers.map((player, index) => {

@@ -89,7 +89,7 @@ export default function CreateTournamentSwiss({
 
                     <div className='mb-2 bg-gray-100'>
                       <label htmlFor='nickname' className='mb-2 block text-sm font-medium'>
-                        Name, Date & League
+                        Tournament Name & Date
                       </label>
                       <div className='relative '>
                         <input

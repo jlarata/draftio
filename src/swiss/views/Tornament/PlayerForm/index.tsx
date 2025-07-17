@@ -144,7 +144,7 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTour
               router.push('./swiss/rounds')
             }}
           /> :
-          /* else */
+          /* case user is logged: */
           <Button
             label={'Get first Round'}
             disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length 
