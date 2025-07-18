@@ -3,7 +3,8 @@
     grid-template-columns: 5fr 1fr 1fr 1fr 1fr 1fr 1fr;
     padding: 24px;
     border-radius: 16px;
-    background-color: white;
+    /*equivalente a bg-gray-100 rgb(249 250 251)*/
+    background-color: rgb(249 250 251);
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 

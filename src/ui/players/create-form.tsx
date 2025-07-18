@@ -49,7 +49,7 @@ export default function CreateForm({ fetchedPlayers, user_email }: { fetchedPlay
 
   return (
     <>
-      <div className='w-full mt-6 h-44 md:w-1/2 bg-gray-100 rounded-md'>
+      <div className='w-full mt-6 bg-gray-100 rounded-md'>
         <div className='mt-6 flow-root'>
           <div className='overflow-x-auto'>
             <div className='inline-block min-w-full align-middle'>

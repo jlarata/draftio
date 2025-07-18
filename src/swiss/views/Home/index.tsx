@@ -90,10 +90,11 @@ const Home = ({
     <>
       {/* <div className={css.container}> */}
       <div className='flex flex-col pt-8 gap-8
-         md:flex-row'>
+         md:flex-row md:gap-0 md:justify-items-stretch '>
 
-        <div className=''>
-          {/* if navigating anomymously wont display league selector */}
+        <div className='md:w-1/3'>
+          {/* when user is navigating anomymously we wont display the league selector
+          so i've cloned the component and made some changes */}
           {user_email === "d3c.draftio@gmail.com" ?
             <CreateTournamentSwissAnonymous leaguesWithTournaments={leagueArrayId}
               //onLeagueChange={handleLeagueChange}
@@ -105,7 +106,7 @@ const Home = ({
             />
           }
         </div>
-        <div className=''>
+        <div className='md:w-1/3'>
           <PlayerForm
             user_email={user_email}
             submitPlayers={submitPlayers}

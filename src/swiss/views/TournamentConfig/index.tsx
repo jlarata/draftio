@@ -41,7 +41,7 @@ const TournamentConfig = ({ config, onConfigChange }: Props) => {
       <div>
         <p className='text-2xl mt-4'>Tournament Configuration</p>
       </div>
-      <div className='flex flex-col md:items-end md:gap-2'>
+      <div className='flex flex-col gap-4 md:items-end md:gap-2'>
         <div className='flex items-center gap-2 flex-col md:flex-row'>
           <label>Best of...</label>
           <NumberInput min={1} max={7} step={2} defaultValue={3} onChange={handleNumberInputChange('Bo')} 

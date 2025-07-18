@@ -63,8 +63,7 @@ export default function CreateTournamentSwissAnonymous({
 
   return (
     <>
-      <div className='bg-gray-100 rounded-md mr-4 ml-4 p-4
-      md:mt-6 md:w-1/2 border border-gray-600'>
+      <div className='bg-gray-100 rounded-md mr-4 ml-4 p-4 border border-gray-600'>
         <p className="text-2xl mt-4 ml-2">Create a New Tournament</p>
         <div className='mt-2 flow-root'>
           <div className='overflow-x-auto'>

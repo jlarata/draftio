@@ -114,8 +114,10 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTour
             />
           )
         })}
-        <div className='-mt-2 -mb-4 rounded border-t border-gray-600'>
-          <div className='-mt-4 border-b border-gray-600'>
+        <div className='-mt-2 -mb-2 rounded border-b border-t border-gray-600
+        md:mb-0'>
+          <div className='-mt-4 
+          md:mb-0'>
           <CreateForm fetchedPlayers={fetchedPlayers} user_email={user_email}></CreateForm>
           </div>
           
@@ -137,7 +139,7 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTour
           {/* case user is anonymous wont use leaguevalidation: */}
           {user_email === "d3c.draftio@gmail.com" ?
             <Button
-              label={'Get first Round'}
+              label={'Start the Draft!'}
               disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length
                 || selectedPlayers.some(esUndefined)
                 || !validTournament
@@ -150,7 +152,7 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTour
             /> :
             /* case user is logged: */
             <Button
-              label={'Get first Round'}
+              label={'Start the Draft!'}
               disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length
                 || selectedPlayers.some(esUndefined)
                 || !validLeague
