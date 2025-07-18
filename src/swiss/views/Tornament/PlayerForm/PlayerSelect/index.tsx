@@ -30,7 +30,7 @@ const PlayerSelectField = ({
         onChange={(e) => (setSelectedOption(e.target.value), handlePlayerNameChange({ player: fetchedPlayers.find((currPlayer) => currPlayer.id === e.target.value)!, index }))}
       >
         <option value='' disabled>
-          Choose a player
+          Select a player
         </option>
         {fetchedPlayers.map((player, idx) => (
           <option key={idx} value={player.id} disabled={selectedPlayers.some((currSelectedPlayer) => {

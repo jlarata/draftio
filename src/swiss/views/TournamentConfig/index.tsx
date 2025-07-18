@@ -37,12 +37,13 @@ const TournamentConfig = ({ config, onConfigChange }: Props) => {
   // Esto tambien creo que se puede cambiar para que sea un map ?
   return (
     <>
+    <div className='flex flex-col gap-4 bg-gray-100 rounded-md p-4 mr-4 ml-4 border border-gray-600'>
       <div>
-        <p className='mb-2 font-bold text-lg'>Tournament Configuration</p>
+        <p className='text-2xl mt-4'>Tournament Configuration</p>
       </div>
       <div className='flex flex-col md:items-end md:gap-2'>
         <div className='flex items-center gap-2 flex-col md:flex-row'>
-          <label>Bo</label>
+          <label>Best of...</label>
           <NumberInput min={1} max={7} step={2} defaultValue={3} onChange={handleNumberInputChange('Bo')} 
           className='md:w-16'/>
         </div>
@@ -62,6 +63,7 @@ const TournamentConfig = ({ config, onConfigChange }: Props) => {
           <label>Points per bye</label>
           <NumberInput min={0} max={100} step={1} defaultValue={0} onChange={handleNumberInputChange('bye')} />
         </div>
+      </div>
       </div>
     </>
   )

@@ -30,7 +30,7 @@ export default function CreateTournamentSwissAnonymous({
   /*const [isValid, setIsValid] = useState(true)*/
 
   const [tournamentName, setTournamentName] = useState<string>('')
-  
+
   const handleAddTournamentName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const typedTournamentName = e.target.value
     setTournamentName(typedTournamentName)
@@ -42,7 +42,7 @@ export default function CreateTournamentSwissAnonymous({
     } else {
       onTournamentChange(false)
     }
-    
+
     //este método ya no se usa, creo:
     setIsTournamentValid(false)
   }
@@ -63,7 +63,9 @@ export default function CreateTournamentSwissAnonymous({
 
   return (
     <>
-      <div className='w-full md:mt-6 h-44 md:w-1/2 bg-gray-100 rounded-md'>
+      <div className='bg-gray-100 rounded-md mr-4 ml-4 p-4
+      md:mt-6 md:w-1/2 border border-gray-600'>
+        <p className="text-2xl mt-4 ml-2">Create a New Tournament</p>
         <div className='mt-2 flow-root'>
           <div className='overflow-x-auto'>
             <div className='inline-block min-w-full align-middle'>
@@ -84,27 +86,27 @@ export default function CreateTournamentSwissAnonymous({
                       </div>
                     </div>
 
-                    <div className='mb-2 bg-gray-100'>
+                    <div className='mb-2'>
                       <label htmlFor='nickname' className='mb-2 block text-sm font-medium'>
-                        Tournament Name & Date
+                        Tournament Name
                       </label>
                       <div className='relative '>
                         <input
                           placeholder='Enter new tournament Name (i.e. Ursa Saga in my house)'
                           id='name'
                           name='name'
-                          className={`peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 ${
-                            isTournamentValid ? css.errorBorder : ''
-                          }`}
+                          className={`peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 ${isTournamentValid ? css.errorBorder : ''
+                            }`}
                           onChange={handleAddTournamentName}
-                          /* onChange={(e) => setTournamentName(e.target.value)}
-                          onBlur={handleAddTournamentName} */
+                          //onBlur={handleAddTournamentName}
                           required
                         ></input>
                         <TrophyIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500' />
                       </div>
 
-                      <label htmlFor='date' className='mb-2 block text-sm font-medium'></label>
+                      <label htmlFor='date' className='mb-2 mt-4 block text-sm font-medium'>
+                        Tournament Date
+                      </label>
                       <div className='transparentInput relative '>
                         <input
                           type='date'
@@ -115,9 +117,8 @@ export default function CreateTournamentSwissAnonymous({
                           onChange={(e) => setDate(e.target.value)}
                         ></input>
                         <CalendarDaysIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500' />
-                      </div>
+                      </div>                    
                     </div>
-                    <div className='mt-6 flex justify-end gap-4 '></div>
                   </div>
                 </form>
               </div>
