@@ -25,14 +25,14 @@ const RoundInput = ({ round, onSelectChange, onConfirmChange }: Props) => {
 }, [round, tournament.rounds]) //ojo esto que no le entiendo
 
   return (
-    <>
+    <div className=' w-full'>
       <div>
-        <p>Ronda {`${round+1}`}</p>
+        <p className='text-2xl mt-4'>Round {`${round+1}`}</p>
       </div>
       <div>
         <MatchInput key={`round-${round}`} matches={matches} onSelectChange={onSelectChange} onConfirmChange={onConfirmChange} />
       </div>
-    </>
+    </div>
   )
 }
 

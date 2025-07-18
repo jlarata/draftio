@@ -10,6 +10,7 @@ import {
   PuzzlePieceIcon, 
   UserIcon,
   InboxStackIcon,
+  BugAntIcon,
 } from '@heroicons/react/24/outline';
 import { User } from '@/services/lib/definitions';
 import { InboxIcon } from '@heroicons/react/20/solid';
@@ -59,6 +60,19 @@ export default function NavLinks(user : User) {
           </Link>
         );
       })}
+      <Link
+            
+            href={'/swiss'}
+            className={clsx(
+              'flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-green-300 hover:text-green-600 md:flex-none md:justify-start md:p-2 md:px-3',
+              {
+                'bg-green-300 text-green-600': pathname === '/swiss',
+              },
+            )}>
+              < BugAntIcon className="w-6 text-green-600" />
+            
+            <p className="hidden md:block">Go Draft!</p>
+          </Link>
     </>
   );
 }

@@ -24,7 +24,7 @@ const PlayerScoreDiv = ({ containerClassName }: Props) => {
 
   return (
     <div className={classNames(containerClassName, css.container)}>
-      <h3 className={css.title}>Tabla de posiciones</h3>
+      <h3 className={css.title}>Standings & Scores</h3>
       <>
         <PlayerRoundRow
           containerClassName={classNames(css.playerRowContainer, css.playerRowHeader)}

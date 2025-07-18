@@ -236,28 +236,6 @@ export async function deleteLeague(id: string) {
   redirect('/dashboard/leagues?leaguedeleted=ok');
 }
 
-export async function deletePlayer(id: string) {
-
-
-  /* first: delete all games that are referenced in a player_game record */
-  await sql`      
-      DELETE FROM game
-      WHERE game.id IN
-         (
-      SELECT
-        game_id
-      FROM
-        player_game pg
-      WHERE
-      pg.player_id = ${id})
-      `
-
-  /* then delete the player: the CASCADE constraint will delete the player_game record*/
-  await sql`DELETE FROM player WHERE id = ${id}`;
-  revalidatePath('/dashboard/players');
-  redirect('/dashboard/players?playerdeleted=ok');
-}
-
 export async function updateTournament(formData: FormData) {
   let { id, name, rawDate, champion, league } = ({
     id: formData.get('id') as string,
@@ -330,9 +308,11 @@ export async function createPlayerAndAssociateWithUser(
               VALUES (${rawFormData.user_email}, ${player_id.player_id[0].id});`;
 
   revalidatePath(`${rawFormData.origin_url}`);
-  redirect(`${rawFormData.origin_url}?playercreated=ok`);
+  //redirect(`${rawFormData.origin_url}`);
+  /* redirect(`${rawFormData.origin_url}?playercreated=ok`); */
 }
 
+/*WARNING: do not call this method directly. use createPlayerAndAssociateWithUser instead */
 async function createPlayer(username: string) {
 
   try {
@@ -347,6 +327,40 @@ async function createPlayer(username: string) {
     console.error('Database Error:', error)
     throw new Error('Failed to create player and return the uuid.')
   }
+}
+
+export async function updatePlayer(id: string, username: string) {
+  //console.log("starting update player function with player id: "+id+", new username: "+username)
+  try {
+    await sql`
+    UPDATE player
+    SET username = ${username}
+    WHERE id = ${id};`
+  } catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to edit player username.')
+  }
+  revalidatePath('/dashboard/players');
+}
+
+export async function deletePlayer(id: string) {
+  /* first: delete all games that are referenced in a player_game record */
+  await sql`      
+      DELETE FROM game
+      WHERE game.id IN
+         (
+      SELECT
+        game_id
+      FROM
+        player_game pg
+      WHERE
+      pg.player_id = ${id})
+      `
+
+  /* then delete the player: the CASCADE constraint will delete the player_game record*/
+  await sql`DELETE FROM player WHERE id = ${id}`;
+  revalidatePath('/dashboard/players');
+  redirect('/dashboard/players?playerdeleted=ok');
 }
 
 export async function createTournament(
