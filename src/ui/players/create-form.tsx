@@ -49,7 +49,7 @@ export default function CreateForm({ fetchedPlayers, user_email }: { fetchedPlay
 
   return (
     <>
-      <div className='w-full mt-6 h-44 md:w-1/2 bg-gray-100 rounded-md'>
+      <div className='w-full mt-6 bg-gray-100 rounded-md'>
         <div className='mt-6 flow-root'>
           <div className='overflow-x-auto'>
             <div className='inline-block min-w-full align-middle'>
@@ -90,7 +90,7 @@ export default function CreateForm({ fetchedPlayers, user_email }: { fetchedPlay
 
                     <div className='mb-4 bg-gray-100'>
                       <label htmlFor='nickname' className='mb-2 block text-sm font-medium'>
-                        Create New Player
+                        Add a New Player to your Collection
                       </label>
                       <div className='relative '>
                         <input
@@ -113,7 +113,7 @@ export default function CreateForm({ fetchedPlayers, user_email }: { fetchedPlay
                         disabled={!isPlayerNameValid(newOption) || isLoading}
                         onClick={handleCreatePlayer}
                       >
-                        {isLoading ? 'Loading...' : 'Create New Player'}
+                        {isLoading ? 'Loading...' : 'Add'}
                       </Button>
                     </div>
                   </div>

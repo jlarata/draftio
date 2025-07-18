@@ -13,13 +13,16 @@ const Input = ({ initialValue, className, onChange, ...props }: Props) => {
   const [value, setValue] = useState(initialValue)
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
-    if (onChange) onChange(e)
+    if (e.target.value === '' || !isNaN(Number(e.target.value))) {
+      setValue(e.target.value)
+      if (onChange) onChange(e)
+    }
+
   }
 
   return (
     <input
-      type='number'
+      type='text'
       onChange={handleOnChange}
       className={classNames(css.input, className)}
       value={value}

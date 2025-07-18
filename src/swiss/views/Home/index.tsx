@@ -34,13 +34,13 @@ const Home = ({
     // validación original, que cambié por la de abajo. borrar
   }*/
 
-    const handleLeagueChange = (isValid: boolean) => {
-      setvalidLeague(isValid)
-    }
+  const handleLeagueChange = (isValid: boolean) => {
+    setvalidLeague(isValid)
+  }
 
-    const handleTournamentChange = (isValid: boolean) => {
-      setValidTournament(isValid)
-    }
+  const handleTournamentChange = (isValid: boolean) => {
+    setValidTournament(isValid)
+  }
 
   const submitPlayers = (players: Player[]) => {
     const date = new Date().toISOString()
@@ -88,38 +88,39 @@ const Home = ({
 
   return (
     <>
-      <div className={css.container}>
-        <div>
+      {/* <div className={css.container}> */}
+      <div className='flex flex-col pt-8 gap-8
+         md:flex-row md:gap-0 md:justify-items-stretch '>
 
-          {/* if navigating anomymously wont display league selector */}
+        <div className='md:w-1/3'>
+          {/* when user is navigating anomymously we wont display the league selector
+          so i've cloned the component and made some changes */}
           {user_email === "d3c.draftio@gmail.com" ?
             <CreateTournamentSwissAnonymous leaguesWithTournaments={leagueArrayId}
-            //onLeagueChange={handleLeagueChange}
-            onTournamentChange={handleTournamentChange}
-             ></CreateTournamentSwissAnonymous> :
-            <div>
-              <CreateTournamentSwiss leaguesWithTournaments={leagueArrayId}
-               onLeagueChange={handleLeagueChange} 
-               onTournamentChange={handleTournamentChange}
-                />
-            </div>
-          }
-
-          <div>
-            <PlayerForm
-              user_email={user_email}
-              submitPlayers={submitPlayers}
-              fetchedPlayers={selectedPlayers}
-              validLeagueTournament={validLeagueTournament}
-              validLeague={validLeague}
-              validTournament={validTournament}
+              //onLeagueChange={handleLeagueChange}
+              onTournamentChange={handleTournamentChange}
+            ></CreateTournamentSwissAnonymous> :
+            <CreateTournamentSwiss leaguesWithTournaments={leagueArrayId}
+              onLeagueChange={handleLeagueChange}
+              onTournamentChange={handleTournamentChange}
             />
-          </div>
+          }
         </div>
-        <div>
+        <div className='md:w-1/3'>
+          <PlayerForm
+            user_email={user_email}
+            submitPlayers={submitPlayers}
+            fetchedPlayers={selectedPlayers}
+            validLeagueTournament={validLeagueTournament}
+            validLeague={validLeague}
+            validTournament={validTournament}
+          />
+        </div>
+        <div className=''>
           <TournamentConfig config={config} onConfigChange={handleConfigChange} />
         </div>
       </div>
+      {/* </div> */}
     </>
   )
 }

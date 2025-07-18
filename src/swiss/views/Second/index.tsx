@@ -148,18 +148,23 @@ const Second = ({ fetchedPlayers }: Props) => {
   }
 
   return (
-    <div className={css.container}>
-      <div className={css.matches}>
-        {visibleRounds.map((round) => (
-          <RoundInput
-            key={round}
-            onSelectChange={handleSelectChange}
-            round={round}
-            onConfirmChange={(isConfirmed) => handleConfirmChange(round, isConfirmed)}
-          />
-        ))}
+    <div className='flex flex-col'>
+      <div className='flex flex-col mt-6 gap-4 mr-4 ml-4
+       md:flex-row md:justify-items-stretch md:ml-4 md:mr-4 md:gap-4'>
+        <div className='md:w-1/2'>
+          <PlayerScoreDiv containerClassName={css.scoreTableContainer} refreshScore={refreshScore} />
+        </div>
+        <div className='md:w-1/2 rounded-xl bg-gray-50 p-4'>
+          {visibleRounds.map((round) => (
+            <RoundInput
+              key={round}
+              onSelectChange={handleSelectChange}
+              round={round}
+              onConfirmChange={(isConfirmed) => handleConfirmChange(round, isConfirmed)}
+            />
+          ))}
+        </div>
       </div>
-      <PlayerScoreDiv containerClassName={css.scoreTableContainer} refreshScore={refreshScore} />
       <Button
         label={'Get Next round'}
         onClick={() => logValue()}
