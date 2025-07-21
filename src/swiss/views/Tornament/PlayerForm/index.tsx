@@ -52,6 +52,31 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTour
     })
   }
 
+  const handleAddPlayerToEight = async () => {
+    setSelectedPlayers((prevPlayers) => {
+      switch (prevPlayers.length) {
+        case 0:
+          return [...prevPlayers, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined]
+        case 1:
+          return [...prevPlayers, undefined, undefined, undefined, undefined, undefined, undefined, undefined]
+        case 2:
+          return [...prevPlayers, undefined, undefined, undefined, undefined, undefined, undefined]
+        case 3:
+          return [...prevPlayers, undefined, undefined, undefined, undefined, undefined]
+        case 4:
+          return [...prevPlayers, undefined, undefined, undefined, undefined]
+        case 5:
+          return [...prevPlayers, undefined, undefined, undefined]
+        case 6:
+          return [...prevPlayers, undefined, undefined]
+        case 7:
+          return [...prevPlayers, undefined]
+      }
+      //will never execute:
+      return [...prevPlayers]
+    })
+  }
+
   const handleStartTournament = async (e: React.MouseEvent<HTMLButtonElement>) => {
     if (selectedPlayers.length >= 2 && new Set(selectedPlayers).size === selectedPlayers.length) {
       setDisablePlayerForm(true)
@@ -96,8 +121,20 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTour
 
         <p className='text-2xl mt-4'>Select &/or add players</p>
 
-        <Button
-          disabled={selectedPlayers.length > 7} label={'Add Player'} onClick={handleAddPlayer} />
+        <div className='grid grid-cols-4'>
+          <div className='col-span-3 flex flex-col'>
+            <Button
+              disabled={selectedPlayers.length > 7} label={'Add Player'} onClick={handleAddPlayer} />
+          </div>
+          <div className='col-span-1 flex flex-col'>
+            <Button
+              disabled={selectedPlayers.length > 7} label={'...max'}
+              onClick={handleAddPlayerToEight}
+            />
+          </div>
+
+        </div>
+
 
         {selectedPlayers.map((player, i) => {
           return (
@@ -118,9 +155,9 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTour
         md:mb-0'>
           <div className='-mt-4 
           md:mb-0'>
-          <CreateForm fetchedPlayers={fetchedPlayers} user_email={user_email}></CreateForm>
+            <CreateForm fetchedPlayers={fetchedPlayers} user_email={user_email}></CreateForm>
           </div>
-          
+
         </div>
         <div className='flex flex-row justify-around'>
           <Button
