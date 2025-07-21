@@ -23,7 +23,7 @@ const PlayerSelectField = ({
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
   return (
-    <div key={`${inputValue}${index}`}>
+    <div className='flex flex-row items-center gap-2' key={`${inputValue}${index}`}>
       <select
         id='custom-select'
         value={inputValue}
