@@ -27,7 +27,7 @@ export default function UserNav({ user_email }: { user_email: string }) {
           </form>
           </div>
         </div> :
-        <div className='p-2'>Drafting anonymously: if you want to save, edit, and navigate your leagues, tournaments and matches,&nbsp;
+        <div className='flex flex-row p-2'>Drafting anonymously: if you want to save, edit, and navigate your leagues, tournaments and matches,&nbsp;
           <Link
             className="text-blue-600 hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent"
             href={"/login"}>login</Link>
@@ -65,7 +65,3 @@ export default function UserNav({ user_email }: { user_email: string }) {
         </form>
       </div>
     </div> */}
-
-
-
-
