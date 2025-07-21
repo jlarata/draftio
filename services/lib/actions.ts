@@ -211,6 +211,22 @@ export async function createLeague(user_email: string, formData: FormData) {
   redirect('/dashboard/leagues?leaguecreated=ok');
 }
 
+/** authomatic creation of a league when creating new user */
+async function createFirstLeague(user_email: string, league_name:string) {
+  try {
+    const { rows: uuid } = await sql`INSERT INTO league (name)
+      VALUES(${league_name})
+      RETURNING id;`;
+    let thisLeagueUUID = uuid[0].id;
+    await sql`INSERT INTO league_user (league_id, p_user_email, user_role)
+        VALUES(${thisLeagueUUID}, ${user_email}, 'admin');`;
+  } catch (error) {
+    console.error('Database Error:', error)
+    throw new Error('Failed to create default league for new user.')
+  }
+}
+
+
 export async function updateLeague(id: string, formData: FormData) {
   let { name } = ({
     name: formData.get('name') as string,
@@ -460,7 +476,7 @@ async function validateEmail(user_email: string) {
   return true
 }
 
-
+//recordatorio: meter un crear liga
 export async function registerUser(formData: FormData) {
 
   let rawFormData: {
@@ -482,9 +498,15 @@ export async function registerUser(formData: FormData) {
         INSERT INTO p_user (email, name, password)
           VALUES (${rawFormData.email}, ${rawFormData.nickname}, ${hashedPassword});`;
 
+    const defaultLeagueName = rawFormData.nickname+`'s league`
+    await createFirstLeague(rawFormData.email, defaultLeagueName);
+
     revalidatePath(`/dashboard?userCreated=ok`);
     redirect(`/dashboard?userCreated=ok`);
+  
   }
+
+
 
   console.log("user exists")
   revalidatePath(`/register?alreadyUsedEmail=ok`);
