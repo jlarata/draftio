@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { LeagueWithTournaments } from '@/services/lib/definitions'
 import { useTournament } from '@/src/swiss/context/tournament'
 import css from './style.module.css'
+import { useRouter } from 'next/navigation'
 
 export default function CreateTournamentSwiss({
   leaguesWithTournaments,
@@ -19,6 +20,9 @@ export default function CreateTournamentSwiss({
   onTournamentChange: (
     isValid: boolean) => void
 }) {
+
+  const router = useRouter()
+
   const { tournament } = useTournament()
   const [leagueID, setLeagueID] = useState<string>('')
   let aTime = new Date()
@@ -58,6 +62,10 @@ export default function CreateTournamentSwiss({
     //onLeagueChange(selectedLeagueID, isValid)
     onLeagueChange(true)
     tournament.databaseInfo.leagueID = selectedLeagueID
+  }
+
+  const handleRouting = (route:string) => {
+    router.push(route)
   }
 
   useEffect(() => {
@@ -123,7 +131,10 @@ export default function CreateTournamentSwiss({
 
                       <label htmlFor='date' className='mb-2 mt-4 block text-sm font-medium'>
                         Tournament League
+                         <span className='text-xs'>(or</span>
+                         <span className='text-xs text-blue-600 hover:cursor-pointer' onClick={() => handleRouting('../../../dashboard/leagues')}> create a new league)</span>
                       </label>
+                      
                       <div className='relative'>
                         <select
                           id='league_id'
