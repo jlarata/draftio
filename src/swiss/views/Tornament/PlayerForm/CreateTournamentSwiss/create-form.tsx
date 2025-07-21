@@ -37,7 +37,6 @@ export default function CreateTournamentSwiss({
 
   const [tournamentName, setTournamentName] = useState<string>('')
 
-
   const handleAddTournamentName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const typedTournamentName = e.target.value
     setTournamentName(typedTournamentName)
