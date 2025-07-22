@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # Next.js Application
+  app:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: draftio-app
+    env_file: ".env"
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      # Remote database connection from .env file
+      - POSTGRES_URL=${POSTGRES_URL}
+      - POSTGRES_PRISMA_URL=${POSTGRES_PRISMA_URL}
+      - POSTGRES_URL_NO_SSL=${POSTGRES_URL_NO_SSL}
+      - POSTGRES_URL_NON_POOLING=${POSTGRES_URL_NON_POOLING}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - AUTH_SECRET=${AUTH_SECRET}
+      - NEXTAUTH_SECRET=${AUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:${APP_PORT:-3000}}
+    volumes:
+      - .:/app:delegated
+      - /app/node_modules
+    command: pnpm dev
+    develop:
+      watch:
+        # Rebuild container when critical config files change
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./pnpm-lock.yaml
+        - action: rebuild
+          path: ./next.config.mjs
+        - action: rebuild
+          path: ./tailwind.config.ts
+        - action: rebuild
+          path: ./tsconfig.json
+        - action: rebuild
+          path: ./Dockerfile.dev
+
+# No volumes needed - using remote database
+
+networks:
+  default:
+    name: draftio-network 
