@@ -31,8 +31,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pnpm add bcrypt --allow-build=bcrypt
-        pnpm install --ignore-scripts=false
+        pnpm install --frozen-lockfile
 
     - name: Run tests
       run: pnpm test
