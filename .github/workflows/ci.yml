@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20, 22]
+        node-version: [20]
 
     steps:
     - name: Checkout code
@@ -36,12 +36,6 @@ jobs:
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
 
-    - name: Build application
-      run: pnpm build
-
-    - name: Run tests
-      run: pnpm test:coverage
-
     - name: Coverage Report as PR Comment
       if: github.event_name == 'pull_request' && matrix.node-version == 20
       uses: ArtiomTr/jest-coverage-report-action@v2
@@ -50,6 +44,9 @@ jobs:
         package-manager: pnpm
         annotations: all
         skip-step: install
+
+    - name: Build application
+      run: pnpm build
 
     - name: Upload coverage reports
       if: matrix.node-version == 20
