@@ -34,7 +34,10 @@ jobs:
         pnpm install --frozen-lockfile
 
     - name: Run tests
-      run: pnpm test
+      uses: ArtiomTr/jest-coverage-report-action@v2.0-rc.6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        threshold: 80 # optional parameter
 
     - name: Build application
       run: pnpm build
