@@ -34,7 +34,7 @@ dev: check-env ## Start pnpm development server
 	@echo "🚀 Starting development server..."
 	@pnpm dev
 
-build: check-env ## Build the application
+build: check-env install ## Build the application
 	@echo "🏗️  Building application..."
 	@pnpm build
 
@@ -106,3 +106,8 @@ docker-setup: ## Complete Docker setup: clean, build, and start
 	@make seed
 	@echo ""
 	@echo "💡 Tip: Use 'make docker-watch' for development with hot reload" 
+
+test: build ## Run Tests
+	@echo "🧪 Running Tests..."
+	@pnpm test
+	@echo "✅ Tests complete"
