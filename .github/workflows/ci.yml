@@ -23,6 +23,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Output
+      run: |
+        cat <<EOF
+        ╔═╗┌─┐┬ ┬┌─┐┌┐┌┌┬┐┌─┐
+        ╠═╣│ ┬│ │├─┤│││ │ ├┤ 
+        ╩ ╩└─┘└─┘┴ ┴┘└┘ ┴ └─┘
+        ╦═╗┌─┐┌─┐┬┌┐┌┌─┐     
+        ╠╦╝├─┤│  │││││ ┬     
+        ╩╚═┴ ┴└─┘┴┘└┘└─┘         
+        Environment: ${{ github.event_name }}
+        Node version: ${{ matrix.node-version }}
+        Repository: ${{ github.repository }}
+        EOF
+
     - name: Install pnpm
       uses: pnpm/action-setup@v4
       with:
