@@ -165,12 +165,7 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTour
             disabled={selectedPlayers.length < 2 || new Set(selectedPlayers).size !== selectedPlayers.length}
             onClick={handleStartTournament}
           />
-          {showRandomSeatStep && (
-            <RandomSeatStep
-              players={selectedPlayers}
-              randomPlayers={randomSeatsUtils.getRandomPlayers(selectedPlayers)}
-            />
-          )}
+          
 
 
           {/* case user is anonymous wont use leaguevalidation: */}
@@ -203,6 +198,12 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTour
             />
           }
         </div>
+        {showRandomSeatStep && (
+            <RandomSeatStep
+              players={selectedPlayers}
+              randomPlayers={randomSeatsUtils.getRandomPlayers(selectedPlayers)}
+            />
+          )}
       </div>
 
 
