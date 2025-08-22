@@ -22,7 +22,7 @@ const RandomSeatStep = ({ players, randomPlayers }: Props) => {
         {randomPlayers.map((player, index) => {
           return (
             <select key={index} disabled={!isChecked} defaultValue={player.id}
-            style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+            style={{display: 'block', width: '100%', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
               {players.map((playerOption, optionIndex) => {
                 if (playerOption) {
                   return (
