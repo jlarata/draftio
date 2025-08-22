@@ -28,7 +28,7 @@ const PlayerSelectField = ({
         id='custom-select'
         value={inputValue}
         onChange={(e) => (setSelectedOption(e.target.value), handlePlayerNameChange({ player: fetchedPlayers.find((currPlayer) => currPlayer.id === e.target.value)!, index }))}
-        style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}
+        style={{display: 'block', maxWidth: '230px',  whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}
       >
         <option value='' disabled>
           Select a player
