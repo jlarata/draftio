@@ -77,6 +77,39 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTour
     })
   }
 
+    const handleAddPlayerToTwelve = async () => {
+    setSelectedPlayers((prevPlayers) => {
+      switch (prevPlayers.length) {
+        case 0:
+          return [...prevPlayers, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,  undefined]
+        case 1:
+          return [...prevPlayers, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined]
+        case 2:
+          return [...prevPlayers, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined]
+        case 3:
+          return [...prevPlayers, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined]
+        case 4:
+          return [...prevPlayers, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined]
+        case 5:
+          return [...prevPlayers, undefined, undefined, undefined, undefined, undefined, undefined, undefined]
+        case 6:
+          return [...prevPlayers, undefined, undefined, undefined, undefined, undefined, undefined]
+        case 7:
+          return [...prevPlayers, undefined, undefined, undefined, undefined, undefined]
+          case 8:
+          return [...prevPlayers, undefined, undefined, undefined, undefined]
+        case 9:
+          return [...prevPlayers, undefined, undefined, undefined]
+        case 10:
+          return [...prevPlayers, undefined, undefined]
+        case 11:
+          return [...prevPlayers, undefined]
+      }
+      //will never execute:
+      return [...prevPlayers]
+    })
+  }
+
   const handleStartTournament = async (e: React.MouseEvent<HTMLButtonElement>) => {
     if (selectedPlayers.length >= 2 && new Set(selectedPlayers).size === selectedPlayers.length) {
       setDisablePlayerForm(true)
@@ -124,12 +157,12 @@ const PlayerForm = ({ submitPlayers, fetchedPlayers, user_email, validLeagueTour
         <div className='grid grid-cols-4'>
           <div className='col-span-3 flex flex-col'>
             <Button
-              disabled={selectedPlayers.length > 7} label={'Add Player'} onClick={handleAddPlayer} />
+              disabled={selectedPlayers.length > 11} label={'Add Player'} onClick={handleAddPlayer} />
           </div>
           <div className='col-span-1 flex flex-col'>
             <Button
-              disabled={selectedPlayers.length > 7} label={'...max'}
-              onClick={handleAddPlayerToEight}
+              disabled={selectedPlayers.length > 11} label={'...max'}
+              onClick={handleAddPlayerToTwelve}
             />
           </div>
 
